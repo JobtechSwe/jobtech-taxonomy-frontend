@@ -45,12 +45,15 @@ class TreeViewItem extends React.Component {
         var children = this.state.children;
         child.parent = this.props.pointer;
         children.push(child);
-        this.props.pointer.children = children;
         this.setState({children: children});
     }
 
     removeChild(item) {
-        // TODO: remove
+        item.setSelected(false);
+        var children = this.state.children;
+        var index = children.indexOf(item);
+        children.splice(index, 1);
+        this.setState({children: children});
     }
 
     onDeselected() {
@@ -99,8 +102,19 @@ class TreeViewItem extends React.Component {
         }
     }
 
+    renderLabel() {
+        var css = "tree_view_item_label no_select " + (this.state.selected ? "tree_view_item_selected" : "");
+        return (
+            <div 
+                className={css}
+                onPointerUp={this.onSelectClicked.bind(this)}>
+                {this.state.text}
+            </div>
+        );
+    }
+
     renderChildren() {
-        if(this.state.expanded) {
+        if(this.state.expanded && this.state.children.length > 0) {
             return (
                 <div className="tree_view_children">
                     {this.renderBlock()}
@@ -120,9 +134,7 @@ class TreeViewItem extends React.Component {
                 <div className="tree_view_content">
                     {this.renderOuterGuideline()}
                     {this.renderExpanded()}
-                    <div onPointerUp={this.onSelectClicked.bind(this)} className={this.state.selected ? "tree_view_item_selected" : ""}>
-                        {this.state.text}
-                    </div>
+                    {this.renderLabel()}
                 </div>
                 {this.renderChildren()}  
             </div>

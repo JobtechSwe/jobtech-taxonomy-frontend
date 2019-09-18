@@ -39,7 +39,10 @@ class Index extends React.Component {
         // setup treeview
         var treeView = ControlUtil.createTreeView();
         treeView.onItemSelected = (item) => {
-            //item.setExpanded(true);
+            var parent = item.parent;
+            if(parent) {
+                parent.removeChild(item);
+            }
         };
         // setup nodes
         var root = ControlUtil.createTreeViewItem(treeView);
@@ -60,7 +63,7 @@ class Index extends React.Component {
                 }
             }
         }
-        treeView.roots.push(root);
+        treeView.addRoot(root);
         this.setState({treeView: treeView});
     }
 

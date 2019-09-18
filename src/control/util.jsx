@@ -13,7 +13,6 @@ class Util {
     }
 
     __treeViewSetSelected(context, item, selected) {
-        var selectionChanged = false;
         if(this.__treeViewIsSelected(context, item)) {
             if(!selected) {
                 if(context.selected.onDeselected) {
@@ -36,6 +35,10 @@ class Util {
         }
     }
 
+    __treeViewAddRoot(context, item) {
+        context.roots.push(item);
+    }
+
     createTreeView() {
         var context = {
             // members
@@ -46,9 +49,14 @@ class Util {
             setSelected: null,
             // callbacks
             onItemSelected: null,
+            // vtable
+            addRoot: null,
+            removeRoot: null,
         };
+        // bind function pointers
         context.isSelected = this.__treeViewIsSelected.bind(this, context);
         context.setSelected = this.__treeViewSetSelected.bind(this, context);
+        context.addRoot = this.__treeViewAddRoot.bind(this, context);
         return context;
     }
 

@@ -111,6 +111,10 @@
     background: #bbb;
 }
 
+.list > .tree_view_item::before {
+    display: none;
+}
+
 .tree_view_content {
     display: flex;
     align-items: center;
@@ -154,7 +158,20 @@
     clip-path: polygon(0px 9px, 15px 9px, 15px 10px, 0px 10px);
 }
 
+.tree_view_item_label {
+    cursor: pointer;
+}
+
+.tree_view_item_label:hover {
+    background: #ccc;
+}
+
 .tree_view_item_selected {
-    background: red;    
+    background: #386479; 
+    color: #fff;   
+}
+
+.tree_view_item_selected:hover {
+    background: #386479; 
 }
 

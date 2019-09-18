@@ -9,19 +9,34 @@ class TreeView extends React.Component {
         this.state = {
             context: null,
         };
-        this.css = "";
+    }
+
+    __init(props) {
+        if(props.context) {
+            props.context.addRoot = this.addRoot.bind(this);
+            props.context.removeRoot = this.removeRoot.bind(this);
+            this.setState({context: props.context});
+        }
     }
 
     componentDidMount() {
-        if(this.props.context) {
-            this.setState({context: this.props.context});
-        }
+        this.__init(this.props);
     }
 
     UNSAFE_componentWillReceiveProps(props) {
-        if(props.context) {
-            this.setState({context: props.context});
-        }
+        this.__init(props);
+    }
+
+    addRoot(root) {
+        this.state.context.roots.push(root);
+        this.setState({context: this.state.context});
+    }
+
+    removeRoot(root) {
+        root.setSelected(false);
+        var index = this.state.context.roots.index(root);
+        this.state.context.roots.splice(index, 1);
+        this.setState({context: this.state.context});
     }
 
     renderRoots() {
@@ -34,7 +49,7 @@ class TreeView extends React.Component {
 
     render() {
         return (
-            <List css={Util.getStyle(this)}>
+            <List css={this.props.css}>
                 {this.renderRoots()}
             </List>
         );
