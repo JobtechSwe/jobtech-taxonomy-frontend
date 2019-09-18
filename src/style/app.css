@@ -1,0 +1,25 @@
+
+body {
+    background: #5d7277;
+}
+
+.temp {
+    display: flex;
+    flex-direction: row;
+}
+
+.left_menu {
+    width: 300px;
+}
+
+.left_menu_buttons {
+    display: flex;
+}
+
+.left_menu .list {
+    height: 300px;
+}
+
+.right_content {
+    width: 100%;
+}

@@ -1,0 +1,160 @@
+
+.font {
+    font-family: 'Calibri', sans-serif;
+}
+
+.no_select {
+    user-select: none;
+}
+
+.panel {
+    background: #fff;
+    color: #000;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.button {
+    display: flex;
+    margin: 2px;
+    padding: 2px;
+    border: 2px solid #333;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: #333;
+    font-size: 12pt;
+    cursor: pointer;
+    box-sizing: border-box;
+    white-space: normal;
+}
+
+.button:hover {
+    color: #fff;
+    background: #888;
+}
+
+.button:active {
+    background: #aaa;
+    color: #000;
+}
+
+.button_round {
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.list {
+    display: flex;
+    background: #eee;
+    flex-direction: column;
+    padding: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    border: 2px solid #333;
+    border-radius: 5px;
+    overflow: auto;
+    box-sizing: border-box;
+}
+
+.item {
+    background: #fff;
+    padding: 2px;
+    margin: 2px;
+    cursor: pointer;
+}
+
+.selected {
+    background: #f00;
+}
+
+.label {
+    white-space: pre;
+}
+
+.hint {
+    position: absolute;
+    background: rgb(247, 231, 164);    
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: #000;
+    box-shadow: #000 0px 1px 3px;
+    padding: 0px 2px 0px 2px;
+    z-index: 1;
+    transform: translate(30px, 30px);
+    transition: all 1s;
+    transition-delay: 1s;
+    font-size: 10pt;
+    opacity: 0;
+    visibility: collapse;
+}
+
+.hint_source:hover .hint {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tree_view_item {
+    position: relative;
+}
+
+.tree_view_item::before {
+    position: absolute;
+    width: 19px;
+    height: 100%;
+    content: "";
+    clip-path: polygon(7px 19px, 8px 19px, 8px 100%, 7px 100%);
+    background: #bbb;
+}
+
+.tree_view_content {
+    display: flex;
+    align-items: center;
+}
+
+.tree_view_children {
+    display: flex;
+}
+
+.tree_view_block {
+    width: 19px;
+    height: 19px;
+}
+
+.tree_view_expand {
+    margin-right: 5px;
+    width: 15px;
+    height: 15px;
+}
+
+.tree_view_expand.button {
+    margin: unset;
+    margin-right: 5px;
+}
+
+.tree_view_item_section {
+    background: #bbb;
+    width: 19px;
+    height: 19px;
+}
+
+.tree_view_t_section {
+    clip-path: polygon(7px 0px, 8px 0px, 8px 9px, 17px 9px, 17px 10px, 8px 10px, 8px 19px, 7px 19px);
+}
+
+.tree_view_l_section {
+    clip-path: polygon(7px 0px, 8px 0px, 8px 9px, 17px 9px, 17px 10px, 7px 10px);
+}
+
+.tree_view_ll_section {
+    clip-path: polygon(0px 9px, 15px 9px, 15px 10px, 0px 10px);
+}
+
+.tree_view_item_selected {
+    background: red;    
+}
+
