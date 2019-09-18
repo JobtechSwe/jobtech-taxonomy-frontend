@@ -4,7 +4,7 @@ The front end is using React with JSX developed using node.js.
 Download the "recommended for most users" version: https://nodejs.org/en/
 
 ## First time opening and installing the project
-npm run install
+npm install
 
 ## Run developer mode with hotloading
 npm run build
