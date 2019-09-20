@@ -115,6 +115,11 @@
     display: none;
 }
 
+.tree_view_item:last-child::before {
+    clip-path: unset;
+    content: unset;
+}
+
 .tree_view_content {
     display: flex;
     align-items: center;
