@@ -2,12 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Support from './support.jsx';
 import Panel from './control/panel.jsx';
-import Button from './control/button.jsx';
-import ButtonRound from './control/button_round.jsx';
-import List from './control/list.jsx';
 import Label from './control/label.jsx';
-import TreeView from './control/tree_view.jsx';
 import ControlUtil from './control/util.jsx';
+import SidePanel from './view/side_panel/side_panel.jsx';
 
 class Index extends React.Component { 
 
@@ -77,19 +74,8 @@ class Index extends React.Component {
 
     render() {
         return (
-            <div className="temp">
-                <Panel css="left_menu">
-                    <div className="left_menu_buttons">
-                        <ButtonRound text="+" hint="hinten"/>
-                        <ButtonRound text="-"/>
-                    </div>
-                    <List 
-                        data={this.state.data}
-                        dataRender={this.renderData.bind(this)}/>
-                    <TreeView context={this.state.treeView}/>
-                    <Button text="Yrkesbenämningar"/>
-                    <Button text="YREKSBENÄMNINGAR" hint="The hint"/>
-                </Panel>
+            <div className="main">
+                <SidePanel/>
                 <Panel css="right_content">
                     <Label text="Content" hint="Cool content that contains stuff"/>
                 </Panel>

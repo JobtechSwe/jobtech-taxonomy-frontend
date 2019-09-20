@@ -98,6 +98,7 @@ class Util {
             // utility
             isLastChild: null,
             isSelected: null,
+            refresh: null,
             // vtable
             setText: null,
             setExpanded: null,

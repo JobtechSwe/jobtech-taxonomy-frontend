@@ -3,9 +3,10 @@ body {
     background: #386479;
 }
 
-.temp {
+.main {
     display: flex;
     flex-direction: row;
+    height: 100%;
 }
 
 .left_menu {
@@ -22,4 +23,23 @@ body {
 
 .right_content {
     width: 100%;
+}
+
+.side_panel {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.side_nav_bar {
+    height: 50px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.side_container {
+    margin-top: 5px;
+    height: 100%;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
