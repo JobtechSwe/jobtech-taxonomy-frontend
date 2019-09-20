@@ -5,13 +5,6 @@ import Container from './container.jsx';
 
 class SidePanel extends React.Component { 
 
-    constructor() {
-        super();
-        this.state = {
-        
-        };
-    }
-
     render() {
         return (
             <Panel css="side_panel">
