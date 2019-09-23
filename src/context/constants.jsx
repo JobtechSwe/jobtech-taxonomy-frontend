@@ -21,6 +21,8 @@ class Constants {
         this.ICON_TMP_3 = "./resource/icon_tmp_3.png";
         this.ICON_TMP_4 = "./resource/icon_tmp_4.png";
         this.ICON_TMP_5 = "./resource/icon_tmp_5.png";
+        // events
+        this.EVENT_SET_WORKMODE = "EVENT_SET_WORKMODE";
     }
 	
 }

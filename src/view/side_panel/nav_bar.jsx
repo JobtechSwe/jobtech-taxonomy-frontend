@@ -2,6 +2,7 @@ import React from 'react';
 import Hint from './../../control/hint.jsx';
 import App from './../../context/app.jsx';
 import Constants from './../../context/constants.jsx';
+import EventDispatcher from './../../context/event_dispatcher.jsx';
 
 class NavBar extends React.Component { 
 
@@ -12,11 +13,15 @@ class NavBar extends React.Component {
         };
     }
 
-    onSaveDialogResult(button, result) {
+    setWorkmode(id) {
+        EventDispatcher.fire(Constants.EVENT_SET_WORKMODE, id);
+        this.setState({selected: id});
+    }
+
+    onSaveDialogResult(id, result) {
         if(result != Constants.DIALOG_OPTION_ABORT) {
             // used saved or discared changes and wants to continue
-            // TODO: event to notify views
-            this.setState({selected: button});
+            this.setWorkmode(id);
         }
     }
 
@@ -24,8 +29,7 @@ class NavBar extends React.Component {
         if(App.hasUnsavedChanges()) {
             App.showSaveDialog(this.onSaveDialogResult.bind(this, id));
         } else {
-            // TODO: event to notify views
-            this.setState({selected: id});
+            this.setWorkmode(id);
         }
     }
 
