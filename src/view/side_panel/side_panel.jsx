@@ -3,6 +3,7 @@ import Panel from './../../control/panel.jsx';
 import NavBar from './nav_bar.jsx';
 import Container from './../container.jsx';
 import Constants from './../../context/constants.jsx';
+import Content1 from './content_1.jsx';
 
 class SidePanel extends React.Component { 
 
@@ -15,7 +16,7 @@ class SidePanel extends React.Component {
                     eventId={Constants.ID_SIDEPANEL_CONTAINER}
                     defaultView={Constants.SIDEPANEL_VIEW_1}
                     views={[{
-                        content: (<div >1</div>),
+                        content: (<Content1/>),
                         id: Constants.SIDEPANEL_VIEW_1,
                     },{
                         content: (<div >2</div>),
