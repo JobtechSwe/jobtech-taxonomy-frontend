@@ -23,6 +23,8 @@ class Constants {
         this.ICON_TMP_5 = "./resource/icon_tmp_5.png";
         // events
         this.EVENT_SET_WORKMODE = "EVENT_SET_WORKMODE";
+        // id's
+        this.ID_SIDEPANEL_CONTAINER = "ID_SIDEPANEL_CONTAINER";
     }
 	
 }

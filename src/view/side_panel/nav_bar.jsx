@@ -14,6 +14,7 @@ class NavBar extends React.Component {
     }
 
     setWorkmode(id) {
+        EventDispatcher.fire(Constants.ID_SIDEPANEL_CONTAINER, id);
         EventDispatcher.fire(Constants.EVENT_SET_WORKMODE, id);
         this.setState({selected: id});
     }
