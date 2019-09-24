@@ -41,8 +41,8 @@ class List extends React.Component {
     render() {
         return (
             <div className={Util.getStyle(this)}>
-                {this.renderData()}
                 {this.props.children}
+                {this.renderData()}
             </div>
         );
     }
