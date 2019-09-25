@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '../../control/button.jsx';
 import List from '../../control/list.jsx';
 import Label from '../../control/label.jsx';
-import Constants from '../../context/constants.jsx';
+import Rest from '../../context/rest.jsx';
 
 class Content1 extends React.Component { 
 
@@ -16,68 +16,70 @@ class Content1 extends React.Component {
             resultData: [],
         };
         this.searchReference = null;
-
-        this.tempData = [];
     }
 
     componentDidMount() {
         // TODO: rest
-        this.tempData = [{
-              "id": "1ZPL_bQH_ATa",
-              "type": "skill",
-              "preferredLabel": "Structural Engineering"
-            }, {
-              "id": "rSKd_BLd_ACL",
-              "type": "skill",
-              "preferredLabel": "Skadereglering, personskadeförsäkring"
-            }, {
-              "id": "ZSXe_KXh_TzJ",
-              "type": "skill",
-              "preferredLabel": "Skatterätt"
-            }, {
-              "id": "hkzB_Lob_4jT",
-              "type": "skill",
-              "preferredLabel": "Skötsel av fordonstvätt"
-            }, {
-              "id": "NEGf_iWM_Ea4",
-              "type": "skill",
-              "preferredLabel": "Sed, texteditor"
-            }, {
-              "id": "FMyD_iiR_FKA",
-              "type": "skill",
-              "preferredLabel": "Spelförsäljning, lottredovisningsterminal (GVT+)"
-            }
-        ];
+        Rest.getConcepts("ssyk_level_1", (data) => {
+            this.setState({resultData: data});
+        }, (status) => {
+            console.log(status);
+        });
     }
 
     componentWillUnmount() {
 
     }
 
+    search(query) {
+        if(query && query.length > 0) {
+            Rest.searchConcepts("ssyk_level_1", query, (data) => {
+                if(this.state.queryType == this.TYPE_LIST) {
+                    this.setState({resultData: data});
+                } else {
+                    this.setState({detailsData: data});
+                }
+            }, (status) => {
+                console.log(status);
+            });
+        } else {
+            Rest.getConcepts("ssyk_level_1", (data) => {
+                if(this.state.queryType == this.TYPE_LIST) {
+                    this.setState({resultData: data});
+                } else {
+                    this.setState({detailsData: data});
+                }
+            }, (status) => {
+                console.log(status);
+            });
+        }
+    }
+
     onTypeChanged(e) {
         // TODO: query backend for type
-        if(e.target.value == this.TYPE_LIST) {
-            
-        } else {
-            
-        }
-        this.setState({queryType: e.target.value});
+        this.searchReference.value = "";
+        this.setState({
+            queryType: e.target.value,
+            resultData: [],
+        });
+        this.search();
     }
 
     onSearchClicked() {
-        var value = this.searchReference.value;
-        if(value && value.length > 0) {
-            
-        } else {
-
-        }
+        this.search(this.searchReference.value);        
     }
 
     onDetailsItemSelected(item) {
-        
+        Rest.abort();
+        Rest.searchRelations(item.id, (data) => {
+            this.setState({resultData: data});
+        }, (status) => {
+            console.log(status);
+        });
     }
 
     onResultItemSelected(item) {
+        // TODO: send notification
     }
 
     renderQueary() {

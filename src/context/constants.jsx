@@ -54,14 +54,35 @@ class Constants {
         this.EVENT_SET_WORKMODE = "EVENT_SET_WORKMODE";
         // id's
         this.ID_SIDEPANEL_CONTAINER = "ID_SIDEPANEL_CONTAINER";
+        // settings
+        this.REST_IP = "https://cors-anywhere.herokuapp.com/http://jobtech-taxonomy-api-develop.dev.services.jtech.se/v0/taxonomy/";
+        this.REST_API_KEY = "";
         // resources
         this.ICON_TMP_1 = "./resource/icon_tmp_1.png";
         this.ICON_TMP_2 = "./resource/icon_tmp_2.png";
         this.ICON_TMP_3 = "./resource/icon_tmp_3.png";
         this.ICON_TMP_4 = "./resource/icon_tmp_4.png";
         this.ICON_TMP_5 = "./resource/icon_tmp_5.png";
+
+        var apikey = this.getArg("apikey");
+        if(apikey) {
+            this.REST_API_KEY = apikey;
+        }
     }
-	
+    
+    getArg(key) {
+		var raw = window.location.hash.split('#');
+		if(raw.length == 2) {
+			var cmd = raw[1];
+			var args = cmd.split('&');
+			for(var i=0; i<args.length; ++i) {
+				if(args[i].indexOf(key + "=") !== -1) {
+					return args[i].split('=')[1]; 
+				}
+			}
+		}
+		return null;
+	}
 }
 
 export default new Constants;
