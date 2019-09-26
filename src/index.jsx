@@ -5,6 +5,7 @@ import Panel from './control/panel.jsx';
 import Label from './control/label.jsx';
 import ControlUtil from './control/util.jsx';
 import SidePanel from './view/side_panel/side_panel.jsx';
+import MainPanel from './view/main_panel/main_panel.jsx';
 
 class Index extends React.Component { 
 
@@ -76,9 +77,7 @@ class Index extends React.Component {
         return (
             <div className="main">
                 <SidePanel/>
-                <Panel css="right_content">
-                    <Label text="Content" hint="Cool content that contains stuff"/>
-                </Panel>
+                <MainPanel/>
             </div>
         );
     }

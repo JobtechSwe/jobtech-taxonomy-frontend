@@ -59,7 +59,7 @@ class Rest {
     }
     
     searchRelations(id, onSuccess, onError) {
-        this.get("/public/concepts?relatedIds=" + id + "&relationType=broader", onSuccess, onError);
+        this.get("/public/concepts?relatedIds=" + id + "&relationType=narrower", onSuccess, onError);
     }
 
 }

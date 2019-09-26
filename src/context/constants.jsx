@@ -52,6 +52,7 @@ class Constants {
         this.DIALOG_OPTION_NO       = 32;
         // events
         this.EVENT_SET_WORKMODE = "EVENT_SET_WORKMODE";
+        this.EVENT_SSYK4_ITEM_SELECTED = "EVENT_SSYK4_ITEM_SELECTED";
         // id's
         this.ID_SIDEPANEL_CONTAINER = "ID_SIDEPANEL_CONTAINER";
         // settings
@@ -68,6 +69,7 @@ class Constants {
         if(apikey) {
             this.REST_API_KEY = apikey;
         }
+		this.lang = this.getArg("lang");
     }
     
     getArg(key) {

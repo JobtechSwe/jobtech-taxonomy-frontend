@@ -69,7 +69,8 @@
 }
 
 .selected {
-    background: #f00;
+    background: rgb(47, 120, 255);
+    color: #fff;
 }
 
 .label {
