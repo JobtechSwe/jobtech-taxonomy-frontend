@@ -37,12 +37,12 @@ class Constants {
             wage_type: "Wage type",
             worktime_extent: "Worktime extent"      
         };*/
-        // side panel navigation views
-        this.SIDEPANEL_VIEW_1 = 0;
-        this.SIDEPANEL_VIEW_2 = 1;
-        this.SIDEPANEL_VIEW_3 = 2;
-        this.SIDEPANEL_VIEW_4 = 3;
-        this.SIDEPANEL_VIEW_5 = 4;
+        // work modes
+        this.WORK_MODE_1 = 0;
+        this.WORK_MODE_2 = 1;
+        this.WORK_MODE_3 = 2;
+        this.WORK_MODE_4 = 3;
+        this.WORK_MODE_5 = 4;
         // dialog options
         this.DIALOG_OPTION_OK       = 1;
         this.DIALOG_OPTION_CANCEL   = 2;
@@ -55,6 +55,7 @@ class Constants {
         this.EVENT_SSYK4_ITEM_SELECTED = "EVENT_SSYK4_ITEM_SELECTED";
         // id's
         this.ID_SIDEPANEL_CONTAINER = "ID_SIDEPANEL_CONTAINER";
+        this.ID_MAINPANEL_CONTAINER = "ID_MAINPANEL_CONTAINER";
         // settings
         this.REST_IP = "https://cors-anywhere.herokuapp.com/http://jobtech-taxonomy-api-develop.dev.services.jtech.se/v0/taxonomy/";
         this.REST_API_KEY = "";

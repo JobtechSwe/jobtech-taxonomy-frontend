@@ -14,22 +14,22 @@ class SidePanel extends React.Component {
                 <Container 
                     css="side_container"
                     eventId={Constants.ID_SIDEPANEL_CONTAINER}
-                    defaultView={Constants.SIDEPANEL_VIEW_1}
+                    defaultView={Constants.WORK_MODE_1}
                     views={[{
                         content: (<Content1/>),
-                        id: Constants.SIDEPANEL_VIEW_1,
+                        id: Constants.WORK_MODE_1,
                     },{
                         content: (<div >2</div>),
-                        id: Constants.SIDEPANEL_VIEW_2,
+                        id: Constants.WORK_MODE_2,
                     },{
                         content: (<div >3</div>),
-                        id: Constants.SIDEPANEL_VIEW_3,
+                        id: Constants.WORK_MODE_3,
                     },{
                         content: (<div >4</div>),
-                        id: Constants.SIDEPANEL_VIEW_4,
+                        id: Constants.WORK_MODE_4,
                     },{
                         content: (<div >5</div>),
-                        id: Constants.SIDEPANEL_VIEW_5,
+                        id: Constants.WORK_MODE_5,
                     }
                 ]}/>
             </Panel>
