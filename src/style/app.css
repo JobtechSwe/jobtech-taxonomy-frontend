@@ -119,5 +119,5 @@ body {
 }
 
 .main_container {
-
+    display: flex;
 }
