@@ -132,7 +132,7 @@ body {
 
 .main_content_1_lower {
     display: flex;
-    height: 100%;
+    flex: 1 1 auto;
     background: #ffc878;
     border-radius: 10px;
     margin-top: 10px;
@@ -221,7 +221,7 @@ body {
 }
 
 .occupation_name_list {
-    height: 100%;
+    flex: 1 1 0;
 }
 
 .occupation_skill {    
@@ -235,5 +235,5 @@ body {
 }
 
 .occupation_skill_list {
-    height: 100%;
+    flex: 1 1 0;
 }
