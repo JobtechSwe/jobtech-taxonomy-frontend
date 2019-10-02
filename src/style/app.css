@@ -120,11 +120,38 @@ body {
 
 .main_container {
     display: flex;
+    height: 100%;
 }
 
 .main_content_1 {
     display: flex;
+    flex-direction: column;
     width: 100%;
+    height: 100%;
+}
+
+.main_content_1_lower {
+    display: flex;
+    height: 100%;
+    background: #ffc878;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.main_content_1_lower > div {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.main_content_1_lower > div:first-child {
+    margin-right: 5px;
+    margin-left: unset;
+}
+
+.main_content_1_lower > div:last-child {
+    margin-right: unset;
+    margin-left: 5px;
 }
 
 .occupation_info {    
@@ -181,4 +208,32 @@ body {
 
 .occupation_info_bottom > textarea {
     resize: none;
+}
+
+.occupation_name {    
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.occupation_name > .label {
+    font-weight: bold;
+}
+
+.occupation_name_list {
+    height: 100%;
+}
+
+.occupation_skill {    
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.occupation_skill > .label {
+    font-weight: bold;
+}
+
+.occupation_skill_list {
+    height: 100%;
 }

@@ -54,6 +54,10 @@ class Rest {
         this.get("/public/concepts?type=" + type, onSuccess, onError);
     }
     
+    getConceptRelations(id, type, relationType, onSuccess, onError) {
+        this.get("/public/concepts?relatedIds=" + id + "&relationType=" + relationType + "&type=" + type, onSuccess, onError);
+    }
+
     searchConcepts(type, query, onSuccess, onError) {
         this.get("/public/search?type=" + type + "&q=" + encodeURIComponent(query), onSuccess, onError);
     }

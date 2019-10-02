@@ -50,6 +50,10 @@ class Constants {
         this.DIALOG_OPTION_ABORT    = 8;
         this.DIALOG_OPTION_YES      = 16;
         this.DIALOG_OPTION_NO       = 32;
+        // relation types
+        this.RELATION_NARROWER = "narrower";
+        this.RELATION_BROADER = "broader";
+        this.RELATION_AFFINITY = "----";
         // events
         this.EVENT_SET_WORKMODE = "EVENT_SET_WORKMODE";
         this.EVENT_SSYK4_ITEM_SELECTED = "EVENT_SSYK4_ITEM_SELECTED";

@@ -7,12 +7,13 @@ import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import OccupationInfo from './occupation_info.jsx';
+import OccupationNames from './occupation_names.jsx';
+import OccupationSkills from './occupation_skills.jsx';
 
 class Content1 extends React.Component { 
 
     constructor() {
         super();
-     
         this.state = {
             item: null,
         };
@@ -35,6 +36,10 @@ class Content1 extends React.Component {
         return (
             <div className="main_content_1">
                 <OccupationInfo item={this.state.item}/>
+                <div className="main_content_1_lower">
+                    <OccupationNames item={this.state.item}/>
+                    <OccupationSkills item={this.state.item}/>
+                </div>
             </div>
         );
     }
