@@ -61,10 +61,6 @@ class Rest {
     searchConcepts(type, query, onSuccess, onError) {
         this.get("/public/search?type=" + type + "&q=" + encodeURIComponent(query), onSuccess, onError);
     }
-    
-    searchRelations(id, onSuccess, onError) {
-        this.get("/public/concepts?relatedIds=" + id + "&relationType=narrower", onSuccess, onError);
-    }
 
 }
 

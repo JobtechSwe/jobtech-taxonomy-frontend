@@ -39,6 +39,11 @@ class Content1 extends React.Component {
             }
             return a.preferredLabel > b.preferredLabel ? 1 : 0;
         });
+
+        for(var i=0; i<data.length; ++i) {
+            data[i].preferredLabel = data[i].preferredLabel.replace(/\/(?! )/g, " / ");
+        }
+
         if(this.state.queryType == this.TYPE_LIST) {
             this.setState({resultData: data});
         } else {
@@ -80,7 +85,7 @@ class Content1 extends React.Component {
     onDetailsItemSelected(item) {
         console.log(item);
         Rest.abort();
-        Rest.searchRelations(item.id, (data) => {
+        Rest.getConceptRelations(item.id, "ssyk_level_4", this.state.queryType == this.TYPE_FIELD ? Constants.RELATION_NARROWER : Constants.RELATION_BROADER, (data) => {
             this.setState({resultData: data});
         }, (status) => {
             // TODO: display error

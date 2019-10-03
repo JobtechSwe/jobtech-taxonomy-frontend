@@ -49,14 +49,29 @@ input.rounded {
     padding: 4px 5px;
 }
 
+input.rounded:focus {
+    outline: none;
+    box-shadow: 0px 0px 3px #3399ff;
+}
+
 textarea.rounded {
     border-radius: 10px;
     padding: 4px 5px;
 }
 
+textarea.rounded:focus {
+    outline: none;
+    box-shadow: 0px 0px 3px #3399ff;
+}
+
 select.rounded {
     border-radius: 10px;
     padding: 4px 5px;
+}
+
+select.rounded:focus {
+    outline: none;
+    box-shadow: 0px 0px 3px #3399ff;
 }
 
 .font {
