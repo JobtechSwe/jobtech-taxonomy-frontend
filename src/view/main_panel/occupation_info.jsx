@@ -22,16 +22,21 @@ class OccupationInfo extends React.Component {
                     <Label text="Yrkesgrupp"/>
                     <input 
                         type="text" 
+                        className="rounded"
                         value={this.props.item == null ? "" : this.props.item.preferredLabel}/>
                     <Label text="Senast ändrad:"/>
                 </div>
                 <div>
                     <Label text="Ansvarig"/>
-                    <input type="text"/>
+                    <input 
+                        type="text" 
+                        className="rounded"/>
                 </div>
                 <div>
                     <Label text="Motsv. ISCO08"/>
-                    <input type="text"/>
+                    <input 
+                        type="text" 
+                        className="rounded"/>
                 </div>
             </div>
         );
@@ -43,6 +48,7 @@ class OccupationInfo extends React.Component {
                 <Label text="Beskrivning"/>
                 <textarea 
                     rows="10" 
+                    className="rounded"
                     value={this.props.item == null ? "" : this.props.item.definition}/>
             </div>
         );

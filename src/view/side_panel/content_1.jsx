@@ -105,7 +105,7 @@ class Content1 extends React.Component {
         return(
             <div className="sub_panel">
                 <select 
-                    className="sub_panel_select"
+                    className="sub_panel_select rounded"
                     value={this.state.queryType}
                     onChange={this.onTypeChanged.bind(this)}>
                     <option value={this.TYPE_LIST}>
@@ -119,6 +119,7 @@ class Content1 extends React.Component {
                 <div className="sub_panel_search">
                     <input 
                         type="text"
+                        className="rounded"
                         ref={(x) => this.searchReference = x}/>
                     <Button 
                         text="Sök"
@@ -137,9 +138,10 @@ class Content1 extends React.Component {
     }
 
     renderResultItem(item) {
+        var ssyk = 0;
         return (
             <div className="side_content_1_result_item">
-                <div>{0}</div>
+                <div>{ssyk}</div>
                 <div>{item.preferredLabel}</div>
             </div>
         );

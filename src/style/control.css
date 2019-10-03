@@ -44,6 +44,21 @@
     background: #c0c0c0;
 }
 
+input.rounded {
+    border-radius: 10px;
+    padding: 4px 5px;
+}
+
+textarea.rounded {
+    border-radius: 10px;
+    padding: 4px 5px;
+}
+
+select.rounded {
+    border-radius: 10px;
+    padding: 4px 5px;
+}
+
 .font {
     font-family: 'Calibri', sans-serif;
 }
