@@ -6,6 +6,8 @@ import Rest from '../../context/rest.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
+import TreeView from '../../control/tree_view.jsx';
+import ControlUtil from '../../control/util.jsx';
 
 class Content1 extends React.Component { 
 
@@ -22,6 +24,8 @@ class Content1 extends React.Component {
             resultData: [],
         };
         this.searchReference = null;
+        this.queryTreeView = ControlUtil.createTreeView();
+        this.queryTreeView.onItemSelected = this.onQueryItemSelected.bind(this);
     }
 
     componentDidMount() {
@@ -39,16 +43,18 @@ class Content1 extends React.Component {
             }
             return a.preferredLabel > b.preferredLabel ? 1 : 0;
         });
-
+        this.queryTreeView.clear();
         for(var i=0; i<data.length; ++i) {
             data[i].preferredLabel = data[i].preferredLabel.replace(/\/(?! )/g, " / ");
+            var item = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
+            item.setText(data[i].preferredLabel);
+            this.queryTreeView.addRoot(item);
         }
-
-        if(this.state.queryType == this.TYPE_LIST) {
+        /*if(this.state.queryType == this.TYPE_LIST) {
             this.setState({resultData: data});
         } else {
             this.setState({detailsData: data});
-        }
+        }*/
     }
 
     search(query) {
@@ -82,21 +88,32 @@ class Content1 extends React.Component {
         this.search(this.searchReference.value);        
     }
 
-    onDetailsItemSelected(item) {
+    onQueryItemSelected(item) {
         console.log(item);
-        Rest.abort();
-        Rest.getConceptRelations(item.id, "ssyk_level_4", this.state.queryType == this.TYPE_FIELD ? Constants.RELATION_NARROWER : Constants.RELATION_BROADER, (data) => {
-            this.setState({resultData: data});
-        }, (status) => {
-            // TODO: display error
-        });
+        var restItem = item.data;
+        if(restItem.type == "ssyk_level_4") {
+            
+        } else {
+            Rest.abort();
+            Rest.getConceptRelations(restItem.id, "ssyk_level_4", this.state.queryType == this.TYPE_FIELD ? Constants.RELATION_NARROWER : Constants.RELATION_BROADER, (data) => {
+                item.clear();
+                for(var i=0; i<data.length; ++i) {
+                    var child = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
+                    child.setText(data[i].preferredLabel);
+                    item.addChild(child);
+                }
+                item.setExpanded(true);
+            }, (status) => {
+                // TODO: display error
+            });
+        }
     }
 
-    onResultItemSelected(item) {
+    /*onResultItemSelected(item) {
         // TODO: send notification
         console.log(item);
         EventDispatcher.fire(Constants.EVENT_SSYK4_ITEM_SELECTED, item);
-    }
+    }*/
 
     renderOption(value) {
         return (
@@ -152,8 +169,11 @@ class Content1 extends React.Component {
         );
     }
 
-    renderDetails() {
-        if(this.state.queryType != this.TYPE_LIST) {
+    renderResult() {
+        return (
+            <TreeView context={this.queryTreeView}/>
+        );
+        /*if(this.state.queryType != this.TYPE_LIST) {
             return (
                 <div className="side_content_1_group">
                     <Label text={Localization.get(this.state.queryType)}/>
@@ -163,10 +183,10 @@ class Content1 extends React.Component {
                         onItemSelected={this.onDetailsItemSelected.bind(this)}/>
                 </div>
             );
-        }
+        }*/
     }
 
-    renderResult() {
+    /*renderResult() {
         return (
             <div className="side_content_1_group">
                 <Label text="Resultat"/>
@@ -181,13 +201,12 @@ class Content1 extends React.Component {
                 </List>
             </div>
         );
-    }
+    }*/
 
     render() {
         return (
             <div className="side_content_1">
                 {this.renderQueary()}
-                {this.renderDetails()}
                 {this.renderResult()}
             </div>
         );

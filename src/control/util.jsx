@@ -52,6 +52,7 @@ class Util {
             // vtable
             addRoot: null,
             removeRoot: null,
+            clear: null,
         };
         // bind function pointers
         context.isSelected = this.__treeViewIsSelected.bind(this, context);
@@ -105,6 +106,7 @@ class Util {
             setSelected: null,
             addChild: null,
             removeChild: null,
+            clear: null,
             onDeselected: null,
             onSelected: null,
         };

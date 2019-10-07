@@ -14,6 +14,10 @@ class Localization {
                 skill: "Kompetens",
                 keyword: "Folklig synonym",
                 occupation_field: "Yrkesområde",
+            },
+            // english
+            en: {
+                
             }
         }
         // find active language

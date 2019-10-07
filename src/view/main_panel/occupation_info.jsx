@@ -9,7 +9,6 @@ class OccupationInfo extends React.Component {
 
     constructor() {
         super();
-     
         this.state = {
           
         };
@@ -25,12 +24,6 @@ class OccupationInfo extends React.Component {
                         className="rounded"
                         value={this.props.item == null ? "" : this.props.item.preferredLabel}/>
                     <Label text="Senast ändrad:"/>
-                </div>
-                <div>
-                    <Label text="Ansvarig"/>
-                    <input 
-                        type="text" 
-                        className="rounded"/>
                 </div>
                 <div>
                     <Label text="Motsv. ISCO08"/>

@@ -45,7 +45,6 @@ class OccupationNames extends React.Component {
             <div className="occupation_name">
                 <Label text="Yrkesbenämningar"/>
                 <List 
-                    css="occupation_name_list"
                     data={this.state.items}
                     dataRender={this.renderItem.bind(this)}
                     onItemSelected={this.onItemSelected.bind(this)}/>

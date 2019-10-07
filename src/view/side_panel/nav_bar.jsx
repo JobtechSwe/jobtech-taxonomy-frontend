@@ -9,7 +9,7 @@ class NavBar extends React.Component {
     constructor() {
         super();
         this.state = {
-            selected: -1,
+            selected: Constants.WORK_MODE_1,
         };
     }
 

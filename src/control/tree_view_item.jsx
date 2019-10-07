@@ -20,6 +20,7 @@ class TreeViewItem extends React.Component {
         pointer.setText = this.setText.bind(this);
         pointer.addChild = this.addChild.bind(this);
         pointer.removeChild = this.removeChild.bind(this);
+        pointer.clear = this.clear.bind(this);
         pointer.setExpanded = this.setExpanded.bind(this);
         pointer.onDeselected = this.onDeselected.bind(this);
         pointer.onSelected = this.onSelected.bind(this);
@@ -62,6 +63,12 @@ class TreeViewItem extends React.Component {
         if(children.length > 0) {
             children[children.length - 1].refresh();
         }
+    }
+
+    clear() {
+        var children = this.state.children;
+        children.splice(0, children.length);
+        this.setState({children: children});
     }
 
     onDeselected() {

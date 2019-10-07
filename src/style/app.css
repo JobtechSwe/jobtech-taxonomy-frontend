@@ -177,10 +177,6 @@ body {
 
 .occupation_info_top > div:nth-child(2) {
     width: 200px;
-}
-
-.occupation_info_top > div:nth-child(3) {
-    width: 200px;
     margin-right: unset;
 }
 
@@ -220,10 +216,6 @@ body {
     font-weight: bold;
 }
 
-.occupation_name_list {
-    flex: 1 1 0;
-}
-
 .occupation_skill {    
     width: 100%;
     display: flex;
@@ -232,8 +224,4 @@ body {
 
 .occupation_skill > .label {
     font-weight: bold;
-}
-
-.occupation_skill_list {
-    flex: 1 1 0;
 }

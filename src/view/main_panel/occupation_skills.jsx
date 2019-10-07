@@ -19,8 +19,7 @@ class OccupationSkills extends React.Component {
         return (
             <div className="occupation_skill">
                 <Label text="Kompetenser"/>
-                <TreeView 
-                    css="occupation_skill_list"/>
+                <TreeView />
             </div>
         );
     }
