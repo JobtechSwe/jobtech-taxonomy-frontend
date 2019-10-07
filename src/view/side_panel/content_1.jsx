@@ -97,10 +97,10 @@ class Content1 extends React.Component {
             return;
         }
         var restItem = item.data;
+        EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, restItem);
         if(restItem.type == "ssyk_level_4") {
-            EventDispatcher.fire(Constants.EVENT_SSYK4_ITEM_SELECTED, restItem);
         } else {
-            if(this.expandedItem) {
+            /*if(this.expandedItem) {
                 this.expandedItem.clear();
             }
             this.expandedItem = item;
@@ -116,7 +116,7 @@ class Content1 extends React.Component {
                 item.setExpanded(true);
             }, (status) => {
                 // TODO: display error
-            });
+            });*/
         }
     }
 
