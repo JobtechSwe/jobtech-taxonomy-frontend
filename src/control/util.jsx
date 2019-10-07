@@ -81,6 +81,10 @@ class Util {
         item.context.setSelected(item, selected);
     }
     
+    __treeViewItemSetShowButton(item, show) {
+        item.showingButton = show;
+    }
+    
     __treeViewItemAddChild(item, child) {
         child.parent = item;
         item.children.push(child);
@@ -90,6 +94,7 @@ class Util {
         var pointer = {
             // members
             expanded: false,
+            showingButton: true,
             text: "item",
             parent: null,
             children: [],
@@ -104,6 +109,7 @@ class Util {
             setText: null,
             setExpanded: null,
             setSelected: null,
+            setShowButton: null,
             addChild: null,
             removeChild: null,
             clear: null,
@@ -115,6 +121,7 @@ class Util {
         pointer.setText = this.__treeViewItemSetText.bind(this, pointer);
         pointer.setExpanded = this.__treeViewItemSetExpanded.bind(this, pointer);
         pointer.setSelected = this.__treeViewItemSetSelected.bind(this, pointer);
+        pointer.setShowButton = this.__treeViewItemSetShowButton.bind(this, pointer);
         pointer.addChild = this.__treeViewItemAddChild.bind(this, pointer);
         pointer.isLastChild = this.__treeViewItemIsLastChild.bind(this, pointer);
         // store type used for mounting the pointer

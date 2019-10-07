@@ -37,6 +37,10 @@ class Content1 extends React.Component {
 
     }
 
+    formatLabel(label) {
+        return label.replace(/\/(?! )/g, " / ");
+    }
+
     setData(data) {
         data.sort((a, b) => {
             if(a.preferredLabel < b.preferredLabel) { 
@@ -46,8 +50,9 @@ class Content1 extends React.Component {
         });
         this.queryTreeView.clear();
         for(var i=0; i<data.length; ++i) {
-            data[i].preferredLabel = data[i].preferredLabel.replace(/\/(?! )/g, " / ");
+            data[i].preferredLabel = this.formatLabel(data[i].preferredLabel);
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
+            item.setShowButton(false);
             item.setText(data[i].preferredLabel);
             this.queryTreeView.addRoot(item);
         }
@@ -87,6 +92,10 @@ class Content1 extends React.Component {
 
     onQueryItemSelected(item) {
         console.log(item);
+        if(this.expandedItem == item) {
+            item.setExpanded(!item.expanded);
+            return;
+        }
         var restItem = item.data;
         if(restItem.type == "ssyk_level_4") {
             EventDispatcher.fire(Constants.EVENT_SSYK4_ITEM_SELECTED, restItem);
@@ -99,6 +108,7 @@ class Content1 extends React.Component {
             Rest.getConceptRelations(restItem.id, "ssyk_level_4", this.state.queryType == this.TYPE_FIELD ? Constants.RELATION_NARROWER : Constants.RELATION_BROADER, (data) => {
                 item.clear();
                 for(var i=0; i<data.length; ++i) {
+                    data[i].preferredLabel = this.formatLabel(data[i].preferredLabel);
                     var child = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
                     child.setText(data[i].preferredLabel);
                     item.addChild(child);

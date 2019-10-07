@@ -9,6 +9,7 @@ class TreeViewItem extends React.Component {
             text: "item",
             children: [],
             expanded: false,
+            showingButton: true,
             selected: false,
         };
     }
@@ -22,6 +23,7 @@ class TreeViewItem extends React.Component {
         pointer.removeChild = this.removeChild.bind(this);
         pointer.clear = this.clear.bind(this);
         pointer.setExpanded = this.setExpanded.bind(this);
+        pointer.setShowButton = this.setShowButton.bind(this);
         pointer.onDeselected = this.onDeselected.bind(this);
         pointer.onSelected = this.onSelected.bind(this);
         // update state with current values
@@ -29,6 +31,7 @@ class TreeViewItem extends React.Component {
             text: pointer.text,
             children: pointer.children,
             expanded: pointer.expanded,
+            showingButton: pointer.showingButton,
             selected: pointer.isSelected(),
         });
     }
@@ -45,6 +48,11 @@ class TreeViewItem extends React.Component {
     setExpanded(expanded) {
         this.props.pointer.expanded = expanded;
         this.setState({expanded: expanded});
+    }
+
+    setShowButton(show) {
+        this.props.pointer.showingButton = show;
+        this.setState({showingButton: show});
     }
 
     addChild(child) {
@@ -68,6 +76,7 @@ class TreeViewItem extends React.Component {
     clear() {
         var children = this.state.children;
         children.splice(0, children.length);
+        this.props.pointer.expanded = false;
         this.setState({
             children: children,
             expanded: false,
@@ -110,7 +119,7 @@ class TreeViewItem extends React.Component {
     }
 
     renderExpanded() {
-        if(this.state.children && this.state.children.length > 0) {
+        if(this.state.children && this.state.children.length > 0 && this.state.showingButton) {
             return (
                 <Button 
                     css="tree_view_expand" 
