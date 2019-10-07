@@ -24,6 +24,7 @@ class Content1 extends React.Component {
             resultData: [],
         };
         this.searchReference = null;
+        this.expandedItem = null;
         this.queryTreeView = ControlUtil.createTreeView();
         this.queryTreeView.onItemSelected = this.onQueryItemSelected.bind(this);
     }
@@ -50,11 +51,6 @@ class Content1 extends React.Component {
             item.setText(data[i].preferredLabel);
             this.queryTreeView.addRoot(item);
         }
-        /*if(this.state.queryType == this.TYPE_LIST) {
-            this.setState({resultData: data});
-        } else {
-            this.setState({detailsData: data});
-        }*/
     }
 
     search(query) {
@@ -76,6 +72,7 @@ class Content1 extends React.Component {
 
     onTypeChanged(e) {
         this.searchReference.value = "";
+        this.expandedItem = null;
         this.setState({
             queryType: e.target.value,
             resultData: [],
@@ -92,8 +89,12 @@ class Content1 extends React.Component {
         console.log(item);
         var restItem = item.data;
         if(restItem.type == "ssyk_level_4") {
-            
+            EventDispatcher.fire(Constants.EVENT_SSYK4_ITEM_SELECTED, restItem);
         } else {
+            if(this.expandedItem) {
+                this.expandedItem.clear();
+            }
+            this.expandedItem = item;
             Rest.abort();
             Rest.getConceptRelations(restItem.id, "ssyk_level_4", this.state.queryType == this.TYPE_FIELD ? Constants.RELATION_NARROWER : Constants.RELATION_BROADER, (data) => {
                 item.clear();
@@ -108,12 +109,6 @@ class Content1 extends React.Component {
             });
         }
     }
-
-    /*onResultItemSelected(item) {
-        // TODO: send notification
-        console.log(item);
-        EventDispatcher.fire(Constants.EVENT_SSYK4_ITEM_SELECTED, item);
-    }*/
 
     renderOption(value) {
         return (

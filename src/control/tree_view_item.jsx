@@ -68,7 +68,10 @@ class TreeViewItem extends React.Component {
     clear() {
         var children = this.state.children;
         children.splice(0, children.length);
-        this.setState({children: children});
+        this.setState({
+            children: children,
+            expanded: false,
+        });
     }
 
     onDeselected() {
