@@ -13,7 +13,7 @@ class Content1 extends React.Component {
         super();
         this.TYPE_LIST = "ssyk_level_4";
         this.TYPE_NAME = "occupation_name"; // benämning
-        this.TYPE_COMPETENCE = "skill";
+        this.TYPE_COMPETENCE = "skill_headline";
         this.TYPE_CASUAL_NAME = "keyword"; // folklig synonym
         this.TYPE_FIELD = "occupation_field"; // yrkesområde
         this.state = {
