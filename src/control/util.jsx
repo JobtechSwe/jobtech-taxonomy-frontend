@@ -123,7 +123,7 @@ class Util {
         pointer.setSelected = this.__treeViewItemSetSelected.bind(this, pointer);
         pointer.setShowButton = this.__treeViewItemSetShowButton.bind(this, pointer);
         pointer.addChild = this.__treeViewItemAddChild.bind(this, pointer);
-        pointer.isLastChild = this.__treeViewItemIsLastChild.bind(this, pointer);
+        pointer.isLastChild = this.__treeViewItemIsLastChild.bind(this, pointer);        
         // store type used for mounting the pointer
         pointer.reactType = <TreeViewItem 
                                 key={"kid_" + this.TREEVIEW_ITEM_ID++} 

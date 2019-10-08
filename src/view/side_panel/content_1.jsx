@@ -1,7 +1,5 @@
 import React from 'react';
 import Button from '../../control/button.jsx';
-import List from '../../control/list.jsx';
-import Label from '../../control/label.jsx';
 import Rest from '../../context/rest.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';

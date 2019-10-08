@@ -41,8 +41,11 @@ class TreeView extends React.Component {
     }
 
     clear() {
-        this.state.context.roots = [];
-        this.setState({context: this.state.context});
+        if(this.state.context) {
+            this.state.context.roots = [];
+            this.state.context.selected = null;
+            this.setState({context: this.state.context});
+        }
     }
 
     renderRoots() {

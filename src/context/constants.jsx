@@ -53,6 +53,7 @@ class Constants {
         // relation types
         this.RELATION_NARROWER = "narrower";
         this.RELATION_BROADER = "broader";
+        this.RELATION_RELATED = "related";
         this.RELATION_AFFINITY = "----";
         // events
         this.EVENT_SET_WORKMODE = "EVENT_SET_WORKMODE";

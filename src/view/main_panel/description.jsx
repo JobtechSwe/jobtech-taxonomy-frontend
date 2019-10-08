@@ -9,9 +9,6 @@ class Description extends React.Component {
 
     constructor() {
         super();
-        this.state = {
-          
-        };
     }
 
     render() {

@@ -179,22 +179,12 @@ body {
     resize: none;
 }
 
-.occupation_name {    
+.connections {    
     width: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.occupation_name > .label {
-    font-weight: bold;
-}
-
-.occupation_skill {    
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.occupation_skill > .label {
+.connections > .label {
     font-weight: bold;
 }
