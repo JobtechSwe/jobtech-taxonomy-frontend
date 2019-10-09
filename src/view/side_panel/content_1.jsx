@@ -96,26 +96,6 @@ class Content1 extends React.Component {
         }
         var restItem = item.data;
         EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, restItem);
-        if(restItem.type == "ssyk_level_4") {
-        } else {
-            /*if(this.expandedItem) {
-                this.expandedItem.clear();
-            }
-            this.expandedItem = item;
-            Rest.abort();
-            Rest.getConceptRelations(restItem.id, "ssyk_level_4", this.state.queryType == this.TYPE_FIELD ? Constants.RELATION_NARROWER : Constants.RELATION_BROADER, (data) => {
-                item.clear();
-                for(var i=0; i<data.length; ++i) {
-                    data[i].preferredLabel = this.formatLabel(data[i].preferredLabel);
-                    var child = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
-                    child.setText(data[i].preferredLabel);
-                    item.addChild(child);
-                }
-                item.setExpanded(true);
-            }, (status) => {
-                // TODO: display error
-            });*/
-        }
     }
 
     renderOption(value) {
@@ -172,45 +152,11 @@ class Content1 extends React.Component {
         );
     }
 
-    renderResult() {
-        return (
-            <TreeView context={this.queryTreeView}/>
-        );
-        /*if(this.state.queryType != this.TYPE_LIST) {
-            return (
-                <div className="side_content_1_group">
-                    <Label text={Localization.get(this.state.queryType)}/>
-                    <List 
-                        data={this.state.detailsData}
-                        dataRender={this.renderDetailsItem.bind(this)}
-                        onItemSelected={this.onDetailsItemSelected.bind(this)}/>
-                </div>
-            );
-        }*/
-    }
-
-    /*renderResult() {
-        return (
-            <div className="side_content_1_group">
-                <Label text="Resultat"/>
-                <List 
-                    data={this.state.resultData}
-                    dataRender={this.renderResultItem.bind(this)}
-                    onItemSelected={this.onResultItemSelected.bind(this)}>
-                    <div className="side_content_1_result_header">
-                        <div>SSYK</div>
-                        <div>Yrkesgrupp</div>
-                    </div>
-                </List>
-            </div>
-        );
-    }*/
-
     render() {
         return (
             <div className="side_content_1">
                 {this.renderQueary()}
-                {this.renderResult()}
+                <TreeView context={this.queryTreeView}/>
             </div>
         );
     }
