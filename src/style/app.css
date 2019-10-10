@@ -133,9 +133,10 @@ body {
 
 .main_content_title {
     font-weight: bold;
-    font-size: 16pt;
+    font-size: 32pt;
     margin-left: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    font-variant-caps: all-petite-caps;
 }
 
 .description {    
@@ -171,4 +172,8 @@ body {
 
 .connections > .label {
     font-weight: bold;
+}
+
+.connections > .list {
+    background: #fff;
 }
