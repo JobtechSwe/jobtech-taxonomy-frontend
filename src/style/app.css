@@ -177,3 +177,40 @@ body {
 .connections > .list {
     background: #fff;
 }
+
+.item_history {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 100px;
+    background: #ffc878;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.item_history > .label{
+    font-weight: bold;
+}
+
+.item_history_item {
+    display: flex;
+    flex-direction: row;
+}
+
+.item_history_item > div:nth-child(1) {
+    padding-right: 10px;
+    white-space: pre;
+}
+
+.item_history_item > div:nth-child(2) {
+    padding-right: 10px;
+}
+
+.item_history_item > div:nth-child(3) {
+    width: 100%;
+    text-align: right;
+    padding-right: 10px;
+}

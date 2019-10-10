@@ -5,6 +5,7 @@ import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Description from './description.jsx';
 import Connections from './connections.jsx';
+import ItemHistory from './item_history.jsx';
 
 class Content1 extends React.Component { 
 
@@ -35,6 +36,7 @@ class Content1 extends React.Component {
         );
         components.push(<Description item={item} key={key++}/>);
         components.push(<Connections item={item} key={key++}/>);
+        components.push(<ItemHistory item={item} key={key++}/>);
         this.setState({components: components});
     }
 

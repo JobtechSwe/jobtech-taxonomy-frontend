@@ -44,6 +44,7 @@ class Localization {
                 connections: "Kopplingar",
                 name: "Namn",
                 description: "Beskrivning",
+                history: "Historia",
             },
             // english
             en: {
