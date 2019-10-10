@@ -23,36 +23,27 @@ class Connections extends React.Component {
     }
 
     findRootFor(type) {
-        return this.relationTreeView.roots.find((root) => {return type == root.data.type});
+        return this.relationTreeView.roots.find((root) => {
+            return type == root.data.type
+        });
+    }
+
+    fetch(item, type) {
+        Rest.getAllConceptRelations(item.id, type, (data) => {
+            for(var i=0; i<data.length; ++i) {         
+                this.addRelationToTree(data[i]);
+            }
+        }, () => {
+            // TODO: Handle error
+        }); 
     }
 
     getRelationsFor(item) {
         this.relationTreeView.clear();
-        if(item) {
-            Rest.getAllConceptRelations(item.id, Constants.RELATION_RELATED, (data) => {
-                for(var i=0; i<data.length; ++i) {
-                    var restElement = data[i];                    
-                    this.addRelationToTree(restElement);
-                }
-            }, () => {
-                // TODO: Handle error
-            });            
-            Rest.getAllConceptRelations(item.id, Constants.RELATION_NARROWER, (data) => {
-                for(var i=0; i<data.length; ++i) {
-                    var restElement = data[i];                    
-                    this.addRelationToTree(restElement);
-                }
-            }, () => {    
-                // TODO: Handle error
-            });            
-            Rest.getAllConceptRelations(item.id, Constants.RELATION_BROADER, (data) => {
-                for(var i=0; i<data.length; ++i) {
-                    var restElement = data[i];                    
-                    this.addRelationToTree(restElement);
-                }
-            }, () => {    
-                // TODO: Handle error
-            });            
+        if(item) {   
+            this.fetch(item, Constants.RELATION_RELATED);        
+            this.fetch(item, Constants.RELATION_NARROWER);        
+            this.fetch(item, Constants.RELATION_BROADER);
         }
     }
 
@@ -60,7 +51,7 @@ class Connections extends React.Component {
         var root = this.findRootFor(element.type);
         if(!root) {
             root = ControlUtil.createTreeViewItem(this.relationTreeView, {type: element.type});
-            root.setText(element.type);
+            root.setText(Localization.get("db_" + element.type));
             this.relationTreeView.addRoot(root);
         }
         var child = ControlUtil.createTreeViewItem(this.relationTreeView, element);
@@ -75,7 +66,7 @@ class Connections extends React.Component {
     render() {
         return (
             <div className="connections">
-                <Label text="Kopplingar"/>
+                <Label text={Localization.get("connections")}/>
                 <TreeView context={this.relationTreeView}/>
             </div>
         );

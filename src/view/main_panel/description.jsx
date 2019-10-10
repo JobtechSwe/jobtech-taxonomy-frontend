@@ -14,12 +14,12 @@ class Description extends React.Component {
     render() {
         return (
             <div className="description">
-                <Label text="Yrkesgrupp"/>
+                <Label text={Localization.get("name")}/>
                 <input 
                     type="text" 
                     className="rounded"
                     value={this.props.item == null ? "" : this.props.item.preferredLabel}/>
-                <Label text="Beskrivning"/>
+                <Label text={Localization.get("description")}/>
                 <textarea 
                     rows="10" 
                     className="rounded"

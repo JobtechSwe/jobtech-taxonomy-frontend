@@ -27,13 +27,14 @@ class Content1 extends React.Component {
     onSideItemSelected(item) {
         var components = [];
         var key = 0;
-        components.push(<Label text={item.type} key={key++}/>);
-        components.push(<Description item={item} key={key++}/>);
         components.push(
-            <div className="main_content_1_lower" key={key++}>                    
-                <Connections item={item}/>
-            </div>
+            <Label 
+                css="main_content_title" 
+                text={Localization.get("db_" + item.type)} 
+                key={key++}/>
         );
+        components.push(<Description item={item} key={key++}/>);
+        components.push(<Connections item={item} key={key++}/>);
         this.setState({components: components});
     }
 

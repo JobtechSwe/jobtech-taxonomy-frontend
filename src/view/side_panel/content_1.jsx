@@ -12,10 +12,10 @@ class Content1 extends React.Component {
     constructor() {
         super();
         this.TYPE_LIST = "ssyk_level_4";
-        this.TYPE_NAME = "occupation_name"; // benämning
+        this.TYPE_NAME = "occupation_name";
         this.TYPE_COMPETENCE = "skill_headline";
-        this.TYPE_CASUAL_NAME = "keyword"; // folklig synonym
-        this.TYPE_FIELD = "occupation_field"; // yrkesområde
+        this.TYPE_COMMON_NAME = "keyword"; 
+        this.TYPE_FIELD = "occupation_field"; 
         this.state = {
             queryType: this.TYPE_LIST,
             detailsData: [],
@@ -90,18 +90,13 @@ class Content1 extends React.Component {
 
     onQueryItemSelected(item) {
         console.log(item);
-        if(this.expandedItem == item) {
-            item.setExpanded(!item.expanded);
-            return;
-        }
-        var restItem = item.data;
-        EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, restItem);
+        EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
     }
 
-    renderOption(value) {
+    renderOption(value, text) {
         return (
             <option value={value}>
-                {Localization.get(value)}
+                {Localization.get(text)}
             </option>
         );
     }
@@ -116,10 +111,10 @@ class Content1 extends React.Component {
                     <option value={this.TYPE_LIST}>
                         {Localization.get("list")}
                     </option>
-                    {this.renderOption(this.TYPE_NAME)}
-                    {this.renderOption(this.TYPE_COMPETENCE)}
-                    {this.renderOption(this.TYPE_CASUAL_NAME)}
-                    {this.renderOption(this.TYPE_FIELD)}
+                    {this.renderOption(this.TYPE_NAME, "occupation_name")}
+                    {this.renderOption(this.TYPE_COMPETENCE, "competense")}
+                    {this.renderOption(this.TYPE_COMMON_NAME, "common_name")}
+                    {this.renderOption(this.TYPE_FIELD, "occupation_field")}
                 </select>
                 <div className="sub_panel_search">
                     <input 
