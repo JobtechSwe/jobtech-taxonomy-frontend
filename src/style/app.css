@@ -131,6 +131,10 @@ body {
     height: 100%;
 }
 
+.main_content_1 > .group:nth-child(2) {
+    margin-top: 0px;
+}
+
 .main_content_title {
     font-weight: bold;
     font-size: 32pt;
@@ -143,10 +147,9 @@ body {
     width: 100%;
     display: flex;
     box-sizing: border-box;
-    background: #ffc878;
     flex-direction: column;
-    border-radius: 10px;
-    padding: 10px;    
+    padding: 10px;
+    padding-top: 0px;
 }
 
 .description > .label {
@@ -163,10 +166,8 @@ body {
     flex: 1 1 auto;
     width: 100%;
     min-height: 200px;
-    background: #ffc878;
-    border-radius: 10px;
-    margin-top: 10px;
     padding: 10px;
+    padding-top: 0px;
     box-sizing: border-box;
 }
 
@@ -184,10 +185,8 @@ body {
     flex: 1 1 auto;
     width: 100%;
     min-height: 100px;
-    background: #ffc878;
-    border-radius: 10px;
-    margin-top: 10px;
     padding: 10px;
+    padding-top: 0px;
     box-sizing: border-box;
 }
 

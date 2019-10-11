@@ -255,3 +255,28 @@ select.rounded:focus {
     background: rgb(47, 120, 255);
     color: #fff;   
 }
+
+.group {
+    box-sizing: border-box;
+    background: #ffc878;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.group_header {
+    display: flex;
+    font-weight: 100;
+    font-size: 16pt;
+    padding: 5px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.group_header img {
+    max-height: 24px;
+    max-width: 24px;
+}
+
+.group_header:hover img {
+    filter: invert(1.0);
+}

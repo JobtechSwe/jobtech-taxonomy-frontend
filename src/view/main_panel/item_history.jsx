@@ -54,8 +54,9 @@ class ItemHistory extends React.Component {
     render() {
         return (
             <div className="item_history">
-                <Label text={Localization.get("history")}/>
-                <List data={this.state.data} dataRender={this.renderItem.bind(this)}/>
+                <List 
+                    data={this.state.data} 
+                    dataRender={this.renderItem.bind(this)}/>
             </div>
         );
     }

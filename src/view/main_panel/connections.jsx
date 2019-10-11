@@ -66,7 +66,6 @@ class Connections extends React.Component {
     render() {
         return (
             <div className="connections">
-                <Label text={Localization.get("connections")}/>
                 <TreeView context={this.relationTreeView}/>
             </div>
         );
