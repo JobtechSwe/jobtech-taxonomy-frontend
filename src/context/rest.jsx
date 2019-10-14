@@ -66,6 +66,13 @@ class Rest {
         this.get("/public/search?type=" + type + "&q=" + encodeURIComponent(query), onSuccess, onError);
     }
 
+    getVersions(onSuccess, onError) {
+        this.get("/public/versions", onSuccess, onError);
+    }
+
+    getChanges(fromVersion, toVersion, offset, limit, onSuccess, onError) {
+        this.get("public/changes?fromVersion=" + fromVersion + "&toVersion=" + toVersion + "&offset=" + offset + "&limit=" + limit, onSuccess, onError);
+    }
 }
 
 export default new Rest;

@@ -35,6 +35,10 @@ class Localization {
                 db_ssyk_level_4: "Yrkesgrupp",
                 db_wage_type: "Anställningsform",
                 db_worktime_extent: "__worktime_extent__",
+                /* Actions */
+                CREATED: "Skapad",
+                UPDATED: "Uppdaterad",
+                DEPRECATED: "Deprecated",
                 /* regular words */
                 list: "Lista",
                 common_name: "Folkligsynonym",
@@ -45,6 +49,8 @@ class Localization {
                 name: "Namn",
                 description: "Beskrivning",
                 history: "Historia",
+                versions: "Versioner",
+                changes: "Förändringar",
             },
             // english
             en: {
