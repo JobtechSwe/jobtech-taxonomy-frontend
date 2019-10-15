@@ -257,6 +257,8 @@ select.rounded:focus {
 }
 
 .group {
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     background: #ffc878;
     border-radius: 10px;

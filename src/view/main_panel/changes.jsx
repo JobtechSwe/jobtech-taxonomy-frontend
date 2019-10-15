@@ -38,10 +38,10 @@ class Changes extends React.Component {
         return(
             <div className="changes_item">
                 <div>
-                    {Localization.get(item.eventType)}
+                    {item.version}
                 </div>
                 <div>
-                    {item.version}
+                    {Localization.get(item.eventType)}
                 </div>
                 <div>
                     {Localization.get("db_" + item.concept.type)}

@@ -35,6 +35,7 @@ class Content2 extends React.Component {
         );
         components.push(
             <Group 
+                css="changes_group"
                 text={Localization.get("changes")}
                 key={key++}>
                 <Changes item={item}/>

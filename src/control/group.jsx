@@ -31,7 +31,8 @@ class Group extends React.Component {
 
     renderChildren() {
         var s = {
-            display: (this.state.expanded ? "block" : "none"),
+            display: (this.state.expanded ? "flex" : "none"),
+            height: "100%",
         }
         return (
             <div style={s}>
