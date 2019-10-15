@@ -128,6 +128,12 @@ body {
     min-width: 50px;
 }
 
+.side_content_3 {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .main_panel {
     width: 100%;
 }

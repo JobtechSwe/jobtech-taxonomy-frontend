@@ -51,6 +51,8 @@ class Localization {
                 history: "Historia",
                 versions: "Versioner",
                 changes: "Förändringar",
+                from: "Från",
+                to: "Till",
             },
             // english
             en: {

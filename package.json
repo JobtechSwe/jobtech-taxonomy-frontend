@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "react-dom": "^16.9.0",
+    "react-datepicker": "^2.9.6"
   }
 }

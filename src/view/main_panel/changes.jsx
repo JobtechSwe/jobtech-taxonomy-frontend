@@ -26,7 +26,7 @@ class Changes extends React.Component {
     getChanges(item) {
         if(item) {
             Rest.abort();
-            Rest.getChanges(item.version - 1, item.version, 0, 20, (data) => {
+            Rest.getChanges(item.version - 1, item.version, 0, 50, (data) => {
                 this.setState({data: data});
             }, (status) => {
                 // TODO: handle error
