@@ -1,15 +1,14 @@
 import React from 'react';
-import Label from '../../control/label.jsx';
 import List from '../../control/list.jsx';
-import ControlUtil from '../../control/util.jsx';
-import Constants from '../../context/constants.jsx';
 import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
+import EventDispatcher from '../../context/event_dispatcher.jsx';
 
 class Changes extends React.Component { 
 
     constructor() {
         super();
+        this.LIST_EVENT_ID = "CHANGES_LIST_ID";
         this.state = {
             data: [],
         }
@@ -20,6 +19,7 @@ class Changes extends React.Component {
     }
 
     UNSAFE_componentWillReceiveProps(props) {
+        EventDispatcher.fire(this.LIST_EVENT_ID);
         this.getChanges(props.item);
     }
 
@@ -57,6 +57,7 @@ class Changes extends React.Component {
         return (
             <div className="changes">
                 <List 
+                    eventId={this.LIST_EVENT_ID}
                     data={this.state.data} 
                     dataRender={this.renderItem.bind(this)}/>
             </div>

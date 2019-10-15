@@ -1,5 +1,6 @@
 import React from 'react';
 import Util from './util.jsx';
+import EventDispatcher from '../context/event_dispatcher.jsx';
 
 class List extends React.Component { 
 
@@ -10,6 +11,23 @@ class List extends React.Component {
             selectedItem: null,
         };
         this.css = "list font";
+        this.boundOnClear = this.onClear.bind(this);        
+    }
+
+    componentDidMount() {
+        if(this.props.eventId) {
+            EventDispatcher.add(this.boundOnClear, this.props.eventId);
+        }
+    }
+
+    componentWillUnmount() {
+        EventDispatcher.remove(this.boundOnClear);
+    }
+
+    onClear() {
+        this.setState({
+            selectedIndex: -1, 
+            selectedItem: null,});
     }
 
     onItemClicked(index, item) {
