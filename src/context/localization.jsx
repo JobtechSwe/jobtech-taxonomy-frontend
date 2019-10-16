@@ -8,6 +8,7 @@ class Localization {
         this.resources = {
             // swedish
             sv: {
+                locale: "sv-SE",
                 /* db types */
                 db_continent: "Kontinent",
                 db_country: "Land",
@@ -21,7 +22,7 @@ class Localization {
                 db_language: "Språk",
                 db_language_level: "Språknivå",
                 db_municipality: "Kommun",
-                db_occupation_collection: "__occupation_collection__",
+                db_occupation_collection: "Yrkessamling",
                 db_occupation_field: "Yrkesområde",
                 db_occupation_name: "Benämning",
                 db_region: "Region",
@@ -49,14 +50,17 @@ class Localization {
                 name: "Namn",
                 description: "Beskrivning",
                 history: "Historia",
-                versions: "Versioner",
+                version: "Version",
+                content: "Innehåll",
                 changes: "Förändringar",
                 from: "Från",
                 to: "Till",
+                change_log: "Förändringslogg",
+                value_storage: "Värdeförråd",
             },
             // english
             en: {
-                
+                locale: "en-GB"
             }
         }
         // find active language

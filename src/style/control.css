@@ -282,3 +282,16 @@ select.rounded:focus {
 .group_header:hover img {
     filter: invert(1.0);
 }
+
+.react-datepicker__input-container > input {
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #aaa;
+    padding: 4px 5px;
+}
+
+.react-datepicker__input-container input:focus {
+    outline: none;
+    box-shadow: 0px 0px 3px #3399ff;
+}

@@ -44,13 +44,17 @@ class Content3 extends React.Component {
                         <Label text={Localization.get("from")}/>
                         <DatePicker 
                             selected={this.state.fromDate} 
-                            onChange={this.setFromDate.bind(this)}/>
+                            onChange={this.setFromDate.bind(this)}
+                            locale={Localization.get("locale")}
+                            dateFormat="yyyy-MM-dd"/>
                     </div>
                     <div>
                         <Label text={Localization.get("to")}/>
                         <DatePicker 
                             selected={this.state.toDate} 
-                            onChange={this.setToDate.bind(this)}/>
+                            onChange={this.setToDate.bind(this)}
+                            locale={Localization.get("locale")}
+                            dateFormat="yyyy-MM-dd"/>
                     </div>
                 </div>
             </div>

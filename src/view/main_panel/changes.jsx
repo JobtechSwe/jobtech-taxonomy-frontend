@@ -15,39 +15,37 @@ class Changes extends React.Component {
     }
 
     componentDidMount() {
-        this.getChanges(this.props.item);
+        this.createData(this.props.period);
     }
 
     UNSAFE_componentWillReceiveProps(props) {
         EventDispatcher.fire(this.LIST_EVENT_ID);
-        this.getChanges(props.item);
+        this.createData(props.period);
     }
 
-    getChanges(item) {
-        if(item) {
-            Rest.abort();
-            Rest.getChanges(item.version - 1, item.version, 0, 50, (data) => {
-                this.setState({data: data});
-            }, (status) => {
-                // TODO: handle error
+    createData() {
+        var testData = [];
+        for(var i=Math.random()*90+1; i>=0; --i) {
+            testData.push({
+                date: new Date("2019-10-16T10:58:25.339Z") - Math.random()*1000*60*60*24*30,
+                type: "Updated",
+                author: "John Doe",
             });
         }
+        this.setState({data: testData});
     }
 
     renderItem(item) {
         return(
             <div className="changes_item">
                 <div>
-                    {item.version}
+                    {new Date(item.date).toLocaleString()}
                 </div>
                 <div>
-                    {Localization.get(item.eventType)}
+                    {item.type}
                 </div>
                 <div>
-                    {Localization.get("db_" + item.concept.type)}
-                </div>
-                <div>
-                    {item.concept.preferredLabel}
+                    {item.author}
                 </div>
             </div>
         );

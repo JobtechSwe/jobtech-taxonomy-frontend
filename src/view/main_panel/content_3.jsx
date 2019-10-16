@@ -4,6 +4,7 @@ import Group from '../../control/group.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
+import Changes from './changes.jsx';
 
 class Content3 extends React.Component { 
 
@@ -17,6 +18,7 @@ class Content3 extends React.Component {
 
     componentDidMount() {
         EventDispatcher.add(this.boundSideTimePeriodSelected, Constants.EVENT_SIDEPANEL_TIME_PERIOD_SELECTED);
+        this.onSideTimePeriodSelected();
     }
 
     componentWillUnmount() {
@@ -24,6 +26,7 @@ class Content3 extends React.Component {
     }
 
     onSideTimePeriodSelected(period) {
+        console.log(period);
         var components = [];
         var key = 0;
         components.push(
@@ -32,14 +35,16 @@ class Content3 extends React.Component {
                 text={Localization.get("change_log")} 
                 key={key++}/>
         );
-        components.push(
-            <Group 
-                css="changes_group"
-                text={Localization.get("changes")}
-                key={key++}>
-                
-            </Group>
-        );
+        if(period) {
+            components.push(
+                <Group 
+                    css="changes_group"
+                    text={Localization.get("changes") + " ( " + period.from.toLocaleDateString() + " - " + period.to.toLocaleDateString() + " )"}
+                    key={key++}>
+                    <Changes period={period}/>
+                </Group>
+            );
+        }
         this.setState({components: components});
     }
 

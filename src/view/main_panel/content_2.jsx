@@ -4,7 +4,7 @@ import Group from '../../control/group.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
-import Changes from './changes.jsx';
+import VersionList from './version_list.jsx';
 
 class Content2 extends React.Component { 
 
@@ -18,6 +18,7 @@ class Content2 extends React.Component {
 
     componentDidMount() {
         EventDispatcher.add(this.boundSideItemSelected, Constants.EVENT_SIDEPANEL_ITEM_SELECTED);
+        this.onSideItemSelected();
     }
 
     componentWillUnmount() {
@@ -30,18 +31,20 @@ class Content2 extends React.Component {
         components.push(
             <Label 
                 css="main_content_title" 
-                text={Localization.get("versions")} 
+                text={Localization.get("version") + (item ? " - " + item.version : "")} 
                 key={key++}/>
         );
-        components.push(
-            <Group 
-                css="changes_group"
-                text={Localization.get("changes")}
-                key={key++}>
-                <Changes item={item}/>
-            </Group>
-        );
-        this.setState({components: components});
+        if(item) {
+            components.push(
+                <Group 
+                    css="version_list_group"
+                    text={Localization.get("content")}
+                    key={key++}>
+                    <VersionList item={item}/>
+                </Group>
+            );
+        }
+    this.setState({components: components});
     }
 
     render() {

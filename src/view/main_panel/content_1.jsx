@@ -19,7 +19,8 @@ class Content1 extends React.Component {
     }
 
     componentDidMount() {
-        EventDispatcher.add(this.boundSideItemSelected, Constants.EVENT_SIDEPANEL_ITEM_SELECTED);
+        EventDispatcher.add(this.boundSideItemSelected, Constants.EVENT_SIDEPANEL_ITEM_SELECTED); 
+        this.onSideItemSelected();       
     }
 
     componentWillUnmount() {
@@ -28,34 +29,36 @@ class Content1 extends React.Component {
 
     onSideItemSelected(item) {
         var components = [];
-        var key = 0;
+        var key = 0;        
         components.push(
             <Label 
                 css="main_content_title" 
-                text={Localization.get("db_" + item.type)} 
+                text={item ? Localization.get("db_" + item.type) : Localization.get("value_storage")} 
                 key={key++}/>
         );
-        components.push(
-            <Group 
-                text="Info"
-                key={key++}>
-                <Description item={item}/>
-            </Group>
-        );
-        components.push(
-            <Group 
-                text={Localization.get("connections")}
-                key={key++}>
-                <Connections item={item}/>
-            </Group>
-        );
-        components.push(
-            <Group 
-                text={Localization.get("history")}
-                key={key++}>
-                <ItemHistory item={item}/>
-            </Group>
-        );
+        if(item) {
+            components.push(
+                <Group 
+                    text="Info"
+                    key={key++}>
+                    <Description item={item}/>
+                </Group>
+            );
+            components.push(
+                <Group 
+                    text={Localization.get("connections")}
+                    key={key++}>
+                    <Connections item={item}/>
+                </Group>
+            );
+            components.push(
+                <Group 
+                    text={Localization.get("history")}
+                    key={key++}>
+                    <ItemHistory item={item}/>
+                </Group>
+            );
+        }
         this.setState({components: components});
     }
 

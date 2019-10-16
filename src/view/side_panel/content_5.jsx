@@ -13,7 +13,7 @@ class Content5 extends React.Component {
     render() {
         return (
             <div className="side_content_5">
-                5
+                statistik
             </div>
         );
     }
