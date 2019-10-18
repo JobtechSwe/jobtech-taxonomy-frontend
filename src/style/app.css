@@ -300,22 +300,47 @@ body {
 
 .version_list_item > div:nth-child(1) {
     padding-right: 10px;
-    width: 40px;
+    width: 100px;
 }
 
 .version_list_item > div:nth-child(2) {
     padding-right: 10px;
-    width: 100px;
+    width: 150px;
 }
 
 .version_list_item > div:nth-child(3) {
     padding-right: 10px;
-    width: 150px;
 }
 
-.version_list_item > div:nth-child(4) {
-    padding-right: 10px;
+.version_list_header {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    font-weight: bold;
+    padding-left: 7px;
 }
+
+.version_list_header > div:hover {
+    color: #fff;
+}
+
+.version_list_header > div:nth-child(1) {
+    padding-right: 10px;
+    width: 100px;
+    cursor: pointer;
+}
+
+.version_list_header > div:nth-child(2) {
+    padding-right: 10px;
+    width: 150px;
+    cursor: pointer;
+}
+
+.version_list_header > div:nth-child(3) {
+    padding-right: 10px;
+    cursor: pointer;
+}
+
 
 .version_list_group {
     height: 100%;
