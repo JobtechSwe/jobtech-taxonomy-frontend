@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from './button.jsx';
+import Util from '../context/util.jsx';
 
 class TreeViewItem extends React.Component { 
     
@@ -81,6 +82,11 @@ class TreeViewItem extends React.Component {
             children: children,
             expanded: false,
         });
+    }
+
+    sortChildren() {
+        Util.sortByKey(children, "text", true);
+        this.setState({children: children});
     }
 
     onDeselected() {

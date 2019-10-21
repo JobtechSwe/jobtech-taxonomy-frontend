@@ -113,6 +113,7 @@ class Util {
             addChild: null,
             removeChild: null,
             clear: null,
+            sortChildren: null,
             onDeselected: null,
             onSelected: null,
         };

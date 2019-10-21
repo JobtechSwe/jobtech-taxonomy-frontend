@@ -33,6 +33,9 @@ class Connections extends React.Component {
             for(var i=0; i<data.length; ++i) {         
                 this.addRelationToTree(data[i]);
             }
+            for(var i=0; i<this.relationTreeView.roots; ++i) {
+                this.relationTreeView.roots[i].sortChildren();
+            }
         }, () => {
             // TODO: Handle error
         }); 

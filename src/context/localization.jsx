@@ -46,7 +46,7 @@ class Localization {
                 /* Actions */
                 CREATED: "Skapad",
                 UPDATED: "Uppdaterad",
-                DEPRECATED: "Deprecated",
+                DEPRECATED: "Avaktualiserat",
                 /* regular words */
                 list: "Yrkesgrupp",
                 common_name: "Folkligsynonym",

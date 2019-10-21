@@ -70,8 +70,8 @@ class Rest {
         this.get("/public/versions", onSuccess, onError);
     }
 
-    getChanges(fromVersion, toVersion, offset, limit, onSuccess, onError) {
-        this.get("public/changes?fromVersion=" + fromVersion + "&toVersion=" + toVersion + "&offset=" + offset + "&limit=" + limit, onSuccess, onError);
+    getChanges(fromVersion, toVersion, onSuccess, onError) {
+        this.get("public/changes?fromVersion=" + fromVersion + "&toVersion=" + toVersion, onSuccess, onError);
     }
 }
 

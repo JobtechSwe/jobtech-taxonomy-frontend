@@ -3,6 +3,7 @@ import List from '../../control/list.jsx';
 import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
+import Util from '../../context/util.jsx';
 
 class VersionList extends React.Component { 
 
@@ -27,47 +28,29 @@ class VersionList extends React.Component {
         EventDispatcher.fire(this.VERSION_LIST_EVENT_ID);
         this.getChanges(props.item);
     }
-    
-    sortByKey(items, lambda, direction) {
-        items.sort((a, b) => {
-            return this.sortValue(direction, lambda(a), lambda(b));
-        });
-        return items;
-    }
-    
-    sortValue(direction, a, b) {
-        if(direction) {
-            if(a < b) return 1;
-            if(a > b) return -1;
-        } else {
-            if(a < b) return -1;
-            if(a > b) return 1;
-        }
-        return 0;
-    }
 
     sortData(data) {
-        var lambda;
+        var cmp;
         switch(this.sortBy) {
             default:
             case this.SORT_EVENT_TYPE:
-                lambda = (a) => {return Localization.get(a.eventType);};
+                cmp = (a) => {return Localization.get(a.eventType);};
                 break;
             case this.SORT_CONCEPT_TYPE:
-                lambda = (a) => {return Localization.get("db_" + a.concept.type);};
+                cmp = (a) => {return Localization.get("db_" + a.concept.type);};
                 break;
             case this.SORT_CONCEPT_LABEL:
-                lambda = (a) => {return a.concept.preferredLabel;};
+                cmp = (a) => {return a.concept.preferredLabel;};
                 break;
         }
-        return this.sortByKey(data, lambda, this.sortDesc);
+        return Util.sortByCmp(data, cmp, this.sortDesc);
     }
 
     getChanges(item) {
         this.setState({data: []});
         if(item) {
             Rest.abort();
-            Rest.getChanges(item.version - 1, item.version, 0, 50, (data) => {
+            Rest.getChanges(item.version - 1, item.version, (data) => {
                 this.setState({data: this.sortData(data)});
             }, (status) => {
                 // TODO: handle error
