@@ -28,7 +28,7 @@ class Constants {
         this.ID_SIDEPANEL_CONTAINER = "ID_SIDEPANEL_CONTAINER";
         this.ID_MAINPANEL_CONTAINER = "ID_MAINPANEL_CONTAINER";
         // settings
-        this.REST_IP = "https://cors-anywhere.herokuapp.com/http://jobtech-taxonomy-api-develop.dev.services.jtech.se/v0/taxonomy/";
+        this.REST_IP = "http://jobtech-taxonomy-sidecar-taxonomy-frontend.test.services.jtech.se/v1/taxonomy";
         this.REST_API_KEY = "";
         // resources
         this.ICON_TMP_1 = "./resource/icon_tmp_1.png";

@@ -13,7 +13,7 @@ class Rest {
             if(http.status >= 200 && http.status < 300) {
                 if(onSuccess != null) {
                     try {
-                        onSuccess(JSON.parse(http.response));
+                        onSuccess(JSON.parse(http.response.split("\"taxonomy/").join("\"")));
                     } catch(err) {
                         console.log("Exception", err);
                     }
@@ -55,11 +55,11 @@ class Rest {
     }
     
     getConceptRelations(id, type, relationType, onSuccess, onError) {
-        this.get("/public/concepts?relatedIds=" + id + "&relationType=" + relationType + "&type=" + type, onSuccess, onError);
+        this.get("/public/concepts?related-ids=" + id + "&relation=" + relationType + "&type=" + type, onSuccess, onError);
     }
 
     getAllConceptRelations(id, relationType, onSuccess, onError) {
-        this.get("/public/concepts?relatedIds=" + id + "&relationType=" + relationType, onSuccess, onError);
+        this.get("/public/concepts?related-ids=" + id + "&relation=" + relationType, onSuccess, onError);
     }
 
     searchConcepts(type, query, onSuccess, onError) {

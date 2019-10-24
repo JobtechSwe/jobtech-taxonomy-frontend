@@ -40,6 +40,7 @@ class Content1 extends React.Component {
     }
 
     setData(data) {
+        console.log(data);
         data.sort((a, b) => {
             if(a.preferredLabel < b.preferredLabel) { 
                 return -1; 
