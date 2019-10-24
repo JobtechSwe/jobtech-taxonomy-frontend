@@ -239,6 +239,10 @@ body {
     box-sizing: border-box;
 }
 
+.connections > .button {
+    width: fit-content;
+}
+
 .connections > .label {
     font-weight: bold;
 }
@@ -287,10 +291,14 @@ body {
     flex-direction: column;
     flex: 1 1 auto;
     width: 100%;
-    min-height: 150px;
+    min-height: 400px;
     padding: 10px;
     padding-top: 0px;
     box-sizing: border-box;
+}
+
+.version_list > .label {
+    padding-left: 7px;
 }
 
 .version_list_item {
@@ -344,7 +352,6 @@ body {
 
 
 .version_list_group {
-    height: 100%;
 }
 
 .changes {

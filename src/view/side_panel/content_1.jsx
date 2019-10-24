@@ -25,14 +25,16 @@ class Content1 extends React.Component {
         this.expandedItem = null;
         this.queryTreeView = ControlUtil.createTreeView();
         this.queryTreeView.onItemSelected = this.onQueryItemSelected.bind(this);
+        this.boundMainItemSelected = this.onMainItemSelected.bind(this);
     }
 
     componentDidMount() {
+        EventDispatcher.add(this.boundMainItemSelected, Constants.EVENT_MAINPANEL_ITEM_SELECTED);
         this.search();
     }
 
     componentWillUnmount() {
-
+        EventDispatcher.remove(this.boundMainItemSelected);
     }
 
     formatLabel(label) {
@@ -40,8 +42,24 @@ class Content1 extends React.Component {
     }
 
     setData(data) {
-        console.log(data);
+        for(var i=0; i<data.length; ++i) {
+            var item = data[i];            
+            if(item["ssyk-2012"]) {
+                item.ssyk = item["ssyk-2012"];            
+                while(item.ssyk.length < 4) {
+                    item.ssyk = "0" + item.ssyk;
+                }                
+            }
+            item.preferredLabel = this.formatLabel(item.preferredLabel);
+        }
+
         data.sort((a, b) => {
+            if(a.ssyk) {
+                if(a.ssyk < b.ssyk) { 
+                    return -1; 
+                }
+                return a.ssyk > b.ssyk ? 1 : 0;
+            }
             if(a.preferredLabel < b.preferredLabel) { 
                 return -1; 
             }
@@ -49,10 +67,9 @@ class Content1 extends React.Component {
         });
         this.queryTreeView.clear();
         for(var i=0; i<data.length; ++i) {
-            data[i].preferredLabel = this.formatLabel(data[i].preferredLabel);
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
             item.setShowButton(false);
-            item.setText(data[i].preferredLabel);
+            item.setText(data[i].ssyk ? data[i].ssyk + "-" + data[i].preferredLabel : data[i].preferredLabel);
             this.queryTreeView.addRoot(item);
         }
     }
@@ -66,11 +83,27 @@ class Content1 extends React.Component {
                 // TODO: display error
             });
         } else {
-            Rest.getConcepts(this.state.queryType, (data) => {
-                this.setData(data);
-            }, (status) => {
-                // TODO: display error
-            });
+            if(this.state.queryType == this.TYPE_LIST) {
+                Rest.getConceptsSsyk(this.state.queryType, (data) => {
+                    this.setData(data);
+                }, (status) => {
+                    // TODO: display error
+                });
+            } else {
+                Rest.getConcepts(this.state.queryType, (data) => {
+                    this.setData(data);
+                }, (status) => {
+                    // TODO: display error
+                });
+            }
+        }
+    }
+
+    onMainItemSelected(item) {
+        // TODO: check if item is in tree and select item
+        var selected = this.queryTreeView.getSelected();
+        if(selected) {
+            this.queryTreeView.setSelected(selected, false);
         }
     }
 
@@ -90,7 +123,7 @@ class Content1 extends React.Component {
     }
 
     onQueryItemSelected(item) {
-        console.log(item);
+        console.log(item);        
         EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
     }
 

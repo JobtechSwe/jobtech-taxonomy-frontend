@@ -66,6 +66,9 @@ class Localization {
                 value_storage: "Värdeförråd",
                 event: "Händelse",
                 message: "Meddelande",
+                visit: "Gå till",
+                filter: "Filter",
+                loading: "laddar...",
             },
             // english
             en: {

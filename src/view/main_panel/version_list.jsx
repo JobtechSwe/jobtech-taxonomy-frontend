@@ -1,4 +1,5 @@
 import React from 'react';
+import Label from '../../control/label.jsx';
 import List from '../../control/list.jsx';
 import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
@@ -15,6 +16,7 @@ class VersionList extends React.Component {
         this.SORT_CONCEPT_LABEL = 2;
         this.state = {
             data: [],
+            filter: "",
         }
         this.sortBy= this.SORT_EVENT_TYPE;
         this.sortDesc= false;
@@ -46,6 +48,17 @@ class VersionList extends React.Component {
         return Util.sortByCmp(data, cmp, this.sortDesc);
     }
 
+    filterData() {
+        // check if empty
+        if(/^\s*$/.test(this.state.filter)) {
+            return this.state.data;
+        }
+        var lowerCaseFilter = this.state.filter.toLowerCase();
+        return this.state.data.filter((e) => {
+            return e.concept.preferredLabel.toLowerCase().indexOf(lowerCaseFilter) >= 0;
+        });
+    }
+
     getChanges(item) {
         this.setState({data: []});
         if(item) {
@@ -56,6 +69,10 @@ class VersionList extends React.Component {
                 // TODO: handle error
             });
         }
+    }
+
+    onFilterChange(value) {        
+        this.setState({filter: value});
     }
 
     onSortClicked(sortBy) {
@@ -100,15 +117,20 @@ class VersionList extends React.Component {
         );
     }
 
-    render() {
+    render() {        
         return (
             <div className="version_list">
-                 {this.renderHeader()}
+                <Label text={Localization.get("filter")}/>
+                <input 
+                    type="text" 
+                    className="rounded" 
+                    value={this.state.filter} 
+                    onChange={(e) => this.onFilterChange(e.target.value)}/>
+                {this.renderHeader()}
                 <List 
                     eventId={this.VERSION_LIST_EVENT_ID}
-                    data={this.state.data} 
-                    dataRender={this.renderItem.bind(this)}>                   
-                </List>
+                    data={this.filterData()} 
+                    dataRender={this.renderItem.bind(this)}/>                                   
             </div>
         );
     }

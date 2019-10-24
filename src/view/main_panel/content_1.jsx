@@ -16,20 +16,23 @@ class Content1 extends React.Component {
             components: [],
         };
         this.boundSideItemSelected = this.onSideItemSelected.bind(this);
+        this.boundMainItemSelected = this.onMainItemSelected.bind(this);
     }
 
     componentDidMount() {
-        EventDispatcher.add(this.boundSideItemSelected, Constants.EVENT_SIDEPANEL_ITEM_SELECTED); 
+        EventDispatcher.add(this.boundSideItemSelected, Constants.EVENT_SIDEPANEL_ITEM_SELECTED);
+        EventDispatcher.add(this.boundMainItemSelected, Constants.EVENT_MAINPANEL_ITEM_SELECTED);
         this.onSideItemSelected();       
     }
 
     componentWillUnmount() {
         EventDispatcher.remove(this.boundSideItemSelected);
+        EventDispatcher.remove(this.boundMainItemSelected);
     }
 
     onSideItemSelected(item) {
         var components = [];
-        var key = 0;        
+        var key = 0;
         components.push(
             <Label 
                 css="main_content_title" 
@@ -60,6 +63,10 @@ class Content1 extends React.Component {
             );
         }
         this.setState({components: components});
+    }
+
+    onMainItemSelected(item) {
+        this.onSideItemSelected(item);
     }
 
     render() {

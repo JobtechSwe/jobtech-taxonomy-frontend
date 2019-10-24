@@ -1,10 +1,12 @@
 import React from 'react';
-import Label from '../../control/label.jsx';
+import Button from '../../control/button.jsx';
 import TreeView from '../../control/tree_view.jsx';
 import ControlUtil from '../../control/util.jsx';
 import Constants from '../../context/constants.jsx';
 import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
+import EventDispatcher from '../../context/event_dispatcher.jsx';
+import localization from '../../context/localization.jsx';
 
 class Connections extends React.Component { 
 
@@ -12,6 +14,9 @@ class Connections extends React.Component {
         super();
         this.relationTreeView = ControlUtil.createTreeView();
         this.relationTreeView.onItemSelected = this.onItemSelected.bind(this);
+        this.selectedItem = null;
+        this.waitingFor = 0;
+        this.waitingForItem = null;
     }
 
     componentDidMount() {
@@ -24,12 +29,17 @@ class Connections extends React.Component {
 
     findRootFor(type) {
         return this.relationTreeView.roots.find((root) => {
-            return type == root.data.type
+            return root.data ? type == root.data.type : false;
         });
     }
 
     fetch(item, type) {
+        this.waitingFor++;
         Rest.getAllConceptRelations(item.id, type, (data) => {
+            this.waitingFor--;
+            if(this.waitingFor <= 0) {
+                this.hideLoader();
+            }
             for(var i=0; i<data.length; ++i) {         
                 this.addRelationToTree(data[i]);
             }
@@ -38,12 +48,33 @@ class Connections extends React.Component {
             }
         }, () => {
             // TODO: Handle error
+            this.waitingFor--;
+            if(this.waitingFor <= 0) {
+                this.hideLoader();
+            }
         }); 
     }
 
-    getRelationsFor(item) {
+    hideLoader() {
+        if(this.waitingForItem) {
+            this.relationTreeView.removeRoot(this.waitingForItem);
+            this.waitingForItem = null;
+        }
+    }
+
+    getRelationsFor(item) {        
         this.relationTreeView.clear();
-        if(item) {   
+        this.waitingFor = 0;
+        this.waitingForItem = null;
+        if(item) {
+            this.waitingForItem = ControlUtil.createTreeViewItem(this.relationTreeView, null);
+            this.waitingForItem.setText(
+                <div>
+                    <div className="loader"/>
+                    <div>{Localization.get("loading")}</div>
+                </div>
+            );
+            this.relationTreeView.addRoot(this.waitingForItem);
             this.fetch(item, Constants.RELATION_RELATED);        
             this.fetch(item, Constants.RELATION_NARROWER);        
             this.fetch(item, Constants.RELATION_BROADER);
@@ -62,14 +93,23 @@ class Connections extends React.Component {
         root.addChild(child);
     }
 
+    onVisitClicked() {
+        if(this.selectedItem && this.selectedItem.parent) {
+            EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.selectedItem.data);
+        }
+    }
+
     onItemSelected(item) {
-        // TODO: 
+        this.selectedItem = item;
     }
 
     render() {
         return (
             <div className="connections">
                 <TreeView context={this.relationTreeView}/>
+                <Button 
+                    text={localization.get("visit")} 
+                    onClick={this.onVisitClicked.bind(this)}/>
             </div>
         );
     }

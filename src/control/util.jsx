@@ -12,7 +12,7 @@ class Util {
         return context.selected == item;
     }
 
-    __treeViewSetSelected(context, item, selected) {
+    __treeViewSetSelected(context, item, selected) {       
         if(this.__treeViewIsSelected(context, item)) {
             if(!selected) {
                 if(context.selected.onDeselected) {
@@ -35,8 +35,18 @@ class Util {
         }
     }
 
+    __treeViewGetSelected(context) {
+        return context.selected;
+    }
+
     __treeViewAddRoot(context, item) {
         context.roots.push(item);
+    }
+
+    __treViewRemoveRoot(context, item) {
+        root.setSelected(false);
+        var index = context.roots.indexOf(item);
+        context.roots.splice(index, 1);
     }
 
     createTreeView() {
@@ -47,6 +57,7 @@ class Util {
             // utility
             isSelected: null,
             setSelected: null,
+            getSelected: null,
             // callbacks
             onItemSelected: null,
             // vtable
@@ -57,7 +68,9 @@ class Util {
         // bind function pointers
         context.isSelected = this.__treeViewIsSelected.bind(this, context);
         context.setSelected = this.__treeViewSetSelected.bind(this, context);
+        context.getSelected = this.__treeViewGetSelected.bind(this, context);
         context.addRoot = this.__treeViewAddRoot.bind(this, context);
+        context.removeRoot = this.__treViewRemoveRoot.bind(this, context);
         return context;
     }
 

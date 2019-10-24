@@ -53,7 +53,11 @@ class Rest {
     getConcepts(type, onSuccess, onError) {
         this.get("/public/concepts?type=" + type, onSuccess, onError);
     }
-    
+
+    getConceptsSsyk(type, onSuccess, onError) {
+        this.get("/public/concepts/ssyk-2012?type=" + type, onSuccess, onError);
+    }
+
     getConceptRelations(id, type, relationType, onSuccess, onError) {
         this.get("/public/concepts?related-ids=" + id + "&relation=" + relationType + "&type=" + type, onSuccess, onError);
     }

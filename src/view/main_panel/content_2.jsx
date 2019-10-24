@@ -44,9 +44,9 @@ class Content2 extends React.Component {
                 </Group>
             );
         }
-    this.setState({components: components});
+        this.setState({components: components});
     }
-
+    
     render() {
         return (
             <div className="main_content_2">
