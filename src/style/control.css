@@ -298,6 +298,8 @@ select.rounded:focus {
 
 .loader_group {
     display: flex;
+    font-weight: bold;
+    font-variant-caps: all-petite-caps;
 }
 
 .loader_group > div {
@@ -306,11 +308,11 @@ select.rounded:focus {
 
 .loader {
     border: 4px solid #f3f3f3; /* Light grey */
-    border-top: 4px solid #3498db; /* Blue */
+    border-top: 4px solid #386479; /* Blue */
     border-radius: 50%;
-    width: 10px;
-    height: 10px;
-    animation: spin 2s linear infinite;
+    width: 8px;
+    height: 8px;
+    animation: spin 1500ms ease-in-out infinite;
   }
   
   @keyframes spin {
