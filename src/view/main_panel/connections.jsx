@@ -63,6 +63,42 @@ class Connections extends React.Component {
         }
     }
 
+    getIsco08CodeFor(item) {
+        item.setText(<Loader css="loader_child" text={item.data.preferredLabel}/>);
+        Rest.getConceptIsco08(item.data.id, (data) => {
+            if(data && data.length == 1) {
+                item.data = data[0];
+                if(item.data["isco-08"]) {
+                    item.data.isco = item.data["isco-08"];            
+                    while(item.data.isco.length < 4) {
+                        item.data.isco = "0" + item.data.isco;
+                    }                
+                }
+                item.setText(item.data.isco + "-" + item.data.preferredLabel);
+            }
+        }, () => {
+            // TODO: Handle error
+        });
+    }
+
+    getSsykCodeFor(item) {
+        item.setText(<Loader css="loader_child" text={item.data.preferredLabel}/>);
+        Rest.getConceptSsyk(item.data.id, (data) => {
+            if(data && data.length == 1) {
+                item.data = data[0];
+                if(item.data["ssyk-2012"]) {
+                    item.data.ssyk = item.data["ssyk-2012"];            
+                    while(item.data.ssyk.length < 4) {
+                        item.data.ssyk = "0" + item.data.ssyk;
+                    }                
+                }
+                item.setText(item.data.ssyk + "-" + item.data.preferredLabel);
+            }
+        }, () => {
+            // TODO: Handle error
+        });
+    }
+
     getRelationsFor(item) {        
         this.relationTreeView.clear();
         this.waitingFor = 0;
@@ -87,6 +123,15 @@ class Connections extends React.Component {
         var child = ControlUtil.createTreeViewItem(this.relationTreeView, element);
         child.setText(element.preferredLabel);
         root.addChild(child);
+        if(element.type === Constants.CONCEPT_ISCO_LEVEL_1 || 
+            element.type === Constants.CONCEPT_ISCO_LEVEL_4) {
+            this.getIsco08CodeFor(child);
+        } else if(element.type === Constants.CONCEPT_SSYK_LEVEL_1 || 
+            element.type === Constants.CONCEPT_SSYK_LEVEL_2 || 
+            element.type === Constants.CONCEPT_SSYK_LEVEL_3 || 
+            element.type === Constants.CONCEPT_SSYK_LEVEL_4) {
+                this.getSsykCodeFor(child);
+        }
     }
 
     onVisitClicked() {
