@@ -24,9 +24,9 @@ class Rest {
                 }
             }
         }
-        this.currentRequest = http;
-        this.currentSuccessCallback = onSuccess;
-        this.currentErrorCallback = onError;
+        this.currentRequest = null;
+        this.currentSuccessCallback = null;
+        this.currentErrorCallback = null;
     }
 
     abort() {

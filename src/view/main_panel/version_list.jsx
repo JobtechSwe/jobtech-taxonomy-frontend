@@ -1,6 +1,7 @@
 import React from 'react';
 import Label from '../../control/label.jsx';
 import List from '../../control/list.jsx';
+import Loader from '../../control/loader.jsx';
 import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
@@ -17,6 +18,7 @@ class VersionList extends React.Component {
         this.state = {
             data: [],
             filter: "",
+            loadingData: false,
         }
         this.sortBy= this.SORT_EVENT_TYPE;
         this.sortDesc= false;
@@ -60,13 +62,20 @@ class VersionList extends React.Component {
     }
 
     getChanges(item) {
-        this.setState({data: []});
+        this.setState({
+            data: [], 
+            loadingData: true,
+        });        
         if(item) {
             Rest.abort();
             Rest.getChanges(item.version - 1, item.version, (data) => {
-                this.setState({data: this.sortData(data)});
+                this.setState({
+                    data: this.sortData(data), 
+                    loadingData: false,
+                });
             }, (status) => {
                 // TODO: handle error
+                this.setState({loadingData: false});
             });
         }
     }
@@ -83,6 +92,14 @@ class VersionList extends React.Component {
             this.sortDesc = false;
         }
         this.setState({ data: this.sortData(this.state.data) });
+    }
+
+    renderLoader() {
+        if(this.state.loadingData) {
+            return (
+                <Loader text={Localization.get("loading")}/>
+            );
+        }
     }
 
     renderHeader() {
@@ -117,7 +134,8 @@ class VersionList extends React.Component {
         );
     }
 
-    render() {        
+    render() {
+        console.log(this.state.loadingData);
         return (
             <div className="version_list">
                 <Label text={Localization.get("filter")}/>
@@ -130,7 +148,9 @@ class VersionList extends React.Component {
                 <List 
                     eventId={this.VERSION_LIST_EVENT_ID}
                     data={this.filterData()} 
-                    dataRender={this.renderItem.bind(this)}/>                                   
+                    dataRender={this.renderItem.bind(this)}>
+                    {this.renderLoader()}
+                </List>                                   
             </div>
         );
     }

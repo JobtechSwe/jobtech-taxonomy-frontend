@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '../../control/button.jsx';
 import TreeView from '../../control/tree_view.jsx';
 import ControlUtil from '../../control/util.jsx';
+import Loader from '../../control/loader.jsx';
 import Constants from '../../context/constants.jsx';
 import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
@@ -68,12 +69,7 @@ class Connections extends React.Component {
         this.waitingForItem = null;
         if(item) {
             this.waitingForItem = ControlUtil.createTreeViewItem(this.relationTreeView, null);
-            this.waitingForItem.setText(
-                <div>
-                    <div className="loader"/>
-                    <div>{Localization.get("loading")}</div>
-                </div>
-            );
+            this.waitingForItem.setText(<Loader text={Localization.get("loading")}/>);
             this.relationTreeView.addRoot(this.waitingForItem);
             this.fetch(item, Constants.RELATION_RELATED);        
             this.fetch(item, Constants.RELATION_NARROWER);        

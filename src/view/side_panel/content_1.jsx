@@ -6,6 +6,7 @@ import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import TreeView from '../../control/tree_view.jsx';
 import ControlUtil from '../../control/util.jsx';
+import Loader from '../../control/loader.jsx';
 
 class Content1 extends React.Component { 
 
@@ -75,6 +76,8 @@ class Content1 extends React.Component {
     }
 
     search(query) {
+        this.queryTreeView.clear();
+        this.showLoader();
         Rest.abort();
         if(query && query.length > 0) {
             Rest.searchConcepts(this.state.queryType, query, (data) => {
@@ -97,6 +100,12 @@ class Content1 extends React.Component {
                 });
             }
         }
+    }
+
+    showLoader() {
+        var waitingForItem = ControlUtil.createTreeViewItem(this.queryTreeView, null);
+        waitingForItem.setText(<Loader text={Localization.get("loading")}/>);
+        this.queryTreeView.addRoot(waitingForItem);
     }
 
     onMainItemSelected(item) {
@@ -123,8 +132,10 @@ class Content1 extends React.Component {
     }
 
     onQueryItemSelected(item) {
-        console.log(item);        
-        EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
+        if(item.data) {
+            console.log(item);        
+            EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
+        }
     }
 
     renderOption(value, text) {
