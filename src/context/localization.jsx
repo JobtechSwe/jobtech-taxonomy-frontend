@@ -68,6 +68,7 @@ class Localization {
                 message: "Meddelande",
                 visit: "Gå till",
                 filter: "Filter",
+                search: "Sök",
                 loading: "laddar...",
             },
             // english

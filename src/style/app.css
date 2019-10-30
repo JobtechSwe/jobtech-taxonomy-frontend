@@ -240,7 +240,7 @@ body {
 }
 
 .connections > .button {
-    width: fit-content;
+    margin-right: auto;
 }
 
 .connections > .label {

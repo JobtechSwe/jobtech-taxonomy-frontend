@@ -43,7 +43,6 @@ class Content1 extends React.Component {
     }
 
     setData(data) {
-        console.log(data);
         for(var i=0; i<data.length; ++i) {
             var item = data[i];            
             if(item["ssyk-code-2012"]) {
@@ -71,7 +70,7 @@ class Content1 extends React.Component {
         for(var i=0; i<data.length; ++i) {
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
             item.setShowButton(false);
-            item.setText(data[i].ssyk ? data[i].ssyk + "-" + data[i].preferredLabel : data[i].preferredLabel);
+            item.setText(data[i].ssyk ? data[i].ssyk + " - " + data[i].preferredLabel : data[i].preferredLabel);
             this.queryTreeView.addRoot(item);
         }
     }
@@ -105,7 +104,7 @@ class Content1 extends React.Component {
 
     showLoader() {
         var waitingForItem = ControlUtil.createTreeViewItem(this.queryTreeView, null);
-        waitingForItem.setText(<Loader text={Localization.get("loading")}/>);
+        waitingForItem.setText(<Loader/>);
         this.queryTreeView.addRoot(waitingForItem);
     }
 
@@ -133,8 +132,7 @@ class Content1 extends React.Component {
     }
 
     onQueryItemSelected(item) {
-        if(item.data) {
-            console.log(item);        
+        if(item.data) {       
             EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
         }
     }
@@ -168,27 +166,9 @@ class Content1 extends React.Component {
                         className="rounded"
                         ref={(x) => this.searchReference = x}/>
                     <Button 
-                        text="Sök"
+                        text={Localization.get("search")}
                         onClick={this.onSearchClicked.bind(this)}/>
                 </div>
-            </div>
-        );
-    }
-
-    renderDetailsItem(item) {
-        return (
-            <div>
-                {item.preferredLabel}
-            </div>
-        );
-    }
-
-    renderResultItem(item) {
-        var ssyk = 0;
-        return (
-            <div className="side_content_1_result_item">
-                <div>{ssyk}</div>
-                <div>{item.preferredLabel}</div>
             </div>
         );
     }

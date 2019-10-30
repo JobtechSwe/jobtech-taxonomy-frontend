@@ -98,7 +98,7 @@ class VersionList extends React.Component {
     renderLoader() {
         if(this.state.loadingData) {
             return (
-                <Loader text={Localization.get("loading")}/>
+                <Loader/>
             );
         }
     }

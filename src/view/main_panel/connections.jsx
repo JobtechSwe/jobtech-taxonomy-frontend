@@ -105,7 +105,7 @@ class Connections extends React.Component {
         this.waitingForItem = null;
         if(item) {
             this.waitingForItem = ControlUtil.createTreeViewItem(this.relationTreeView, null);
-            this.waitingForItem.setText(<Loader text={Localization.get("loading")}/>);
+            this.waitingForItem.setText(<Loader/>);
             this.relationTreeView.addRoot(this.waitingForItem);
             this.fetch(item, Constants.RELATION_RELATED);        
             this.fetch(item, Constants.RELATION_NARROWER);        
