@@ -7,6 +7,7 @@ import Group from '../../control/group.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
+import Rest from '../../context/rest.jsx';
 
 class Content5 extends React.Component { 
 
@@ -307,177 +308,75 @@ class Content5 extends React.Component {
                       "loc": 73846
                     }
                   ]
-                },
-                {
-                  "name": "misc",
-                  "color": "hsl(330, 70%, 50%)",
-                  "children": [
-                    {
-                      "name": "whatever",
-                      "color": "hsl(168, 70%, 50%)",
-                      "children": [
-                        {
-                          "name": "hey",
-                          "color": "hsl(227, 70%, 50%)",
-                          "loc": 124580
-                        },
-                        {
-                          "name": "WTF",
-                          "color": "hsl(147, 70%, 50%)",
-                          "loc": 159849
-                        },
-                        {
-                          "name": "lol",
-                          "color": "hsl(62, 70%, 50%)",
-                          "loc": 148884
-                        },
-                        {
-                          "name": "IMHO",
-                          "color": "hsl(246, 70%, 50%)",
-                          "loc": 66041
-                        }
-                      ]
-                    },
-                    {
-                      "name": "other",
-                      "color": "hsl(109, 70%, 50%)",
-                      "loc": 148948
-                    },
-                    {
-                      "name": "crap",
-                      "color": "hsl(226, 70%, 50%)",
-                      "children": [
-                        {
-                          "name": "crapA",
-                          "color": "hsl(76, 70%, 50%)",
-                          "loc": 129048
-                        },
-                        {
-                          "name": "crapB",
-                          "color": "hsl(240, 70%, 50%)",
-                          "children": [
-                            {
-                              "name": "crapB1",
-                              "color": "hsl(92, 70%, 50%)",
-                              "loc": 123446
-                            },
-                            {
-                              "name": "crapB2",
-                              "color": "hsl(60, 70%, 50%)",
-                              "loc": 27958
-                            },
-                            {
-                              "name": "crapB3",
-                              "color": "hsl(260, 70%, 50%)",
-                              "loc": 110685
-                            },
-                            {
-                              "name": "crapB4",
-                              "color": "hsl(189, 70%, 50%)",
-                              "loc": 196906
-                            }
-                          ]
-                        },
-                        {
-                          "name": "crapC",
-                          "color": "hsl(331, 70%, 50%)",
-                          "children": [
-                            {
-                              "name": "crapC1",
-                              "color": "hsl(256, 70%, 50%)",
-                              "loc": 58545
-                            },
-                            {
-                              "name": "crapC2",
-                              "color": "hsl(218, 70%, 50%)",
-                              "loc": 90651
-                            },
-                            {
-                              "name": "crapC3",
-                              "color": "hsl(186, 70%, 50%)",
-                              "loc": 56119
-                            },
-                            {
-                              "name": "crapC4",
-                              "color": "hsl(290, 70%, 50%)",
-                              "loc": 61936
-                            },
-                            {
-                              "name": "crapC5",
-                              "color": "hsl(128, 70%, 50%)",
-                              "loc": 49317
-                            },
-                            {
-                              "name": "crapC6",
-                              "color": "hsl(298, 70%, 50%)",
-                              "loc": 194176
-                            },
-                            {
-                              "name": "crapC7",
-                              "color": "hsl(293, 70%, 50%)",
-                              "loc": 108268
-                            },
-                            {
-                              "name": "crapC8",
-                              "color": "hsl(39, 70%, 50%)",
-                              "loc": 155259
-                            },
-                            {
-                              "name": "crapC9",
-                              "color": "hsl(32, 70%, 50%)",
-                              "loc": 12652
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
                 }
               ]
-        };
-        this.data2 = [
+            };
+            this.data2 = [
+                {
+                    id: "a",
+                    key1: 5,
+                    key2: 10,
+                    key3: 7,
+                },
+                {
+                    id: "b",
+                    key1: -5,
+                    key2: 40,
+                    key3: 8,
+                },
+                {
+                    id: "c",
+                    key1: 15,
+                    key2: -10,
+                    key3: 9,
+                },
+            ];
+        this.state = {
+            data3: [
             {
                 id: "a",
-                key1: 5,
-                key2: 10,
-                key3: 7,
+                label: "aaa",
+                value: 10,
+                color: "#777",
             },
             {
                 id: "b",
-                key1: -5,
-                key2: 40,
-                key3: 8,
+                label: "bbb",
+                value: 40,
+                color: "#888",
             },
             {
                 id: "c",
-                key1: 15,
-                key2: -10,
-                key3: 9,
+                label: "ccc",
+                value: 15,
+                color: "#999",
             },
-        ];
-    this.data3 = [
-        {
-            id: "a",
-            label: "aaa",
-            value: 10,
-            color: "#777",
-        },
-        {
-            id: "b",
-            label: "bbb",
-            value: 40,
-            color: "#888",
-        },
-        {
-            id: "c",
-            label: "ccc",
-            value: 15,
-            color: "#999",
-        },
-    ];
-}
+        ]};
+    }
+
+    componentDidMount() {
+        Rest.getChanges(1, 2, (data) => {
+            console.log(data);
+            var test = [];
+            for(var i=0; i<data.length; ++i) {
+                console.log("kalle");
+                var item = data[i];
+                var obj = test.find((p) => {return p.id === item["event-type"]});
+                if(obj) {
+                    obj.value++;
+                } else {
+                    test.push({id: item["event-type"], label: item["event-type"], value: 1, color: "#999"});                    
+                }
+            }
+            console.log(test);
+            this.setState({data3: test});
+        }, (status) => {
+            // TODO: handle error
+        });
+    }
 
     render() {
+
         return (
             <div className="main_content_5">
                 <ResponsiveTreeMap
@@ -492,7 +391,7 @@ class Content5 extends React.Component {
                     indexBy="id"                    
                 />
                 <ResponsivePie 
-                    data={this.data3}
+                    data={this.state.data3}
                 />
             </div>
         );

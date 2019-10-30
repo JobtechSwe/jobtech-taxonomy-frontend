@@ -49,44 +49,50 @@ class Content4 extends React.Component {
             return;
         }
         item.fetchedRelations = true;
-        Rest.getAllConceptRelations(item.id, Constants.RELATION_BROADER, (data) => {
-            var nodes = JSON.parse(JSON.stringify(this.state.data.nodes));
-            var edges = JSON.parse(JSON.stringify(this.state.data.edges));
-            for(var i=0; i<data.length; ++i) {
-                var p = data[i];
-                p.label = p.preferredLabel;
-                p.title = p.label;
-                if(!nodes.find((n) => {return nodes.id === p.id})) {
-                    nodes.push(p);
-                    edges.push({
-                        from: item.id,
-                        to: p.id
-                    });
+        if(item.relations.broader > 0) {
+            Rest.getAllConceptRelations(item.id, Constants.RELATION_BROADER, (data) => {
+                var nodes = JSON.parse(JSON.stringify(this.state.data.nodes));
+                var edges = JSON.parse(JSON.stringify(this.state.data.edges));
+                for(var i=0; i<data.length; ++i) {
+                    var p = data[i];
+                    p.label = p.preferredLabel;
+                    p.title = p.label;
+                    if(!nodes.find((n) => {return nodes.id === p.id})) {
+                        nodes.push(p);
+                        edges.push({
+                            from: item.id,
+                            to: p.id
+                        });
+                    }
+                }   
+                this.state.data = {nodes: nodes, edges: edges};
+                this.setState({data: {nodes: nodes, edges: edges}});
+            }, (status) => {
+                // TODO: error handling
+            });
+        }
+        if(item.relations.narrower > 0) {
+            Rest.getAllConceptRelations(item.id, Constants.RELATION_NARROWER, (data) => {
+                var nodes = JSON.parse(JSON.stringify(this.state.data.nodes));
+                var edges = JSON.parse(JSON.stringify(this.state.data.edges));
+                for(var i=0; i<data.length; ++i) {
+                    var p = data[i];
+                    p.label = p.preferredLabel;
+                    p.title = p.label;
+                    if(!nodes.find((n) => {return nodes.id === p.id})) {
+                        nodes.push(p);
+                        edges.push({
+                            from: p.id,
+                            to: item.id
+                        });
+                    }
                 }
-            }            
-            this.setState({data: {nodes: nodes, edges: edges}});
-        }, (status) => {
-            // TODO: error handling
-        });
-        Rest.getAllConceptRelations(item.id, Constants.RELATION_NARROWER, (data) => {
-            var nodes = JSON.parse(JSON.stringify(this.state.data.nodes));
-            var edges = JSON.parse(JSON.stringify(this.state.data.edges));
-            for(var i=0; i<data.length; ++i) {
-                var p = data[i];
-                p.label = p.preferredLabel;
-                p.title = p.label;
-                if(!nodes.find((n) => {return nodes.id === p.id})) {
-                    nodes.push(p);
-                    edges.push({
-                        from: p.id,
-                        to: item.id
-                    });
-                }
-            }            
-            this.setState({data: {nodes: nodes, edges: edges}});
-        }, (status) => {
-            // TODO: error handling
-        });
+                this.state.data = {nodes: nodes, edges: edges};
+                this.setState({data: {nodes: nodes, edges: edges}});
+            }, (status) => {
+                // TODO: error handling
+            });
+        }
     }
 
     findNodeById(id) {
