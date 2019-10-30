@@ -42,6 +42,15 @@ class Content1 extends React.Component {
         return label.replace(/\/(?! )/g, " / ");
     }
 
+    getItemFormat(data) {
+        return (
+            <div className="ssyk_item">
+                <div>{data.ssyk}</div>
+                <div>{data.preferredLabel}</div>
+            </div>
+        );
+    }
+
     setData(data) {
         for(var i=0; i<data.length; ++i) {
             var item = data[i];            
@@ -70,7 +79,7 @@ class Content1 extends React.Component {
         for(var i=0; i<data.length; ++i) {
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
             item.setShowButton(false);
-            item.setText(data[i].ssyk ? data[i].ssyk + " - " + data[i].preferredLabel : data[i].preferredLabel);
+            item.setText(data[i].ssyk ? this.getItemFormat(data[i]) : data[i].preferredLabel);
             this.queryTreeView.addRoot(item);
         }
     }

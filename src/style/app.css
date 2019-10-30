@@ -354,6 +354,14 @@ body {
 .version_list_group {
 }
 
+.ssyk_item {
+    display: flex;
+}
+
+.ssyk_item > div:first-child {
+    margin-right: 5px;
+}
+
 .changes {
     display: flex;
     flex-direction: column;
