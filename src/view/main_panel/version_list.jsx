@@ -38,13 +38,13 @@ class VersionList extends React.Component {
         switch(this.sortBy) {
             default:
             case this.SORT_EVENT_TYPE:
-                cmp = (a) => {return Localization.get(a.eventType);};
+                cmp = (a) => {return Localization.get(a["event-type"]);};
                 break;
             case this.SORT_CONCEPT_TYPE:
-                cmp = (a) => {return Localization.get("db_" + a.concept.type);};
+                cmp = (a) => {return Localization.get("db_" + a["changed-concept"].type);};
                 break;
             case this.SORT_CONCEPT_LABEL:
-                cmp = (a) => {return a.concept.preferredLabel;};
+                cmp = (a) => {return a["changed-concept"].preferredLabel;};
                 break;
         }
         return Util.sortByCmp(data, cmp, this.sortDesc);
@@ -57,7 +57,7 @@ class VersionList extends React.Component {
         }
         var lowerCaseFilter = this.state.filter.toLowerCase();
         return this.state.data.filter((e) => {
-            return e.concept.preferredLabel.toLowerCase().indexOf(lowerCaseFilter) >= 0;
+            return e["changed-concept"].preferredLabel.toLowerCase().indexOf(lowerCaseFilter) >= 0;
         });
     }
 
@@ -69,6 +69,7 @@ class VersionList extends React.Component {
         if(item) {
             Rest.abort();
             Rest.getChanges(item.version - 1, item.version, (data) => {
+                console.log(data);
                 this.setState({
                     data: this.sortData(data), 
                     loadingData: false,
@@ -122,13 +123,13 @@ class VersionList extends React.Component {
         return(
             <div className="version_list_item">               
                 <div>
-                    {Localization.get(item.eventType)}
+                    {Localization.get(item["event-type"])}
                 </div>
                 <div>
-                    {Localization.get("db_" + item.concept.type)}
+                    {Localization.get("db_" + item["changed-concept"].type)}
                 </div>
                 <div>
-                    {item.concept.preferredLabel}
+                    {item["changed-concept"].preferredLabel}
                 </div>
             </div>
         );

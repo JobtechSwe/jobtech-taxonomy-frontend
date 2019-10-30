@@ -12,11 +12,11 @@ class Content1 extends React.Component {
 
     constructor() {
         super();
-        this.TYPE_LIST = "ssyk_level_4";
-        this.TYPE_NAME = "occupation_name";
-        this.TYPE_COMPETENCE = "skill_headline";
+        this.TYPE_LIST = "ssyk-level-4";
+        this.TYPE_NAME = "occupation-name";
+        this.TYPE_COMPETENCE = "skill-headline";
         this.TYPE_COMMON_NAME = "keyword"; 
-        this.TYPE_FIELD = "occupation_field"; 
+        this.TYPE_FIELD = "occupation-field"; 
         this.state = {
             queryType: this.TYPE_LIST,
             detailsData: [],
@@ -43,10 +43,11 @@ class Content1 extends React.Component {
     }
 
     setData(data) {
+        console.log(data);
         for(var i=0; i<data.length; ++i) {
             var item = data[i];            
-            if(item["ssyk-2012"]) {
-                item.ssyk = item["ssyk-2012"];            
+            if(item["ssyk-code-2012"]) {
+                item.ssyk = item["ssyk-code-2012"];            
                 while(item.ssyk.length < 4) {
                     item.ssyk = "0" + item.ssyk;
                 }                
@@ -156,10 +157,10 @@ class Content1 extends React.Component {
                     <option value={this.TYPE_LIST}>
                         {Localization.get("list")}
                     </option>
-                    {this.renderOption(this.TYPE_NAME, "occupation_name")}
+                    {this.renderOption(this.TYPE_NAME, "occupation-name")}
                     {this.renderOption(this.TYPE_COMPETENCE, "competense")}
-                    {this.renderOption(this.TYPE_COMMON_NAME, "common_name")}
-                    {this.renderOption(this.TYPE_FIELD, "occupation_field")}
+                    {this.renderOption(this.TYPE_COMMON_NAME, "common-name")}
+                    {this.renderOption(this.TYPE_FIELD, "occupation-field")}
                 </select>
                 <div className="sub_panel_search">
                     <input 

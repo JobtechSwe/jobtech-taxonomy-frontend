@@ -21,12 +21,12 @@ class Constants {
         this.RELATION_RELATED = "related";
         this.RELATION_AFFINITY = "----";
         // concept types
-        this.CONCEPT_ISCO_LEVEL_1 = "isco_level_1";
-        this.CONCEPT_ISCO_LEVEL_4 = "isco_level_4";
-        this.CONCEPT_SSYK_LEVEL_1 = "ssyk_level_1";
-        this.CONCEPT_SSYK_LEVEL_2 = "ssyk_level_2";
-        this.CONCEPT_SSYK_LEVEL_3 = "ssyk_level_3";
-        this.CONCEPT_SSYK_LEVEL_4 = "ssyk_level_4";
+        this.CONCEPT_ISCO_LEVEL_1 = "isco-level-1";
+        this.CONCEPT_ISCO_LEVEL_4 = "isco-level-4";
+        this.CONCEPT_SSYK_LEVEL_1 = "ssyk-level-1";
+        this.CONCEPT_SSYK_LEVEL_2 = "ssyk-level-2";
+        this.CONCEPT_SSYK_LEVEL_3 = "ssyk-level-3";
+        this.CONCEPT_SSYK_LEVEL_4 = "ssyk-level-4";
         // events
         this.EVENT_SET_WORKMODE = "EVENT_SET_WORKMODE";
         this.EVENT_SIDEPANEL_ITEM_SELECTED = "EVENT_SIDEPANEL_ITEM_SELECTED";

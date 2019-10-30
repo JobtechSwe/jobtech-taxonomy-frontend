@@ -17,6 +17,7 @@ class Content2 extends React.Component {
     componentDidMount() {
         Rest.abort();
         Rest.getVersions((data)=>{
+            console.log(data);
             for(var i=0; i<data.length; ++i) {
                 data[i].date = new Date(data[i].timestamp);
             }
