@@ -13,7 +13,7 @@ class Content4 extends React.Component {
     render() {
         return (
             <div className="side_content_4">
-                Relationer                
+               
             </div>
         );
     }

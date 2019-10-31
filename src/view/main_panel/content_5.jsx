@@ -13,7 +13,7 @@ class Content5 extends React.Component {
         super();
         //Storleken på värdeförråd mot varandra (hämta några olika)        
         this.state = {
-            data3: [
+            data: [
             {
                 x: "aaa",
                 y: 10,
@@ -37,7 +37,6 @@ class Content5 extends React.Component {
             console.log(data);
             var test = [];
             for(var i=0; i<data.length; ++i) {
-                console.log("kalle");
                 var item = data[i];
                 var obj = test.find((p) => {return p.x === item["event-type"]});
                 if(obj) {
@@ -47,7 +46,7 @@ class Content5 extends React.Component {
                 }
             }
             console.log(test);
-            this.setState({data3: test});
+            this.setState({data: test});
         }, (status) => {
             // TODO: handle error
         });
@@ -57,18 +56,18 @@ class Content5 extends React.Component {
 
         return (
             <div className="main_content_5">
-                <div className="test1">
+                <div className="main_content_5_chart">
                     <VictoryBar 
-                        data={this.state.data3}
+                        data={this.state.data}
                         x="x"
                         y="y"
                     />
                 </div>
-                <div className="test2">
+                <div className="main_content_5_chart">
                     <VictoryPie 
-                        cornerRadius={({ datum }) => /*datum.y **/ 5}
-                        innerRadius={({ datum }) => /*datum.y **/ 40}
-                        data={this.state.data3}
+                        cornerRadius="5"
+                        innerRadius="60"
+                        data={this.state.data}
                     />
                 </div>
             </div>

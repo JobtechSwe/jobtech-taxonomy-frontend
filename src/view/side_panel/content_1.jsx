@@ -12,13 +12,13 @@ class Content1 extends React.Component {
 
     constructor() {
         super();
-        this.TYPE_LIST = "ssyk-level-4";
+        this.TYPE_SSYK = "ssyk-level-4";
         this.TYPE_NAME = "occupation-name";
         this.TYPE_COMPETENCE = "skill-headline";
         this.TYPE_COMMON_NAME = "keyword"; 
         this.TYPE_FIELD = "occupation-field"; 
         this.state = {
-            queryType: this.TYPE_LIST,
+            queryType: this.TYPE_SSYK,
             detailsData: [],
             resultData: [],
         };
@@ -95,8 +95,8 @@ class Content1 extends React.Component {
                 // TODO: display error
             });
         } else {
-            if(this.state.queryType == this.TYPE_LIST) {
-                Rest.getConceptsSsyk(this.state.queryType, (data) => {
+            if(this.state.queryType == this.TYPE_SSYK) {                
+                Rest.getConceptsSsyk("ssyk-level-1 ssyk-level-2 ssyk-level-3 ssyk-level-4", (data) => {
                     this.setData(data);
                 }, (status) => {
                     // TODO: display error
@@ -161,8 +161,8 @@ class Content1 extends React.Component {
                     className="sub_panel_select rounded"
                     value={this.state.queryType}
                     onChange={this.onTypeChanged.bind(this)}>
-                    <option value={this.TYPE_LIST}>
-                        {Localization.get("list")}
+                    <option value={this.TYPE_SSYK}>
+                        {Localization.get("occupation-group")}
                     </option>
                     {this.renderOption(this.TYPE_NAME, "occupation-name")}
                     {this.renderOption(this.TYPE_COMPETENCE, "competense")}
