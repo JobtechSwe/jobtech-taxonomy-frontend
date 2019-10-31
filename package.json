@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "release": "webpack && uglifyjs --compress --mangle --output ./src/bundle.js -- ./src/bundle.js",
+    "release": "webpack",
     "build": "webpack-dev-server --inline --hot --host 0.0.0.0 --port 8000"
   },
   "author": "",
@@ -17,22 +17,23 @@
   "devDependencies": {
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
-    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-react": "^7.6.3",
     "babel-loader": "^8.0.6",
-    "uglify-js": "^3.4.9",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.8",
-    "webpack-dev-server": "^3.8.0"
+    "webpack-dev-server": "^3.8.0",
+    "uglify-js": "^3.6.5",
+    "uglifyjs-webpack-plugin": "^2.2.0"
   },
   "dependencies": {
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-datepicker": "^2.9.6",
     "@nivo/bar": "^0.59.2",
     "@nivo/network": "^0.59.1",
     "@nivo/pie": "^0.59.0",
     "@nivo/treemap": "^0.59.0",
+    "react": "^16.9.0",
     "react-d3-graph": "^2.3.0",
+    "react-datepicker": "^2.9.6",
+    "react-dom": "^16.9.0",
     "react-graph-vis": "^1.0.5"
   }
 }
