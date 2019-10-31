@@ -68,8 +68,8 @@ class Connections extends React.Component {
         Rest.getConceptIsco08(item.data.id, (data) => {
             if(data && data.length == 1) {
                 item.data = data[0];
-                if(item.data["isco-08"]) {
-                    item.data.isco = item.data["isco-08"];            
+                if(item.data["isco-code-08"]) {
+                    item.data.isco = item.data["isco-code-08"];            
                     while(item.data.isco.length < 4) {
                         item.data.isco = "0" + item.data.isco;
                     }                
@@ -86,8 +86,8 @@ class Connections extends React.Component {
         Rest.getConceptSsyk(item.data.id, (data) => {
             if(data && data.length == 1) {
                 item.data = data[0];
-                if(item.data["ssyk-2012"]) {
-                    item.data.ssyk = item.data["ssyk-2012"];            
+                if(item.data["ssyk-code-2012"]) {
+                    item.data.ssyk = item.data["ssyk-code-2012"];            
                     while(item.data.ssyk.length < 4) {
                         item.data.ssyk = "0" + item.data.ssyk;
                     }                
