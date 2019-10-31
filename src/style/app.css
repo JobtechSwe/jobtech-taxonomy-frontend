@@ -134,6 +134,18 @@ body {
     height: 100%;
 }
 
+.side_content_4 {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.side_content_5 {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .main_panel {
     width: 100%;
 }

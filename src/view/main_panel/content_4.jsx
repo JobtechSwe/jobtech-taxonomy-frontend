@@ -24,11 +24,16 @@ class Content4 extends React.Component {
             nodes: [],
             edges: []
         }};
+        this.boundSideItemSelected = this.onSideItemSelected.bind(this);
     }
 
     componentDidMount() {
-        //POC
+        EventDispatcher.add(this.boundSideItemSelected, Constants.EVENT_SIDEPANEL_ITEM_SELECTED);
         this.getConcept("DPPw_4wa_AsH");
+    }
+
+    componentWillUnmount() {
+        EventDispatcher.remove(this.boundSideItemSelected);
     }
 
     getConcept(id) {
@@ -105,7 +110,15 @@ class Content4 extends React.Component {
         }
     }
 
-    elementSelected(event) {
+    onSideItemSelected(item) {
+        var d = {nodes: [], edges: []};
+        item.label = item.preferredLabel;
+        item.title = item.label;
+        d.nodes.push(item);            
+        this.setState({data: d});
+    }
+
+    onElementSelected(event) {
         console.log(event);
         this.updateRelations(this.findNodeById(event.nodes[0]));
     }
@@ -113,7 +126,7 @@ class Content4 extends React.Component {
     render() {
         console.log("render", this.state.data);
         var events = {
-            select: this.elementSelected.bind(this)
+            select: this.onElementSelected.bind(this)
         };
         return (
             <div className="main_content_4">
