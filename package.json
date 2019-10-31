@@ -26,14 +26,12 @@
     "uglifyjs-webpack-plugin": "^2.2.0"
   },
   "dependencies": {
-    "@nivo/bar": "^0.59.2",
-    "@nivo/network": "^0.59.1",
-    "@nivo/pie": "^0.59.0",
-    "@nivo/treemap": "^0.59.0",
     "react": "^16.9.0",
     "react-d3-graph": "^2.3.0",
     "react-datepicker": "^2.9.6",
     "react-dom": "^16.9.0",
-    "react-graph-vis": "^1.0.5"
+    "react-graph-vis": "^1.0.5",
+    "react-vis": "^1.11.7",
+    "victory": "^33.1.1"
   }
 }

@@ -203,6 +203,12 @@ body {
     margin-top: 0px;
 }
 
+main_content_5_chart {
+    margin: 10px;
+    border: 1px solid;
+    border-radius: 10px;
+}
+
 .main_content_title {
     font-weight: bold;
     font-size: 32pt;
