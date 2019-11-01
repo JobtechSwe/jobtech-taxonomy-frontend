@@ -13,10 +13,21 @@ class Content4 extends React.Component {
         super();
         this.options = {
             layout: {
-              hierarchical: false
+              hierarchical: true
             },
             edges: {
               color: "#000000"
+            },
+            nodes: {
+                shape: "box",
+                margin: 10,
+                font: {
+                    size: 16,
+                    color: "#000"
+                },
+                widthConstraint: {
+                    maximum: 200
+                }
             }
         };
         this.state = {
@@ -40,13 +51,75 @@ class Content4 extends React.Component {
         Rest.getConcept(id, (data) => {
             console.log(data);
             var d = {nodes: [], edges: []};
-            data[0].label = data[0].preferredLabel;
-            data[0].title = data[0].label;
+            data[0].label = data[0].preferredLabel + "\n" + Localization.get("db_" + data[0].type);
+            data[0].group = this.getGroupFor(data[0].type);
             d.nodes.push(data[0]);            
             this.setState({data: d});
         }, (status) => {
             // TODO: error handling
         });
+    }
+
+    getGroupFor(type) {
+        switch(type) {
+            case "continent":
+                return 1;
+            case "country":
+                return 2;
+            case "driving-licence":
+                return 3;
+            case "driving-licence-combination":
+                return 4;
+            case "employment-duration":
+                return 5;
+            case "employment-type":
+                return 6;
+            case "isco-level-1":
+            case "isco-level-4":
+                return 7;
+            case "keyword":
+                return 8;
+            case "language":
+                return 9;
+            case "language-level":
+                return 10;
+            case "municipality":
+                return 11;
+            case "occupation-collection":
+                return 12;
+            case "occupation-field":
+                return 13;
+            case "occupation-name":
+                return 14;
+            case "region":
+                return 15;
+            case "skill":
+            case "skill-headline":
+                return 16;
+            case "sni-level-1":
+            case "sni-level-2":
+                return 17;
+            case "ssyk-level-1":
+            case "ssyk-level-2":
+            case "ssyk-level-3":
+            case "ssyk-level-4":
+                return 18;
+            case "sun-education-field-1":
+            case "sun-education-field-2":
+            case "sun-education-field-3":
+            case "sun-education-field-4":
+                return 19;
+            case "sun-education-level-1":
+            case "sun-education-level-2":
+            case "sun-education-level-3":
+                return 20;
+            case "wage-type":
+                return 21;
+            case "worktime-extent":
+                return 22;
+            default:
+                return 0;
+        }
     }
 
     updateRelations(item) {
@@ -60,8 +133,8 @@ class Content4 extends React.Component {
                 var edges = JSON.parse(JSON.stringify(this.state.data.edges));
                 for(var i=0; i<data.length; ++i) {
                     var p = data[i];
-                    p.label = p.preferredLabel;
-                    p.title = p.label;
+                    p.label = p.preferredLabel + "\n" + Localization.get("db_" + p.type);
+                    p.group = this.getGroupFor(p.type);
                     if(!nodes.find((n) => {return nodes.id === p.id})) {
                         nodes.push(p);
                         edges.push({
@@ -82,8 +155,8 @@ class Content4 extends React.Component {
                 var edges = JSON.parse(JSON.stringify(this.state.data.edges));
                 for(var i=0; i<data.length; ++i) {
                     var p = data[i];
-                    p.label = p.preferredLabel;
-                    p.title = p.label;
+                    p.label = p.preferredLabel + "\n" + Localization.get("db_" + p.type);
+                    p.group = this.getGroupFor(p.type);
                     if(!nodes.find((n) => {return nodes.id === p.id})) {
                         nodes.push(p);
                         edges.push({
@@ -101,10 +174,8 @@ class Content4 extends React.Component {
     }
 
     findNodeById(id) {
-        console.log(id);
         for(var i=0; i<this.state.data.nodes.length; ++i) {
             if(id === this.state.data.nodes[i].id) {
-                console.log(this.state.data.nodes[i]);
                 return this.state.data.nodes[i];
             }
         }
@@ -112,9 +183,9 @@ class Content4 extends React.Component {
 
     onSideItemSelected(item) {
         var d = {nodes: [], edges: []};
-        item.label = item.preferredLabel;
-        item.title = item.label;
-        d.nodes.push(item);            
+        item.label = item.preferredLabel + "\n" + Localization.get("db_" + item.type);
+        item.group = this.getGroupFor(item.type);
+        d.nodes.push(item);
         this.setState({data: d});
     }
 
