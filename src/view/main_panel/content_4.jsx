@@ -11,15 +11,16 @@ class Content4 extends React.Component {
 
     constructor() {
         super();
+        this.EDGE_LENGTH = 300;
         this.options = {
             layout: {
-              hierarchical: true
+              hierarchical: false
             },
             edges: {
               color: "#000000"
             },
             nodes: {
-                shape: "box",
+                //shape: "box",
                 margin: 10,
                 font: {
                     size: 16,
@@ -51,7 +52,7 @@ class Content4 extends React.Component {
         Rest.getConcept(id, (data) => {
             console.log(data);
             var d = {nodes: [], edges: []};
-            data[0].label = data[0].preferredLabel + "\n" + Localization.get("db_" + data[0].type);
+            data[0].label = Localization.get("db_" + data[0].type) + "\n" + data[0].preferredLabel;
             data[0].group = this.getGroupFor(data[0].type);
             d.nodes.push(data[0]);            
             this.setState({data: d});
@@ -133,13 +134,14 @@ class Content4 extends React.Component {
                 var edges = JSON.parse(JSON.stringify(this.state.data.edges));
                 for(var i=0; i<data.length; ++i) {
                     var p = data[i];
-                    p.label = p.preferredLabel + "\n" + Localization.get("db_" + p.type);
+                    p.label = Localization.get("db_" + p.type) + "\n" + p.preferredLabel;
                     p.group = this.getGroupFor(p.type);
                     if(!nodes.find((n) => {return nodes.id === p.id})) {
                         nodes.push(p);
                         edges.push({
                             from: item.id,
-                            to: p.id
+                            to: p.id,
+                            length: this.EDGE_LENGTH
                         });
                     }
                 }   
@@ -155,13 +157,14 @@ class Content4 extends React.Component {
                 var edges = JSON.parse(JSON.stringify(this.state.data.edges));
                 for(var i=0; i<data.length; ++i) {
                     var p = data[i];
-                    p.label = p.preferredLabel + "\n" + Localization.get("db_" + p.type);
+                    p.label = Localization.get("db_" + p.type) + "\n" + p.preferredLabel;
                     p.group = this.getGroupFor(p.type);
                     if(!nodes.find((n) => {return nodes.id === p.id})) {
                         nodes.push(p);
                         edges.push({
                             from: p.id,
-                            to: item.id
+                            to: item.id,
+                            length: this.EDGE_LENGTH
                         });
                     }
                 }
@@ -183,7 +186,7 @@ class Content4 extends React.Component {
 
     onSideItemSelected(item) {
         var d = {nodes: [], edges: []};
-        item.label = item.preferredLabel + "\n" + Localization.get("db_" + item.type);
+        item.label = Localization.get("db_" + item.type) + "\n" + item.preferredLabel;
         item.group = this.getGroupFor(item.type);
         d.nodes.push(item);
         this.setState({data: d});
