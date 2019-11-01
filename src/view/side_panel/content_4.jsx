@@ -17,10 +17,36 @@ class Content4 extends React.Component {
 
     componentDidMount() {
         Rest.getConceptsSsyk("ssyk-level-1 ssyk-level-2 ssyk-level-3 ssyk-level-4", (data) => {
+            for(var i=0; i<data.length; ++i) {
+                var item = data[i];            
+                if(item["ssyk-code-2012"]) {
+                    item.ssyk = item["ssyk-code-2012"];            
+                    while(item.ssyk.length < 4) {
+                        item.ssyk = "0" + item.ssyk;
+                    }                
+                }
+                item.preferredLabel = this.formatLabel(item.preferredLabel);
+            }
+            data.sort((a, b) => {
+                if(a.ssyk) {
+                    if(a.ssyk < b.ssyk) { 
+                        return -1; 
+                    }
+                    return a.ssyk > b.ssyk ? 1 : 0;
+                }
+                if(a.preferredLabel < b.preferredLabel) { 
+                    return -1; 
+                }
+                return a.preferredLabel > b.preferredLabel ? 1 : 0;
+            });
             this.setState({data: data});
         }, (status) => {
             // TODO: error handling
         });
+    }
+
+    formatLabel(label) {
+        return label.replace(/\/(?! )/g, " / ");
     }
 
     onItemSelected(item) {
@@ -29,8 +55,9 @@ class Content4 extends React.Component {
 
     renderItem(item) {
         return(
-            <div>
-                {item.preferredLabel}
+            <div className="ssyk_item">
+                <div>{item.ssyk}</div>
+                <div>{item.preferredLabel}</div>
             </div>
         );
     }
