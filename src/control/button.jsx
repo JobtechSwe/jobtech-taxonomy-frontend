@@ -9,9 +9,11 @@ class Button extends React.Component {
     }
 
     render() {
+        var isEnabled = this.props.isEnabled == null ? true : this.props.isEnabled;
+        var css = Util.getStyle(this) + (isEnabled ? "" : " button_disabled");
         return (
             <div 
-                className={Util.getStyle(this)}
+                className={css}
                 onMouseUp={this.props.onClick}>
                 <div>{this.props.text}</div>
                 {Util.renderHint(this)}

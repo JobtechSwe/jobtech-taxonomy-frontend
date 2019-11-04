@@ -162,9 +162,17 @@ class Connections extends React.Component {
         return (
             <div className="connections">
                 <TreeView context={this.relationTreeView}/>
-                <Button 
-                    text={localization.get("visit")} 
-                    onClick={this.onVisitClicked.bind(this)}/>
+                <div>
+                    <Button 
+                        text={localization.get("visit")} 
+                        onClick={this.onVisitClicked.bind(this)}/>
+                    <Button 
+                        isEnabled={!this.state.isLocked}
+                        text={localization.get("add")}/>
+                    <Button 
+                        isEnabled={!this.state.isLocked}
+                        text={localization.get("remove")}/>
+                </div>
             </div>
         );
     }

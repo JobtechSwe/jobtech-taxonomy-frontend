@@ -62,6 +62,8 @@ class Localization {
                 changes: "Förändringar",
                 from: "Från",
                 to: "Till",
+                add: "Lägg till",
+                remove: "Ta bort",
                 change_log: "Förändringslogg",
                 value_storage: "Värdeförråd",
                 event: "Händelse",

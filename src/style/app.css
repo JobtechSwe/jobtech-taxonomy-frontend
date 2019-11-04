@@ -257,6 +257,10 @@ body {
     box-sizing: border-box;
 }
 
+.connections div:nth-child(2) {
+    display: flex;
+}
+
 .connections > .button {
     margin-right: auto;
 }
