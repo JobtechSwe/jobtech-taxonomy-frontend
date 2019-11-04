@@ -145,6 +145,13 @@ class Util {
         return pointer;
     }
 
+    createGroupContext() {
+        return {
+            // callbacks
+            onLockChanged: null,
+        };
+    }
+
     renderHint(control) {
         if(control.props.hint) {
             return (

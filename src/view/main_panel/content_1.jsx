@@ -1,4 +1,5 @@
 import React from 'react';
+import ControlUtil from '../../control/util.jsx';
 import Label from '../../control/label.jsx';
 import Group from '../../control/group.jsx';
 import Constants from '../../context/constants.jsx';
@@ -40,18 +41,28 @@ class Content1 extends React.Component {
                 key={key++}/>
         );
         if(item) {
+            var infoContext = ControlUtil.createGroupContext();
+            var connectionsContext = ControlUtil.createGroupContext();
             components.push(
                 <Group 
                     text="Info"
+                    useLock={true}
+                    context={infoContext}
                     key={key++}>
-                    <Description item={item}/>
+                    <Description 
+                        item={item}
+                        groupContext={infoContext}/>
                 </Group>
             );
             components.push(
                 <Group 
                     text={Localization.get("connections")}
+                    useLock={true}
+                    context={connectionsContext}
                     key={key++}>
-                    <Connections item={item}/>
+                    <Connections 
+                        item={item}
+                        groupContext={connectionsContext}/>
                 </Group>
             );
             components.push(

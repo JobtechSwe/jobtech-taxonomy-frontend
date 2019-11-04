@@ -8,6 +8,7 @@ class Group extends React.Component {
         super();
         this.state = {
             expanded: true,
+            locked: true,
         }
         this.css = "group";
     }
@@ -16,15 +17,35 @@ class Group extends React.Component {
         this.setState({expanded: !this.state.expanded});
     }
 
+    onLockClicked() {
+        this.setState({locked: !this.state.locked}, () => {
+            var context = this.props.context;
+            if(context && context.onLockChanged) {
+                context.onLockChanged(this.state.locked);
+            }
+        });
+    }
+
+    renderLock() {
+        if(this.props.useLock) {
+            return (
+                <div onMouseUp={this.onLockClicked.bind(this)}>
+                    <img src={this.state.locked ? Constants.ICON_LOCKED : Constants.ICON_UNLOCKED}/>
+                </div>
+            );
+        }
+    }
+
     renderHeader() {
         return (
-            <div 
-                className="group_header font no_select" 
-                onMouseUp={this.onHeaderClicked.bind(this)}>
-                <img src={this.state.expanded ? Constants.ICON_EXPAND_UP : Constants.ICON_EXPAND_DOWN}/>
-                <div>
-                    {this.props.text}
+            <div className="group_header font no_select">
+                <div onMouseUp={this.onHeaderClicked.bind(this)}>
+                    <img src={this.state.expanded ? Constants.ICON_EXPAND_UP : Constants.ICON_EXPAND_DOWN}/>
+                    <div>
+                        {this.props.text}
+                    </div>
                 </div>
+                {this.renderLock()}
             </div>
         );
     }

@@ -277,12 +277,18 @@ select.rounded:focus {
     cursor: pointer;
 }
 
+.group_header div:first-child {
+    display: flex;
+    flex: 1 1 auto;
+}
+
 .group_header img {
     max-height: 24px;
     max-width: 24px;
+    pointer-events: none;
 }
 
-.group_header:hover img {
+.group_header div:hover img {
     filter: invert(1.0);
 }
 

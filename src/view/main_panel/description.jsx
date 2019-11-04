@@ -4,11 +4,68 @@ import List from '../../control/list.jsx';
 import Label from '../../control/label.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
+import App from '../../context/app.jsx';
 
 class Description extends React.Component { 
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLocked: true,
+            preferredLabel: props.item ? props.item.preferredLabel : "",
+            definition: props.item ? props.item.definition : "",
+        };
+    }
+
+    componentDidMount() {
+        this.init(this.props);
+    }
+
+    UNSAFE_componentWillReceiveProps(props) {
+        this.init(props);
+    }
+
+    init(props) {
+        if(props.groupContext) {
+            props.groupContext.onLockChanged = this.onGroupLockedChanged.bind(this);
+        }
+        this.setState({
+            preferredLabel: props.item ? props.item.preferredLabel : "",
+            definition: props.item ? props.item.definition : "",
+        });
+    }
+
+    onGroupLockedChanged(isLocked) {
+        this.setState({isLocked: isLocked});
+    }
+
+    onUndoLabel(value) {
+        this.setState({preferredLabel: value});
+    }
+
+    onUndoDefinition(value) {
+        this.setState({definition: value});
+    }
+
+    createEditRequest(id, value, undoCallback) {
+        var request = App.createEditRequest(id);
+        request.newValue = value;
+        request.oldValue = this.state[id];
+        request.objectId = this.props.item.id;
+        request.undoCallback = undoCallback;
+        return request;
+    }
+
+    onLabelChanged(e) {
+        var request = this.createEditRequest("preferredLabel", e.target.value, this.onUndoLabel.bind(this));
+        App.addEditRequest(request);
+        this.setState({preferredLabel: e.target.value});
+    }
+
+    onDefinitionChanged(e) {
+        var request = this.createEditRequest("definition", e.target.value, this.onUndoDefinition.bind(this));
+        App.addEditRequest(request);
+        this.setState({definition: e.target.value});
     }
 
     render() {
@@ -18,12 +75,16 @@ class Description extends React.Component {
                 <input 
                     type="text" 
                     className="rounded"
-                    value={this.props.item == null ? "" : this.props.item.preferredLabel}/>
+                    disabled={this.state.isLocked ? "disabled" : ""}
+                    value={this.state.preferredLabel}
+                    onChange={this.onLabelChanged.bind(this)}/>
                 <Label text={Localization.get("description")}/>
                 <textarea 
                     rows="10" 
                     className="rounded"
-                    value={this.props.item == null ? "" : this.props.item.definition}/>
+                    disabled={this.state.isLocked ? "disabled" : ""}
+                    value={this.state.definition}
+                    onChange={this.onDefinitionChanged.bind(this)}/>
             </div>
         );
     }

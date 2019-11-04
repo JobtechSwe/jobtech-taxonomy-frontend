@@ -13,6 +13,9 @@ class Connections extends React.Component {
 
     constructor() {
         super();
+        this.state = {
+            isLocked: true,
+        };
         this.relationTreeView = ControlUtil.createTreeView();
         this.relationTreeView.onItemSelected = this.onItemSelected.bind(this);
         this.selectedItem = null;
@@ -21,11 +24,32 @@ class Connections extends React.Component {
     }
 
     componentDidMount() {
-        this.getRelationsFor(this.props.item);
+        this.init(this.props);
     }
 
     UNSAFE_componentWillReceiveProps(props) {
+        this.init(props);
+    }
+
+    init(props) {
+        if(props.groupContext) {
+            props.groupContext.onLockChanged = this.onGroupLockedChanged.bind(this);
+        }
         this.getRelationsFor(props.item);
+    }
+
+    onGroupLockedChanged(isLocked) {
+        this.setState({isLocked: isLocked});
+    }
+
+    onVisitClicked() {
+        if(this.selectedItem && this.selectedItem.parent) {
+            EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.selectedItem.data);
+        }
+    }
+
+    onItemSelected(item) {
+        this.selectedItem = item;
     }
 
     findRootFor(type) {
@@ -132,16 +156,6 @@ class Connections extends React.Component {
             element.type === Constants.CONCEPT_SSYK_LEVEL_4) {
                 this.getSsykCodeFor(child);
         }
-    }
-
-    onVisitClicked() {
-        if(this.selectedItem && this.selectedItem.parent) {
-            EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.selectedItem.data);
-        }
-    }
-
-    onItemSelected(item) {
-        this.selectedItem = item;
     }
 
     render() {
