@@ -34,13 +34,42 @@ class Content1 extends React.Component {
     onSideItemSelected(item) {
         var components = [];
         var key = 0;
-        components.push(
-            <Label 
-                css="main_content_title" 
-                text={item ? Localization.get("db_" + item.type) : Localization.get("value_storage")} 
-                key={key++}/>
-        );
         if(item) {
+
+            //item.deprecated = true;
+
+            // setup title, if deprecated we want it to be really visible
+            if(item.deprecated) {
+                components.push(
+                    <div 
+                        className="main_content_title_container"
+                        key={key++}>
+                        <Label 
+                            css="main_content_title" 
+                            text={Localization.get("db_" + item.type)}/>
+                        <div className="main_content_title_name">
+                            <Label text={item.preferredLabel}/>
+                            <Label 
+                                css="main_content_title_deprecated" 
+                                text={Localization.get("deprecated")}/>
+                        </div>
+                    </div>
+                );
+            } else {
+                components.push(
+                    <div 
+                        className="main_content_title_container"
+                        key={key++}>
+                        <Label 
+                            css="main_content_title" 
+                            text={Localization.get("db_" + item.type)}/>
+                        <div className="main_content_title_name">
+                            <Label text={item.preferredLabel}/>
+                        </div>
+                    </div>
+                );
+            }
+            // add content for item
             var infoContext = ControlUtil.createGroupContext();
             var connectionsContext = ControlUtil.createGroupContext();
             components.push(
@@ -71,6 +100,13 @@ class Content1 extends React.Component {
                     key={key++}>
                     <ItemHistory item={item}/>
                 </Group>
+            );
+        } else {
+            components.push(
+                <Label 
+                    css="main_content_title" 
+                    text={Localization.get("value_storage")} 
+                    key={key++}/>
             );
         }
         this.setState({components: components});

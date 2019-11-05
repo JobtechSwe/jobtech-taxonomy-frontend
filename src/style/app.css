@@ -245,12 +245,47 @@ body {
     border-radius: 10px;
 }
 
+.main_content_title_container {
+    display: flex;
+    justify-content: space-between;
+}
+
 .main_content_title {
     font-weight: bold;
     font-size: 32pt;
     margin-left: 10px;
     margin-bottom: 10px;
     font-variant-caps: all-petite-caps;
+}
+
+.main_content_title_name {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 14pt;
+    font-variant-caps: all-petite-caps;
+    justify-content: center;
+    margin-bottom: 10px;
+    margin-right: 5px;
+}
+
+.main_content_title_name .label {
+    margin: 0px;
+    padding: 0px;
+    height: 16px;
+    overflow: visible;
+    align-self: flex-end;
+}
+
+.main_content_title_name div {
+    max-width: 250px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.main_content_title_deprecated {
+    color: #dd0000;
 }
 
 .description {    

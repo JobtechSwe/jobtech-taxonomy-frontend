@@ -10,10 +10,12 @@ class Description extends React.Component {
 
     constructor(props) {
         super(props);
+        var item = props.item;
         this.state = {
             isLocked: true,
-            preferredLabel: props.item ? props.item.preferredLabel : "",
-            definition: props.item ? props.item.definition : "",
+            preferredLabel: item ? item.preferredLabel : "",
+            definition: item ? item.definition : "",
+            deprecated: item && item.deprecated != null ? item.deprecated : false,
         };
     }
 
@@ -29,9 +31,11 @@ class Description extends React.Component {
         if(props.groupContext) {
             props.groupContext.onLockChanged = this.onGroupLockedChanged.bind(this);
         }
+        var item = props.item;
         this.setState({
-            preferredLabel: props.item ? props.item.preferredLabel : "",
-            definition: props.item ? props.item.definition : "",
+            preferredLabel: item ? item.preferredLabel : "",
+            definition: item ? item.definition : "",
+            deprecated: item && item.deprecated != null ? item.deprecated : false,
         });
     }
 
