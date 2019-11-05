@@ -64,6 +64,9 @@ class Localization {
                 to: "Till",
                 add: "Lägg till",
                 remove: "Ta bort",
+                save: "Spara",
+                abort: "Avbryt",
+                ignore: "Ignorera",
                 change_log: "Förändringslogg",
                 value_storage: "Värdeförråd",
                 event: "Händelse",
@@ -72,6 +75,7 @@ class Localization {
                 filter: "Filter",
                 search: "Sök",
                 loading: "laddar...",
+                dialog_unsaved_changes: "Du har osparade förändringar, vill du spara?",
             },
             // english
             en: {

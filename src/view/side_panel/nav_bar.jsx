@@ -22,7 +22,7 @@ class NavBar extends React.Component {
 
     onSaveDialogResult(id, result) {
         if(result != Constants.DIALOG_OPTION_ABORT) {
-            // used saved or discared changes and wants to continue
+            // user saved or discared changes and wants to continue
             this.setWorkmode(id);
         }
     }

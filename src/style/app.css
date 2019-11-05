@@ -9,6 +9,22 @@ body {
     height: 100%;
 }
 
+.dialog_save {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.dialog_save_buttons {
+    display: flex;
+    margin-top: 10px;
+    align-self: flex-end;
+}
+
+.dialog_save_buttons > .button:nth-child(3) {
+    margin-right: 0px;
+}
+
 .side_panel {
     display: flex;
     flex-direction: column;

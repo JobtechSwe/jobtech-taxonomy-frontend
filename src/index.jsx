@@ -43,7 +43,6 @@ class Index extends React.Component {
         var window = document.getElementById("overlay_window");
         container.classList.remove("overlay_effect");
         window.classList.remove("overlay_window");
-        window.innerHTML = "";
     }
 
     render() {

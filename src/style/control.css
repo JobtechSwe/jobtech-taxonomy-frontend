@@ -362,6 +362,7 @@ select.rounded:focus {
     min-height: 100px;
     min-width: 300px;
     box-shadow: 0px 5px 10px #9999;
+    box-sizing: border-box;
 }
 
 .dialog_window .label {
@@ -369,9 +370,10 @@ select.rounded:focus {
     margin-bottom: 5px;
     padding: 5px;
     border-radius: 5px;
+    font-weight: bold;
 }
 
-.dialog_window div:nth-child(2) {
+.dialog_window > div:nth-child(2) {
     display: flex;
     height: 100%;
     background: #fff;
@@ -385,8 +387,12 @@ select.rounded:focus {
     user-select: none;
 }
 
+#overlay_window {
+    display: none;
+}
+
 .overlay_window {
-    display: flex;
+    display: flex !important;
     position: absolute;
     left: 50%;
     top: 50%;

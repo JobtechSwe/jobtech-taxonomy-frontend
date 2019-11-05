@@ -4,6 +4,7 @@ import Rest from '../../context/rest.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
+import App from '../../context/app.jsx';
 import TreeView from '../../control/tree_view.jsx';
 import ControlUtil from '../../control/util.jsx';
 import Loader from '../../control/loader.jsx';
@@ -140,9 +141,20 @@ class Content1 extends React.Component {
         this.search(this.searchReference.value);        
     }
 
-    onQueryItemSelected(item) {
-        if(item.data) {       
+    onSaveDialogResult(item, result) {
+        if(result != Constants.DIALOG_OPTION_ABORT) {
+            // user saved or discared changes and wants to continue
             EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
+        }
+    }
+
+    onQueryItemSelected(item) {
+        if(item.data) {
+            if(App.hasUnsavedChanges()) {
+                App.showSaveDialog(this.onSaveDialogResult.bind(this, item));
+            } else {
+                EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
+            }
         }
     }
 
