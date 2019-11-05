@@ -13,6 +13,18 @@ class Group extends React.Component {
         this.css = "group";
     }
 
+    UNSAFE_componentWillReceiveProps(props) {
+        this.setState({
+            expanded: true,
+            locked: true,
+        }, () => {
+            var context = this.props.context;
+            if(context && context.onLockChanged) {
+                context.onLockChanged(this.state.locked);
+            }
+        });
+    }
+
     onHeaderClicked() {
         this.setState({expanded: !this.state.expanded});
     }

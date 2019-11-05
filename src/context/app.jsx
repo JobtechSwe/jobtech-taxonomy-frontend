@@ -94,11 +94,17 @@ class App {
     }
 
     showSaveDialog(callback) {
+        var changes = this.editRequests.map((element, index) => {
+            return (
+                <li key={index}>{element.text}</li>
+            );
+        });
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
             title: Localization.get("save"),
             content: 
                 <div className="dialog_save">
                     <div>{Localization.get("dialog_unsaved_changes")}</div>
+                    <ul>{changes}</ul>
                     <div className="dialog_save_buttons">
                         <Button 
                             onClick={this.saveChanges.bind(this)}

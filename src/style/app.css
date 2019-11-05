@@ -15,6 +15,13 @@ body {
     justify-content: space-between;
 }
 
+.dialog_save > ul {
+    margin: 0px;
+    margin-top: 5px;
+    padding-left: 35px;
+    list-style-type: square;
+}
+
 .dialog_save_buttons {
     display: flex;
     margin-top: 10px;
@@ -169,6 +176,7 @@ body {
 .main_container {
     display: flex;
     height: 100%;
+    transition: all 500ms ease-in-out;
 }
 
 .main_content_1 {

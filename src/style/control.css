@@ -361,12 +361,13 @@ select.rounded:focus {
     padding: 5px;
     min-height: 100px;
     min-width: 300px;
-    box-shadow: 0px 5px 10px #9999;
+    box-shadow: 0px 5px 10px #0009;
     box-sizing: border-box;
 }
 
 .dialog_window .label {
-    background: #fff;
+    background: #386479;
+    color: #fff;
     margin-bottom: 5px;
     padding: 5px;
     border-radius: 5px;

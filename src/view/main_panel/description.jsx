@@ -58,12 +58,14 @@ class Description extends React.Component {
 
     onLabelChanged(e) {
         var request = this.createEditRequest("preferredLabel", e.target.value, this.onUndoLabel.bind(this));
+        request.text = Localization.get("name");
         App.addEditRequest(request);
         this.setState({preferredLabel: e.target.value});
     }
 
     onDefinitionChanged(e) {
         var request = this.createEditRequest("definition", e.target.value, this.onUndoDefinition.bind(this));
+        request.text = Localization.get("description");
         App.addEditRequest(request);
         this.setState({definition: e.target.value});
     }
