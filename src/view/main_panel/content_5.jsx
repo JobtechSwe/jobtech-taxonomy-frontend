@@ -1,5 +1,5 @@
 import React from 'react';
-import { VictoryBar, VictoryPie } from 'victory';
+import { VictoryBar, VictoryPie, VictoryTooltip } from 'victory';
 import Label from '../../control/label.jsx';
 import Group from '../../control/group.jsx';
 import Constants from '../../context/constants.jsx';
@@ -64,7 +64,8 @@ class Content5 extends React.Component {
                     />
                 </div>
                 <div className="main_content_5_chart">
-                    <VictoryPie 
+                    <VictoryPie
+                        labelComponent={<VictoryTooltip/>}
                         cornerRadius="5"
                         innerRadius="60"
                         data={this.state.data}
