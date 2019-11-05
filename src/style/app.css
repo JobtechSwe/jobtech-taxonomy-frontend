@@ -427,3 +427,10 @@ body {
     font-weight: normal;
     font-variant-caps: normal;
 }
+
+.vis_network {
+    display: flex;
+    overflow-y: auto;
+    width: 100%;
+    height: 100%;
+}
