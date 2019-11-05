@@ -4,6 +4,7 @@ import TreeView from '../../control/tree_view.jsx';
 import ControlUtil from '../../control/util.jsx';
 import Loader from '../../control/loader.jsx';
 import Constants from '../../context/constants.jsx';
+import App from '../../context/app.jsx';
 import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
@@ -38,13 +39,24 @@ class Connections extends React.Component {
         this.getRelationsFor(props.item);
     }
 
+    onSaveDialogResult(item, result) {
+        if(result != Constants.DIALOG_OPTION_ABORT) {
+            // user saved or discared changes and wants to continue
+            EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item);
+        }
+    }
+
     onGroupLockedChanged(isLocked) {
         this.setState({isLocked: isLocked});
     }
 
     onVisitClicked() {
         if(this.selectedItem && this.selectedItem.parent) {
-            EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.selectedItem.data);
+            if(App.hasUnsavedChanges()) {
+                App.showSaveDialog(this.onSaveDialogResult.bind(this, this.selectedItem.data));
+            } else {
+                EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.selectedItem.data);
+            }
         }
     }
 
