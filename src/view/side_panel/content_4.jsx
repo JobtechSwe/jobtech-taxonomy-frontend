@@ -4,6 +4,7 @@ import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import List from '../../control/list.jsx';
+import Loader from '../../control/loader.jsx';
 
 class Content4 extends React.Component { 
 
@@ -11,11 +12,12 @@ class Content4 extends React.Component {
         super();
 
         this.state = {
-            data: []
+            data: [],
+            loadingData: true,
         };
     }
 
-    componentDidMount() {
+    componentDidMount() {        
         Rest.getConceptsSsyk("ssyk-level-1 ssyk-level-2 ssyk-level-3 ssyk-level-4", (data) => {
             for(var i=0; i<data.length; ++i) {
                 var item = data[i];            
@@ -39,7 +41,10 @@ class Content4 extends React.Component {
                 }
                 return a.preferredLabel > b.preferredLabel ? 1 : 0;
             });
-            this.setState({data: data});
+            this.setState({
+                data: data, 
+                loadingData: false
+            });
         }, (status) => {
             // TODO: error handling
         });
@@ -51,6 +56,14 @@ class Content4 extends React.Component {
 
     onItemSelected(item) {
         EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item);
+    }
+
+    renderLoader() {
+        if(this.state.loadingData) {
+            return(
+                <Loader/>
+            );
+        }
     }
 
     renderItem(item) {
@@ -69,7 +82,9 @@ class Content4 extends React.Component {
                     data={this.state.data}
                     dataRender={this.renderItem.bind(this)}
                     onItemSelected={this.onItemSelected.bind(this)}
-                />
+                >
+                    {this.renderLoader()}
+                </List>
             </div>
         );
     }

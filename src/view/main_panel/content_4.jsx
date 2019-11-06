@@ -20,6 +20,12 @@ class Content4 extends React.Component {
                 enabled: false,
                 showButton: false,
             },
+            interaction: { 
+                hover: true 
+            },
+            manipulation: {
+                enabled: true
+            },
             layout: {
               hierarchical: false
             },
@@ -35,7 +41,9 @@ class Content4 extends React.Component {
                 margin: 5,
                 font: {
                     size: 16,
-                    color: "#000"
+                    color: "#000",
+                    strokeWidth: 1,
+                    strokeColor: "#fff",
                 },
                 widthConstraint: {
                     maximum: 200
@@ -48,19 +56,6 @@ class Content4 extends React.Component {
                     }
                 }
             },
-            //physics: {
-            //    forceAtlas2Based: {
-            //        gravitationalConstant: -560,
-            //        centralGravity: 0.005,
-            //        springLength: 230,
-            //        springConstant: 0.18,
-            //        avoidOverlap: 0.7
-            //    },
-            //    maxVelocity: 146,
-            //    solver: "forceAtlas2Based",
-            //    timestep: 0.35,
-            //    stabilization: {iterations: 150}
-            //}
             physics: {
                 forceAtlas2Based: {
                     avoidOverlap: 0.41
@@ -77,11 +72,11 @@ class Content4 extends React.Component {
             edges: []
         }};
         this.boundSideItemSelected = this.onSideItemSelected.bind(this);
+        this.boundElementSelected = this.onElementSelected.bind(this);
     }
 
     componentDidMount() {
-        EventDispatcher.add(this.boundSideItemSelected, Constants.EVENT_SIDEPANEL_ITEM_SELECTED);
-        this.getConcept("DPPw_4wa_AsH");
+        EventDispatcher.add(this.boundSideItemSelected, Constants.EVENT_SIDEPANEL_ITEM_SELECTED);        
         this.edges = new Vis.DataSet(this.state.data.edges);
         this.nodes = new Vis.DataSet(this.state.data.nodes);
         var container = document.getElementById("vis_network_id");
@@ -96,23 +91,8 @@ class Content4 extends React.Component {
         if(!this.Network) {
             
             var container = document.getElementById("vis_network_id");
-            this.Network = new Vis.Network(container, {edges: this.edges, nodes: this.nodes}, this.options);
+            this.Network = new Vis.Network(container, {edges: this.edges, nodes: this.nodes}, this.options);            
         }
-        this.Network.on("select", this.onElementSelected.bind(this));
-    }
-
-    getConcept(id) {
-        Rest.getConcept(id, (data) => {
-            console.log(data);
-            var d = {nodes: [], edges: []};
-            data[0].label = Localization.get("db_" + data[0].type) + "\n" + data[0].preferredLabel;
-            data[0].group = this.getGroupFor(data[0].type);
-            d.nodes.push(data[0]);
-            this.nodes.add(d.nodes);
-            this.setState({data: d});
-        }, (status) => {
-            // TODO: error handling
-        });
     }
 
     getGroupFor(type) {
@@ -181,31 +161,27 @@ class Content4 extends React.Component {
         if(!item) {
             console.log("Nothing selected");
             return;
-        }
-        var selected = this.state.data.nodes.find((n) => {return n.id === item.id});
-        if(selected) {
-            if(selected.fetchedRelations) {
-                return;
-            }
-            selected.fetchedRelations = true;
-            selected.group = this.getGroupFor(selected.type);
-            this.nodes.update([selected]);
-        } else {
-            console.log("Unable to find node in data");
+        }    
+        if(item.fetchedRelations) {
             return;
         }
-        if(selected.relations.broader > 0) {
-            Rest.getAllConceptRelations(selected.id, Constants.RELATION_BROADER, (data) => {
+        item.fetchedRelations = true;
+        item.label = item.preferredLabel;
+        item.title = Localization.get("db_" + item.type);
+        item.group = this.getGroupFor(item.type);
+        this.nodes.update([item]);
+        if(item.relations.broader > 0) {
+            Rest.getAllConceptRelations(item.id, Constants.RELATION_BROADER, (data) => {
                 var nodes = [];
                 var edges = [];
                 for(var i=0; i<data.length; ++i) {
                     var p = data[i];
-                    p.label = Localization.get("db_" + p.type) + "\n" + p.preferredLabel;
+                    p.title = Localization.get("db_" + p.type) + "<br \>" + p.preferredLabel;
                     p.group = "notFetched";
-                    if(!this.state.data.nodes.find((n) => {return n.id === p.id})) {
+                    if(!this.findNodeById(p.id)) {
                         nodes.push(p);
                         edges.push({
-                            from: selected.id,
+                            from: item.id,
                             to: p.id,
                         });
                     }
@@ -219,19 +195,19 @@ class Content4 extends React.Component {
                 // TODO: error handling
             });
         }
-        if(selected.relations.narrower > 0) {
-            Rest.getAllConceptRelations(selected.id, Constants.RELATION_NARROWER, (data) => {
+        if(item.relations.narrower > 0) {
+            Rest.getAllConceptRelations(item.id, Constants.RELATION_NARROWER, (data) => {
                 var nodes = [];
                 var edges = [];
                 for(var i=0; i<data.length; ++i) {
                     var p = data[i];
-                    p.label = Localization.get("db_" + p.type) + "\n" + p.preferredLabel;
+                    p.title = Localization.get("db_" + p.type) + "<br \>" + p.preferredLabel;
                     p.group = "notFetched";
-                    if(!this.state.data.nodes.find((n) => {return n.id === p.id})) {
+                    if(!this.findNodeById(p.id)) {
                         nodes.push(p);
                         edges.push({
                             from: p.id,
-                            to: selected.id,                            
+                            to: item.id,                            
                         });
                     }
                 }
@@ -247,16 +223,13 @@ class Content4 extends React.Component {
     }
 
     findNodeById(id) {
-        for(var i=0; i<this.state.data.nodes.length; ++i) {
-            if(id === this.state.data.nodes[i].id) {
-                return this.state.data.nodes[i];
-            }
-        }
+        return this.state.data.nodes.find((n) => {return n.id === id});
     }
 
     onSideItemSelected(item) {
         var d = {nodes: [], edges: []};
-        item.label = Localization.get("db_" + item.type) + "\n" + item.preferredLabel;
+        item.label = item.preferredLabel;
+        item.title = Localization.get("db_" + item.type);
         item.group = this.getGroupFor(item.type);
         d.nodes.push(item);
         this.edges.clear();
@@ -264,22 +237,27 @@ class Content4 extends React.Component {
         this.nodes.clear();
         this.nodes.add(d.nodes);
         this.setState({data: d});
+        this.updateRelations(item);
     }
 
     onElementSelected(event) {
-        console.log(event);
+        console.log("onElementSelected", event);
         this.updateRelations(this.findNodeById(event.nodes[0]));
     }
 
     render() {
-        var events = {
+        /*var events = {
             select: this.onElementSelected.bind(this)
-        };
+        };*/
+        if(this.Network) {
+            this.Network.off("select", this.boundElementSelected);
+            this.Network.on("select", this.boundElementSelected);
+        }
         return (
             <div className="main_content_4">
                 <div 
                     id="vis_network_id"
-                    className="vis_network"/>
+                    className="vis_network_main"/>
             </div>
         );
     }

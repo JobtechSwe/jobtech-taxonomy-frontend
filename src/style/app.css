@@ -487,9 +487,21 @@ body {
     font-variant-caps: normal;
 }
 
-.vis_network {
+.vis_network_main {
     display: flex;
     overflow-y: auto;
     width: 100%;
     height: 100%;
+}
+
+.vis-tooltip {
+    position: absolute;
+    background: rgb(247, 231, 164);    
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: #000;
+    box-shadow: #000 0px 1px 3px;
+    padding: 0px 2px 0px 2px;
+    z-index: 1;
+    font-family: 'Calibri', sans-serif;
 }
