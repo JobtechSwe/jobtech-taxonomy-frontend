@@ -76,6 +76,13 @@ body {
     border-radius: 10px;
 }
 
+.save_panel {
+    display: flex;
+    padding: 5px;
+    width: 100%;
+    justify-content: flex-end;
+}
+
 .sub_panel {
     background: #eee;
     border: 1px solid #bbb;
@@ -185,10 +192,6 @@ body {
     overflow-y: auto;
     width: 100%;
     height: 100%;
-}
-
-.main_content_1 > .group:nth-child(2) {
-    margin-top: 0px;
 }
 
 .main_content_2 {

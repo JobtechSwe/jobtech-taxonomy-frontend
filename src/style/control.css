@@ -22,6 +22,7 @@
     display: block;
     border-style: solid;
     width: 8px;
+    height: 14px;
 }
 /* Up */
 ::-webkit-scrollbar-button:single-button:vertical:decrement {
@@ -100,12 +101,12 @@ select.rounded:focus {
     display: flex;
     margin: 2px;
     padding: 2px;
-    border: 2px solid #333;
+    border: 2px solid #555;
     border-radius: 5px;
     align-items: center;
     justify-content: center;
     color: #fff;
-    background: #333;
+    background: #386479;
     font-size: 12pt;
     cursor: pointer;
     box-sizing: border-box;
@@ -130,12 +131,12 @@ select.rounded:focus {
 
 .button_disabled:hover {
     color: #fff;
-    background: #333;
+    background: #386479;
 }
 
 .button_disabled:active {
     color: #fff;
-    background: #333;
+    background: #386479;
 }
 
 .button_round {
@@ -281,7 +282,7 @@ select.rounded:focus {
     box-sizing: border-box;
     background: #ffc878;
     border-radius: 10px;
-    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .group_header {

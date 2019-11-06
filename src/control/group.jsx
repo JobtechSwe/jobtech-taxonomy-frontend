@@ -49,17 +49,19 @@ class Group extends React.Component {
     }
 
     renderHeader() {
-        return (
-            <div className="group_header font no_select">
-                <div onMouseUp={this.onHeaderClicked.bind(this)}>
-                    <img src={this.state.expanded ? Constants.ICON_EXPAND_UP : Constants.ICON_EXPAND_DOWN}/>
-                    <div>
-                        {this.props.text}
+        if(this.props.text) {
+            return (
+                <div className="group_header font no_select">
+                    <div onMouseUp={this.onHeaderClicked.bind(this)}>
+                        <img src={this.state.expanded ? Constants.ICON_EXPAND_UP : Constants.ICON_EXPAND_DOWN}/>
+                        <div>
+                            {this.props.text}
+                        </div>
                     </div>
+                    {this.renderLock()}
                 </div>
-                {this.renderLock()}
-            </div>
-        );
+            );
+        }
     }
 
     renderChildren() {

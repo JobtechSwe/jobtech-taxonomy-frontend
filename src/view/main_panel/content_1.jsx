@@ -7,6 +7,7 @@ import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Description from './description.jsx';
 import Connections from './connections.jsx';
+import SavePanel from './save_panel.jsx';
 import ItemHistory from './item_history.jsx';
 
 class Content1 extends React.Component { 
@@ -35,9 +36,6 @@ class Content1 extends React.Component {
         var components = [];
         var key = 0;
         if(item) {
-
-            //item.deprecated = true;
-
             // setup title, if deprecated we want it to be really visible
             if(item.deprecated) {
                 components.push(
@@ -72,6 +70,12 @@ class Content1 extends React.Component {
             // add content for item
             var infoContext = ControlUtil.createGroupContext();
             var connectionsContext = ControlUtil.createGroupContext();
+            components.push(
+                <Group 
+                    key={key++}>
+                    <SavePanel item={item}/>
+                </Group>
+            );
             components.push(
                 <Group 
                     text="Info"

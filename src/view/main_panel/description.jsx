@@ -51,6 +51,10 @@ class Description extends React.Component {
         this.setState({definition: value});
     }
 
+    onUndoDeprecated(value) {
+        this.setState({deprecated: value});
+    }
+
     createEditRequest(id, value, undoCallback) {
         var request = App.createEditRequest(id);
         request.newValue = value;
@@ -73,6 +77,13 @@ class Description extends React.Component {
         App.addEditRequest(request);
         this.setState({definition: e.target.value});
     }
+    
+    onDeprecatedChanged(e) {
+        var request = this.createEditRequest("deprecated", e.target.checked, this.onUndoDeprecated.bind(this));
+        request.text = Localization.get("deprecated");
+        App.addEditRequest(request);
+        this.setState({deprecated: e.target.checked});
+    }
 
     render() {
         return (
@@ -91,6 +102,12 @@ class Description extends React.Component {
                     disabled={this.state.isLocked ? "disabled" : ""}
                     value={this.state.definition}
                     onChange={this.onDefinitionChanged.bind(this)}/>
+                <Label text={Localization.get("deprecated")}/>
+                <input 
+                    type="checkbox"
+                    disabled={this.state.isLocked ? "disabled" : ""}
+                    checked={this.state.deprecated}
+                    onChange={this.onDeprecatedChanged.bind(this)}/>
             </div>
         );
     }

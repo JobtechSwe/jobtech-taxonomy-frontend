@@ -3,7 +3,6 @@ import EventDispatcher from './event_dispatcher.jsx';
 import Constants from './constants.jsx';
 import Localization from './localization.jsx';
 import Button from './../control/button.jsx';
-import { isThisSecond } from 'date-fns/esm';
 
 class App { 
 
@@ -26,14 +25,27 @@ class App {
     }
 
     addEditRequest(request) {
+        var count = this.editRequests.length;
         var item = this.editRequests.find((x) => {
             return x.id == request.id;
         });
         if(item) {
             item.timestamp = new Date().getTime();
             item.newValue = request.newValue;
+            if(item.newValue == item.oldValue) {
+                // when the new and old value are the same, the request is no longer valid
+                var index = this.editRequests.indexOf(item);
+                this.editRequests.splice(index, 1);
+            }
         } else {
             this.editRequests.push(request);
+        }
+        if(count > 0 && this.editRequests.length == 0) {
+            // no more changes
+            EventDispatcher.fire(Constants.EVENT_HIDE_SAVE_PANEL);
+        } else if(count == 0 && this.editRequests.length > 0) {
+            // new changes
+            EventDispatcher.fire(Constants.EVENT_SHOW_SAVE_PANEL);
         }
     }
 
