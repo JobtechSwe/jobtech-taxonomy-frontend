@@ -285,6 +285,10 @@ select.rounded:focus {
     margin-bottom: 10px;
 }
 
+.group:last-child {
+    margin-bottom: unset;
+}
+
 .group_header {
     display: flex;
     font-weight: 100;
