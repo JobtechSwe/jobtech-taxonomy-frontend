@@ -241,14 +241,10 @@ class Content4 extends React.Component {
     }
 
     onElementSelected(event) {
-        console.log("onElementSelected", event);
         this.updateRelations(this.findNodeById(event.nodes[0]));
     }
 
     render() {
-        /*var events = {
-            select: this.onElementSelected.bind(this)
-        };*/
         if(this.Network) {
             this.Network.off("select", this.boundElementSelected);
             this.Network.on("select", this.boundElementSelected);
