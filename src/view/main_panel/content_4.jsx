@@ -241,7 +241,23 @@ class Content4 extends React.Component {
     }
 
     onElementSelected(event) {
-        this.updateRelations(this.findNodeById(event.nodes[0]));
+        if(event.event.tapCount == 1) {
+            if(event.nodes.length > 0) {
+                this.updateRelations(this.findNodeById(event.nodes[0]));
+            }
+        } else if(event.event.tapCount == 2) {
+            if(event.nodes.length > 0) {
+                var nodeId = event.nodes[0];
+                for(var i=0; i < this.state.data.edges.length; ++i) {
+                    var edge = this.state.data.edges[i];
+                    if(edge.from === nodeId) {
+                        this.updateRelations(this.findNodeById(edge.to));
+                    } else if(edge.to === nodeId) {
+                        this.updateRelations(this.findNodeById(edge.from));
+                    }
+                }
+            }
+        }
     }
 
     render() {
