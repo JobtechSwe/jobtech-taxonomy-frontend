@@ -66,6 +66,8 @@ class Localization {
                 remove: "Ta bort",
                 save: "Spara",
                 abort: "Avbryt",
+                yes: "Ja",
+                no: "Nej",
                 ignore: "Ignorera",
                 reset: "Återställ",
                 change_log: "Förändringslogg",
@@ -77,6 +79,8 @@ class Localization {
                 search: "Sök",
                 loading: "laddar...",
                 deprecated: "Avaktualiserad",
+                deprecate: "Avaktualisera",
+                dialog_deprecate: "Är du säker på att du vill avaktualisera",
                 dialog_unsaved_changes: "Du har osparade förändringar, vill du spara?",
             },
             // english

@@ -4,11 +4,12 @@ import Constants from './../context/constants.jsx';
 
 class Group extends React.Component { 
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             expanded: true,
             locked: true,
+            unlockable: props.unlockable != null ? props.unlockable : true,
         }
         this.css = "group";
     }
@@ -17,6 +18,7 @@ class Group extends React.Component {
         this.setState({
             expanded: true,
             locked: true,
+            unlockable: props.unlockable != null ? props.unlockable : true,
         }, () => {
             var context = this.props.context;
             if(context && context.onLockChanged) {
@@ -30,19 +32,25 @@ class Group extends React.Component {
     }
 
     onLockClicked() {
-        this.setState({locked: !this.state.locked}, () => {
-            var context = this.props.context;
-            if(context && context.onLockChanged) {
-                context.onLockChanged(this.state.locked);
-            }
-        });
+        if(this.state.unlockable) {
+            this.setState({locked: !this.state.locked}, () => {
+                var context = this.props.context;
+                if(context && context.onLockChanged) {
+                    context.onLockChanged(this.state.locked);
+                }
+            });
+        }
     }
 
     renderLock() {
         if(this.props.useLock) {
+            var icon = this.state.locked ? Constants.ICON_LOCKED : Constants.ICON_UNLOCKED;
+            if(!this.state.unlockable) {
+                icon = Constants.ICON_HARD_LOCKED;
+            }
             return (
                 <div onMouseUp={this.onLockClicked.bind(this)}>
-                    <img src={this.state.locked ? Constants.ICON_LOCKED : Constants.ICON_UNLOCKED}/>
+                    <img src={icon}/>
                 </div>
             );
         }

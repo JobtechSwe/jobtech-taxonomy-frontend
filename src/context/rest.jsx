@@ -52,6 +52,15 @@ class Rest {
         http.send();
     }
 
+    delete(func, onSuccess, onError) {
+        var http = new XMLHttpRequest();
+        this.setupCallbacks(http, onSuccess, onError);
+        http.open("DELETE", Constants.REST_IP + func, true);
+        http.setRequestHeader("api-key", Constants.REST_API_KEY);
+        http.setRequestHeader("Accept", "application/json");
+        http.send();
+    }
+
     getConcept(id, onSuccess, onError) {
         this.get("/main/concepts?id=" + id, onSuccess, onError);
     }
@@ -90,6 +99,10 @@ class Rest {
 
     getChanges(fromVersion, toVersion, onSuccess, onError) {
         this.get("/main/changes?fromVersion=" + fromVersion + "&toVersion=" + toVersion, onSuccess, onError);
+    }
+
+    deleteConcept(id, onSuccess, onError) {
+        this.get("/private/delete-concept", id, onSuccess, onError);
     }
 
 }

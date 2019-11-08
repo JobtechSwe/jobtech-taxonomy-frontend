@@ -3,6 +3,8 @@ import Button from '../../control/button.jsx';
 import List from '../../control/list.jsx';
 import Label from '../../control/label.jsx';
 import Constants from '../../context/constants.jsx';
+import Rest from '../../context/rest.jsx';
+import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Localization from '../../context/localization.jsx';
 import App from '../../context/app.jsx';
 
@@ -72,6 +74,50 @@ class Description extends React.Component {
         this.setState({definition: e.target.value});
     }
 
+    onDeprecateClicked() {
+        EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
+            title: Localization.get("deprecate"),
+            content: this.renderDeprecateDialog(),
+        });
+    }
+
+    onDeprecateYesClicked() {
+        this.props.item.deprecated = true;
+        EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.props.item);
+        EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
+        /*Rest.deleteConcept(this.props.item.id, () => {
+            this.props.item.deprecated = true;
+            // reselect the item, so the user interface is refreshed
+            EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.props.item);
+            EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
+        }, () => {
+            // TODO: notify error
+            EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
+        });*/
+    }
+    
+    onDeprecateAbortClicked() {
+        EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
+    }
+
+    renderDeprecateDialog() {
+        return (
+            <div className="dialog_save">
+                <div>
+                    {Localization.get("dialog_deprecate")} "{this.state.preferredLabel}"?
+                </div>
+                <div className="dialog_save_buttons">
+                    <Button 
+                        text={Localization.get("yes")}
+                        onClick={this.onDeprecateYesClicked.bind(this)}/>
+                    <Button 
+                        text={Localization.get("abort")}
+                        onClick={this.onDeprecateAbortClicked.bind(this)}/>
+                </div>
+            </div>
+        );
+    }
+
     render() {
         return (
             <div className="description">
@@ -89,6 +135,12 @@ class Description extends React.Component {
                     disabled={this.state.isLocked ? "disabled" : ""}
                     value={this.state.definition}
                     onChange={this.onDefinitionChanged.bind(this)}/>
+                <div>
+                    <Button 
+                        isEnabled={!this.state.isLocked}
+                        text={Localization.get("deprecate")}
+                        onClick={this.onDeprecateClicked.bind(this)}/>
+                </div>
             </div>
         );
     }

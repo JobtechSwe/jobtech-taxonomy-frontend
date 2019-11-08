@@ -13,6 +13,11 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    width: 100%;
+}
+
+.dialog_save .button {
+    min-width: 50px;
 }
 
 .dialog_save > ul {
@@ -257,7 +262,6 @@ body {
     font-weight: bold;
     font-size: 32pt;
     margin-left: 10px;
-    margin-bottom: 10px;
     font-variant-caps: all-petite-caps;
 }
 
@@ -268,7 +272,6 @@ body {
     font-size: 14pt;
     font-variant-caps: all-petite-caps;
     justify-content: center;
-    margin-bottom: 10px;
     margin-right: 5px;
 }
 
@@ -306,6 +309,10 @@ body {
 
 .description > textarea {
     resize: none;
+}
+
+.description > div:last-child {
+    display: flex;
 }
 
 .connections {    

@@ -36,8 +36,9 @@ class Content1 extends React.Component {
         var components = [];
         var key = 0;
         if(item) {
+            var isDeprecated = item.deprecated ? item.deprecated : false;
             // setup title, if deprecated we want it to be really visible
-            if(item.deprecated) {
+            if(isDeprecated) {
                 components.push(
                     <div 
                         className="main_content_title_container"
@@ -81,6 +82,7 @@ class Content1 extends React.Component {
                     text="Info"
                     useLock={true}
                     context={infoContext}
+                    unlockable={!isDeprecated}
                     key={key++}>
                     <Description 
                         item={item}
@@ -92,6 +94,7 @@ class Content1 extends React.Component {
                     text={Localization.get("connections")}
                     useLock={true}
                     context={connectionsContext}
+                    unlockable={!isDeprecated}
                     key={key++}>
                     <Connections 
                         item={item}

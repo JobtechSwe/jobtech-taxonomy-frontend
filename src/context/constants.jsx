@@ -52,6 +52,7 @@ class Constants {
         this.ICON_EXPAND_DOWN = "./resource/icon_expand_down.png";
         this.ICON_LOCKED = "./resource/icon_locked.png";
         this.ICON_UNLOCKED = "./resource/icon_unlocked.png";
+        this.ICON_HARD_LOCKED = "./resource/icon_hard_locked.png";
 
         var apikey = this.getArg("apikey");
         if(apikey) {
