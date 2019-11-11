@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Support from './support.jsx';
 import EventDispatcher from './context/event_dispatcher.jsx';
 import Constants from './context/constants.jsx';
+import Util from './context/util.jsx';
 import DialogWindow from './control/dialog_window.jsx';
 import SidePanel from './view/side_panel/side_panel.jsx';
 import MainPanel from './view/main_panel/main_panel.jsx';
@@ -18,6 +19,7 @@ class Index extends React.Component {
     }
 
     componentDidMount() {
+        Util.initSearchUrl("default");
         EventDispatcher.add(this.boundShowOverlayWindow, Constants.EVENT_SHOW_OVERLAY);
         EventDispatcher.add(this.boundHideOverlayWindow, Constants.EVENT_HIDE_OVERLAY);
         /*EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {

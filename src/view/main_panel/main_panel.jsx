@@ -2,6 +2,7 @@ import React from 'react';
 import Panel from './../../control/panel.jsx';
 import Container from './../container.jsx';
 import Constants from './../../context/constants.jsx';
+import Util from './../../context/util.jsx';
 import Content1 from './content_1.jsx';
 import Content2 from './content_2.jsx';
 import Content3 from './content_3.jsx';
@@ -16,7 +17,7 @@ class MainPanel extends React.Component {
                 <Container 
                     css="main_container"
                     eventId={Constants.ID_MAINPANEL_CONTAINER}
-                    defaultView={Constants.WORK_MODE_1}
+                    defaultView={Util.getDefaultWorkMode()}
                     views={[{
                         content: (<Content1/>),
                         id: Constants.WORK_MODE_1,

@@ -1,6 +1,7 @@
 import React from 'react';
 import Hint from './../../control/hint.jsx';
 import App from './../../context/app.jsx';
+import Util from './../../context/util.jsx';
 import Constants from './../../context/constants.jsx';
 import EventDispatcher from './../../context/event_dispatcher.jsx';
 
@@ -9,14 +10,19 @@ class NavBar extends React.Component {
     constructor() {
         super();
         this.state = {
-            selected: Constants.WORK_MODE_1,
+            selected: Util.getDefaultWorkMode(),
         };
+    }
+
+    componentDidMount() {
+
     }
 
     setWorkmode(id) {
         EventDispatcher.fire(Constants.ID_SIDEPANEL_CONTAINER, id);
         EventDispatcher.fire(Constants.ID_MAINPANEL_CONTAINER, id);
         EventDispatcher.fire(Constants.EVENT_SET_WORKMODE, id);
+        Util.setSearchUrlValue("tab", Constants.URL_MODE_SEARCHMAP[id]);
         this.setState({selected: id});
     }
 

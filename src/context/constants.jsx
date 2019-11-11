@@ -39,6 +39,23 @@ class Constants {
         // id's
         this.ID_SIDEPANEL_CONTAINER = "ID_SIDEPANEL_CONTAINER";
         this.ID_MAINPANEL_CONTAINER = "ID_MAINPANEL_CONTAINER";
+
+        this.URL_SEARCH_MODEMAP = {
+            "default": this.WORK_MODE_1,
+            "list": this.WORK_MODE_1,
+            "version": this.WORK_MODE_2,
+            "changelog": this.WORK_MODE_3,
+            "relations": this.WORK_MODE_4,
+            "stats": this.WORK_MODE_5,
+        };
+        this.URL_MODE_SEARCHMAP = {
+            "0": "list",
+            "1": "version",
+            "2": "changelog",
+            "3": "relations",
+            "4": "stats",
+        },
+
         // settings
         this.REST_IP = "http://jobtech-taxonomy-sidecar-taxonomy-frontend.test.services.jtech.se/v1/taxonomy";
         this.REST_API_KEY = "";
