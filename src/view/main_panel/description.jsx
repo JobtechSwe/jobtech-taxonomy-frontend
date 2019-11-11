@@ -82,18 +82,15 @@ class Description extends React.Component {
     }
 
     onDeprecateYesClicked() {
-        this.props.item.deprecated = true;
-        EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.props.item);
-        EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
-        /*Rest.deleteConcept(this.props.item.id, () => {
+        Rest.deleteConcept(this.props.item.id, () => {
             this.props.item.deprecated = true;
-            // reselect the item, so the user interface is refreshed
+            // reselect the item, so the gui is refreshed
             EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.props.item);
             EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
         }, () => {
             // TODO: notify error
             EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
-        });*/
+        });
     }
     
     onDeprecateAbortClicked() {
