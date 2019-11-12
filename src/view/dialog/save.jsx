@@ -9,6 +9,9 @@ class Save extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            note: App.editNote,
+        }
     }
 
     onSaveClicked() {
@@ -24,6 +27,11 @@ class Save extends React.Component {
         EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
     }
 
+    onNoteChanged(e) {
+        App.editNote = e.target.value;
+        this.setState({note: e.target.value});
+    }
+
     render() {
         var changes = this.props.changes.map((element, index) => {
             return (
@@ -36,6 +44,11 @@ class Save extends React.Component {
             <div className="dialog_save">
                 <div>{Localization.get("dialog_unsaved_changes")}</div>
                 <ul>{changes}</ul>
+                <div>{Localization.get("change_note")}</div>
+                <textarea 
+                    className="rounded"
+                    value={this.state.note}
+                    onChange={this.onNoteChanged.bind(this)}/>
                 <div className="dialog_save_buttons">
                     <Button 
                         onClick={this.onSaveClicked.bind(this)}

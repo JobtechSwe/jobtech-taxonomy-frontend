@@ -282,11 +282,7 @@ select.rounded:focus {
     box-sizing: border-box;
     background: #ffc878;
     border-radius: 10px;
-    margin-bottom: 10px;
-}
-
-.group:last-child {
-    margin-bottom: unset;
+    margin-top: 10px;
 }
 
 .group_header {

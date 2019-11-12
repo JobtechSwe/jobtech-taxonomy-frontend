@@ -1,35 +1,71 @@
 import React from 'react';
 import ControlUtil from '../../control/util.jsx';
 import Label from '../../control/label.jsx';
+import Button from '../../control/button.jsx';
 import Group from '../../control/group.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
+import App from '../../context/app.jsx';
+import SavePanel from './save_panel.jsx';
 import Description from './description.jsx';
 import Connections from './connections.jsx';
-import SavePanel from './save_panel.jsx';
 import ItemHistory from './item_history.jsx';
+import Save from '../dialog/save.jsx';
 
 class Content1 extends React.Component { 
 
     constructor() {
         super();
         this.state = {
+            isShowingSavePanel: false,
+            item: null,
             components: [],
         };
         this.boundSideItemSelected = this.onSideItemSelected.bind(this);
         this.boundMainItemSelected = this.onMainItemSelected.bind(this);
+        this.boundShowSave = this.onShowSave.bind(this);
+        this.boundHideSave = this.onHideSave.bind(this);
+        this.boundHideSavePanel = this.onHideSavePanel.bind(this);
     }
 
     componentDidMount() {
         EventDispatcher.add(this.boundSideItemSelected, Constants.EVENT_SIDEPANEL_ITEM_SELECTED);
         EventDispatcher.add(this.boundMainItemSelected, Constants.EVENT_MAINPANEL_ITEM_SELECTED);
+        EventDispatcher.add(this.boundShowSave, Constants.EVENT_SHOW_SAVE_BUTTON);
+        EventDispatcher.add(this.boundHideSave, Constants.EVENT_HIDE_SAVE_BUTTON);
+        EventDispatcher.add(this.boundHideSavePanel, Constants.EVENT_HIDE_SAVE_PANEL);
         this.onSideItemSelected();       
     }
 
     componentWillUnmount() {
         EventDispatcher.remove(this.boundSideItemSelected);
         EventDispatcher.remove(this.boundMainItemSelected);
+        EventDispatcher.remove(this.boundShowSave);
+        EventDispatcher.remove(this.boundHideSave);
+        EventDispatcher.remove(this.boundHideSavePanel);
+    }
+
+    onShowSave() {
+        this.forceUpdate();
+    }
+
+    onHideSave() {
+        this.forceUpdate();
+    }
+
+    onHideSavePanel() {
+        this.setState({isShowingSavePanel: false});
+    }
+
+    onTitleSaveClicked() {
+        this.setState({isShowingSavePanel: true});
+    }
+
+    onTitleResetClicked() {
+        // TODO: dialog?
+        App.undoEditRequests();
+        this.forceUpdate();
     }
 
     onSideItemSelected(item) {
@@ -37,46 +73,9 @@ class Content1 extends React.Component {
         var key = 0;
         if(item) {
             var isDeprecated = item.deprecated ? item.deprecated : false;
-            // setup title, if deprecated we want it to be really visible
-            if(isDeprecated) {
-                components.push(
-                    <div 
-                        className="main_content_title_container"
-                        key={key++}>
-                        <Label 
-                            css="main_content_title" 
-                            text={Localization.get("db_" + item.type)}/>
-                        <div className="main_content_title_name">
-                            <Label text={item.preferredLabel}/>
-                            <Label 
-                                css="main_content_title_deprecated" 
-                                text={Localization.get("deprecated")}/>
-                        </div>
-                    </div>
-                );
-            } else {
-                components.push(
-                    <div 
-                        className="main_content_title_container"
-                        key={key++}>
-                        <Label 
-                            css="main_content_title" 
-                            text={Localization.get("db_" + item.type)}/>
-                        <div className="main_content_title_name">
-                            <Label text={item.preferredLabel}/>
-                        </div>
-                    </div>
-                );
-            }
             // add content for item
             var infoContext = ControlUtil.createGroupContext();
             var connectionsContext = ControlUtil.createGroupContext();
-            components.push(
-                <Group 
-                    key={key++}>
-                    <SavePanel item={item}/>
-                </Group>
-            );
             components.push(
                 <Group 
                     text="Info"
@@ -108,24 +107,80 @@ class Content1 extends React.Component {
                     <ItemHistory item={item}/>
                 </Group>
             );
-        } else {
-            components.push(
-                <Label 
-                    css="main_content_title" 
-                    text={Localization.get("value_storage")} 
-                    key={key++}/>
-            );
         }
-        this.setState({components: components});
+        this.setState({
+            isShowingSavePanel: false,
+            item: item,
+            components: components,
+        });
     }
 
     onMainItemSelected(item) {
         this.onSideItemSelected(item);
     }
 
+    renderTitle() {
+        var item = this.state.item;
+        if(item == null) {
+            return (
+                <Label 
+                    css="main_content_title" 
+                    text={Localization.get("value_storage")}/>
+            );
+        } else {
+            var key = 0;
+            var isDeprecated = item.deprecated ? item.deprecated : false;
+            var components = [];
+            if(App.hasUnsavedChanges()) {
+                components.push(
+                    <div 
+                        key={key++}
+                        className="main_content_title_save">
+                        <Button 
+                            onClick={this.onTitleResetClicked.bind(this)}
+                            text={Localization.get("reset")}/>
+                        <Button 
+                            onClick={this.onTitleSaveClicked.bind(this)}
+                            text={Localization.get("save")}/>
+                    </div>
+                );
+                if(this.state.isShowingSavePanel) {
+                    components.push(
+                        <SavePanel key={key++}/>
+                    );
+                }
+            } else {
+                components.push(
+                    <Label 
+                        key={key++}
+                        text={item.preferredLabel}/>
+                );
+                if(isDeprecated) {
+                    components.push(
+                        <Label 
+                            key={key++}
+                            css="main_content_title_deprecated" 
+                            text={Localization.get("deprecated")}/>
+                    );
+                }
+            }
+            return (
+                <div className="main_content_title_container">
+                    <Label 
+                        css="main_content_title" 
+                        text={Localization.get("db_" + item.type)}/>
+                    <div className="main_content_title_name">
+                        {components}
+                    </div>
+                </div>
+            );
+        }
+    }
+
     render() {
         return (
-            <div className="main_content_1">                
+            <div className="main_content_1">
+                {this.renderTitle()}             
                 {this.state.components}
             </div>
         );

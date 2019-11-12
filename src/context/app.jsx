@@ -9,6 +9,7 @@ class App {
 
     constructor() {
         this.editRequests = [];
+        this.editNote = "";
     }
 
     createEditRequest(id) {
@@ -43,10 +44,10 @@ class App {
         }
         if(count > 0 && this.editRequests.length == 0) {
             // no more changes
-            EventDispatcher.fire(Constants.EVENT_HIDE_SAVE_PANEL);
+            EventDispatcher.fire(Constants.EVENT_HIDE_SAVE_BUTTON);
         } else if(count == 0 && this.editRequests.length > 0) {
             // new changes
-            EventDispatcher.fire(Constants.EVENT_SHOW_SAVE_PANEL);
+            EventDispatcher.fire(Constants.EVENT_SHOW_SAVE_BUTTON);
         }
     }
 
@@ -77,6 +78,7 @@ class App {
             }
         }
         this.editRequests = [];
+        this.editNote = "";
     }
 
     undoEditRequests() {
@@ -87,10 +89,12 @@ class App {
             }
         }
         this.editRequests = [];
+        this.editNote = "";
     }
 
     discardEditRequest() {
         this.editRequests = [];
+        this.editNote = "";
     }
 
     hasUnsavedChanges() {
