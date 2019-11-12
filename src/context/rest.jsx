@@ -77,6 +77,10 @@ class Rest {
         this.get("/specific/concepts/ssyk?id=" + id, onSuccess, onError);
     }
 
+    getConceptsIsco08(type, onSuccess, onError) {
+        this.get("/specific/concepts/isco?type=" + type, onSuccess, onError);
+    }
+
     getConceptIsco08(id, onSuccess, onError) {
         this.get("/specific/concepts/isco?id=" + id, onSuccess, onError);
     }
@@ -89,8 +93,8 @@ class Rest {
         this.get("/main/concepts?related-ids=" + id + "&relation=" + relationType, onSuccess, onError);
     }
 
-    searchConcepts(type, query, onSuccess, onError) {
-        this.get("/search?type=" + type + "&q=" + encodeURIComponent(query), onSuccess, onError);
+    searchConcepts(query, onSuccess, onError) {
+        this.get("/suggesters/autocomplete?query-string=" + encodeURIComponent(query), onSuccess, onError);
     }
 
     getVersions(onSuccess, onError) {

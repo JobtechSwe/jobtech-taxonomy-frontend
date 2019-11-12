@@ -139,7 +139,7 @@ class VersionList extends React.Component {
         console.log(this.state.loadingData);
         return (
             <div className="version_list">
-                <Label text={Localization.get("filter")}/>
+                <Label text={Localization.get("title_filter")}/>
                 <input 
                     type="text" 
                     className="rounded" 
