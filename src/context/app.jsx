@@ -3,6 +3,7 @@ import EventDispatcher from './event_dispatcher.jsx';
 import Constants from './constants.jsx';
 import Localization from './localization.jsx';
 import Button from './../control/button.jsx';
+import Save from './../view/dialog/save.jsx';
 
 class App { 
 
@@ -75,6 +76,7 @@ class App {
                 objectGroups[i].callback(objectGroups[i].changes);
             }
         }
+        this.editRequests = [];
     }
 
     undoEditRequests() {
@@ -87,18 +89,8 @@ class App {
         this.editRequests = [];
     }
 
-    saveChanges() {
-        this.commitEditRequests();
+    discardEditRequest() {
         this.editRequests = [];
-        EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
-    }
-
-    discardChanges(callback) {
-        this.editRequests = [];
-        if(callback) {
-            callback(Constants.DIALOG_OPTION_NO);
-        }
-        EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
     }
 
     hasUnsavedChanges() {
@@ -106,29 +98,11 @@ class App {
     }
 
     showSaveDialog(callback) {
-        var changes = this.editRequests.map((element, index) => {
-            return (
-                <li key={index}>{element.text}</li>
-            );
-        });
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
             title: Localization.get("save"),
-            content: 
-                <div className="dialog_save">
-                    <div>{Localization.get("dialog_unsaved_changes")}</div>
-                    <ul>{changes}</ul>
-                    <div className="dialog_save_buttons">
-                        <Button 
-                            onClick={this.saveChanges.bind(this)}
-                            text={Localization.get("save")}/>
-                        <Button 
-                            onClick={this.discardChanges.bind(this, callback)}
-                            text={Localization.get("ignore")}/>
-                        <Button 
-                            onClick={() => EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY)}
-                            text={Localization.get("abort")}/>
-                    </div>
-                </div>
+            content: <Save 
+                callback={callback}
+                changes={this.editRequests}/>,
         });
     }
 	

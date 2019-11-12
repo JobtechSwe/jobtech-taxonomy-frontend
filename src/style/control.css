@@ -337,8 +337,8 @@ select.rounded:focus {
 }
 
 .loader {
-    border: 4px solid #f3f3f3; /* Light grey */
-    border-top: 4px solid #386479; /* Blue */
+    border: 4px solid #c9c9c9;
+    border-top: 4px solid #386479; 
     border-radius: 50%;
     width: 8px;
     height: 8px;
@@ -388,7 +388,7 @@ select.rounded:focus {
 }
 
 .overlay_effect {
-    filter: blur(5px);
+    filter: blur(5px) contrast(0.5);
     pointer-events: none;
     user-select: none;
 }
