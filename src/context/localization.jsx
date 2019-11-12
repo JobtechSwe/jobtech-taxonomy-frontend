@@ -82,6 +82,8 @@ class Localization {
                 deprecate: "Avaktualisera",
                 dialog_deprecate: "Är du säker på att du vill avaktualisera",
                 dialog_unsaved_changes: "Du har osparade förändringar, vill du spara?",
+                close: "Stäng",
+                show: "Visa",
             },
             // english
             en: {
