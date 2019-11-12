@@ -73,27 +73,27 @@ class Content1 extends React.Component {
         );
     }
 
-    findRootFor(type) {
-        return this.queryTreeView.roots.find((root) => {
-            return root.data ? type == root.data.type : false;
-        });
-    }
-
     buildTree(data) {
         this.queryTreeView.clear();
+        var roots = [];
         for(var i=0; i<data.length; ++i) {
             var element = data[i];
-            var root = this.findRootFor(element.type);
+            var root = roots.find((r) => {
+                return r.data ? element.type == r.data.type : false;
+            });
             if(!root) {
                 root = ControlUtil.createTreeViewItem(this.queryTreeView, {type: element.type});
                 root.setText(Localization.get("db_" + element.type));
                 root.setExpanded(true);                
-                this.queryTreeView.addRoot(root);
+                roots.push(root);
             }
             var child = ControlUtil.createTreeViewItem(this.queryTreeView, element);
             child.setShowButton(false);
             child.setText(data[i].ssyk ? this.getItemFormat(data[i]) : element.preferredLabel);
             root.addChild(child);
+        }
+        for(var i=0; i<roots.length; ++i) {
+            this.queryTreeView.addRoot(roots[i]);
         }
     }
     
