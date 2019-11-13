@@ -137,11 +137,11 @@ class Content1 extends React.Component {
     }
 
     search(query) {
-        this.queryTreeView.clear();
-        this.showLoader();
+        this.queryTreeView.clear();        
         Rest.abort();
         if(this.state.queryType == this.TYPE_SEARCH) {
             if(query && query.length > 0) {
+                this.showLoader();
                 Rest.searchConcepts(query, (data) => {
                     this.state.data = data;
                     this.setData(data);
@@ -151,6 +151,7 @@ class Content1 extends React.Component {
                 });
             }
         } else {
+            this.showLoader();
             if(this.state.queryType == this.TYPE_SSYK) {
                 Rest.getConceptsSsyk(this.state.queryType, (data) => {
                     this.state.data = data;
