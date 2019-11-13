@@ -102,7 +102,7 @@ class Rest {
     }
 
     getChanges(fromVersion, toVersion, onSuccess, onError) {
-        this.get("/main/changes?fromVersion=" + fromVersion + "&toVersion=" + toVersion, onSuccess, onError);
+        this.get("/main/changes?from-version=" + fromVersion + "&to-version=" + toVersion, onSuccess, onError);
     }
 
     deleteConcept(id, onSuccess, onError) {
