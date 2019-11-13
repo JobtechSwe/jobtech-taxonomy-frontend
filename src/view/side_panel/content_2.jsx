@@ -4,6 +4,7 @@ import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import List from '../../control/list.jsx';
+import Loader from '../../control/loader.jsx';
 
 class Content2 extends React.Component { 
 
@@ -11,6 +12,7 @@ class Content2 extends React.Component {
         super();
         this.state = {
             versions: [],
+            loadingData: true,
         }
     }
 
@@ -21,7 +23,10 @@ class Content2 extends React.Component {
             for(var i=0; i<data.length; ++i) {
                 data[i].date = new Date(data[i].timestamp);
             }
-            this.setState({versions: data});
+            this.setState({
+                versions: data,
+                loadingData: false,
+            });
         }, (status) => {
             // TODO: display error
         });
@@ -30,6 +35,14 @@ class Content2 extends React.Component {
     onVersionSelected(item) {
         console.log(item);
         EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item);
+    }
+
+    renderLoader() {
+        if(this.state.loadingData) {
+            return(
+                <Loader/>
+            );
+        }
     }
 
     renderVersions(item) {
@@ -47,7 +60,9 @@ class Content2 extends React.Component {
                 <List 
                     data={this.state.versions} 
                     dataRender={this.renderVersions.bind(this)}
-                    onItemSelected={this.onVersionSelected.bind(this)}/>
+                    onItemSelected={this.onVersionSelected.bind(this)}>
+                    {this.renderLoader()}
+                </List>
             </div>
         );
     }

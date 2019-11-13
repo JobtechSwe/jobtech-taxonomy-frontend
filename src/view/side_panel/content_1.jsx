@@ -28,7 +28,8 @@ class Content1 extends React.Component {
         this.TYPE_OCCUPATION_FIELD = "occupation-field";
         this.TYPE_OCCUPATION_NAME = "occupation-name";
         this.TYPE_REGION = "region";
-        this.TYPE_SKILL = "skill";
+        //this.TYPE_SKILL = "skill-headline skill";
+        this.TYPE_SKILL = "skill-headline";
         this.TYPE_SNI = "sni-level-1 sni-level-2";
         this.TYPE_SSYK = "ssyk-level-1 ssyk-level-2 ssyk-level-3 ssyk-level-4";
         this.TYPE_SUN_EDUCATION_FIELD = "sun-ecucation-field-1 sun-ecucation-field-2 sun-ecucation-field-3 sun-ecucation-field-4";
@@ -36,10 +37,6 @@ class Content1 extends React.Component {
         this.TYPE_WAGE_TYPE = "wage-type";
         this.TYPE_WORKTIME_EXTENT = "worktime-extent";
 
-        this.TYPE_COMMON_NAME = "keyword"; 
-        this.TYPE_NAME = "occupation-name";
-        this.TYPE_COMPETENCE = "skill-headline";
-        this.TYPE_FIELD = "occupation-field"; 
         this.state = {
             data: [],
             queryType: this.TYPE_SSYK,
