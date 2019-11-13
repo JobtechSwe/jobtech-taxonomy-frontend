@@ -182,7 +182,9 @@ class Content1 extends React.Component {
     filterAndPopulate(query) {
         if(query.length > 0) {
             var q = query.toLowerCase();
-            var data = this.state.data.filter((item) => {return item.preferredLabel.toLowerCase().indexOf(q) >= 0;});
+            var data = this.state.data.filter((item) => {
+                return item.preferredLabel.toLowerCase().indexOf(q) >= 0;
+            });
             this.populateTree(data);
         } else {
             this.populateTree(this.state.data);
@@ -229,7 +231,7 @@ class Content1 extends React.Component {
     }
 
     onQueryItemSelected(item) {
-        if(item.data) {
+        if(item.data && item.data.id) {
             if(App.hasUnsavedChanges()) {
                 App.showSaveDialog(this.onSaveDialogResult.bind(this, item));
             } else {
