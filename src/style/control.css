@@ -101,6 +101,8 @@ select.rounded:focus {
     display: flex;
     margin: 2px;
     padding: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
     border: 2px solid #555;
     border-radius: 5px;
     align-items: center;

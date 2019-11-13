@@ -65,7 +65,7 @@ class Content1 extends React.Component {
     onTitleResetClicked() {
         // TODO: dialog?
         App.undoEditRequests();
-        this.forceUpdate();
+        this.setState({isShowingSavePanel: false});
     }
 
     onSideItemSelected(item) {

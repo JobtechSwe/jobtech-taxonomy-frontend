@@ -3,6 +3,7 @@ import Panel from './../../control/panel.jsx';
 import NavBar from './nav_bar.jsx';
 import Container from './../container.jsx';
 import Constants from './../../context/constants.jsx';
+import Util from './../../context/util.jsx';
 import Content1 from './content_1.jsx';
 import Content2 from './content_2.jsx';
 import Content3 from './content_3.jsx';
@@ -18,7 +19,7 @@ class SidePanel extends React.Component {
                 <Container 
                     css="side_container"
                     eventId={Constants.ID_SIDEPANEL_CONTAINER}
-                    defaultView={Constants.WORK_MODE_1}
+                    defaultView={Util.getDefaultWorkMode()}
                     views={[{
                         content: (<Content1/>),
                         id: Constants.WORK_MODE_1,
