@@ -1,5 +1,4 @@
 import React from 'react';
-import Graph from 'react-graph-vis';
 import Vis from 'vis-network';
 import Label from '../../control/label.jsx';
 import Group from '../../control/group.jsx';
