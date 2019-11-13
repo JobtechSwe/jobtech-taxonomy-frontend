@@ -12,7 +12,10 @@ class Util {
         return context.selected == item;
     }
 
-    __treeViewSetSelected(context, item, selected) {       
+    __treeViewSetSelected(context, item, selected) {
+        if(context.onAllowItemSelection && !context.onAllowItemSelection(item)) {
+            return;
+        }   
         if(this.__treeViewIsSelected(context, item)) {
             if(!selected) {
                 if(context.selected.onDeselected) {
@@ -60,6 +63,7 @@ class Util {
             getSelected: null,
             // callbacks
             onItemSelected: null,
+            onAllowItemSelection: null,
             // vtable
             addRoot: null,
             removeRoot: null,
