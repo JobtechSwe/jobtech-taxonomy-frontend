@@ -156,7 +156,7 @@ class Content4 extends React.Component {
         }
     }
 
-    updateRelations(item) {        
+    updateRelations(item, x, y) {        
         if(!item) {
             console.log("Nothing selected");
             return;
@@ -168,6 +168,8 @@ class Content4 extends React.Component {
         item.label = item.preferredLabel;
         item.title = Localization.get("db_" + item.type);
         item.group = this.getGroupFor(item.type);
+        item.x = undefined;
+        item.y = undefined;
         this.nodes.update([item]);
         if(item.relations.broader > 0) {
             Rest.getAllConceptRelations(item.id, Constants.RELATION_BROADER, (data) => {
@@ -176,7 +178,9 @@ class Content4 extends React.Component {
                 for(var i=0; i<data.length; ++i) {
                     var p = data[i];
                     p.title = Localization.get("db_" + p.type) + "<br \>" + p.preferredLabel;
-                    p.group = "notFetched";
+                    p.group = "notFetched";                    
+                    p.x = x;
+                    p.y = y;
                     if(!this.findNodeById(p.id)) {
                         nodes.push(p);
                         edges.push({
@@ -201,7 +205,9 @@ class Content4 extends React.Component {
                 for(var i=0; i<data.length; ++i) {
                     var p = data[i];
                     p.title = Localization.get("db_" + p.type) + "<br \>" + p.preferredLabel;
-                    p.group = "notFetched";
+                    p.group = "notFetched";                    
+                    p.x = x;
+                    p.y = y;
                     if(!this.findNodeById(p.id)) {
                         nodes.push(p);
                         edges.push({
@@ -236,13 +242,15 @@ class Content4 extends React.Component {
         this.nodes.clear();
         this.nodes.add(d.nodes);
         this.setState({data: d});
-        this.updateRelations(item);
+        this.updateRelations(item, 0, 0);
     }
 
     onElementSelected(event) {
+        var x = event.pointer.canvas.x;
+        var y = event.pointer.canvas.y;
         if(event.event.tapCount == 1) {
             if(event.nodes.length > 0) {
-                this.updateRelations(this.findNodeById(event.nodes[0]));
+                this.updateRelations(this.findNodeById(event.nodes[0]), x, y);
             }
         } else if(event.event.tapCount == 2) {
             if(event.nodes.length > 0) {
@@ -250,9 +258,9 @@ class Content4 extends React.Component {
                 for(var i=0; i < this.state.data.edges.length; ++i) {
                     var edge = this.state.data.edges[i];
                     if(edge.from === nodeId) {
-                        this.updateRelations(this.findNodeById(edge.to));
+                        this.updateRelations(this.findNodeById(edge.to), x, y);
                     } else if(edge.to === nodeId) {
-                        this.updateRelations(this.findNodeById(edge.from));
+                        this.updateRelations(this.findNodeById(edge.from), x, y);
                     }
                 }
             }
