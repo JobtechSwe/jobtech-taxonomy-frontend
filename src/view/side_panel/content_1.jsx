@@ -45,6 +45,7 @@ class Content1 extends React.Component {
         this.expandedItem = null;
         this.queryTreeView = ControlUtil.createTreeView();
         this.queryTreeView.onItemSelected = this.onQueryItemSelected.bind(this);
+        this.queryTreeView.onAllowItemSelection = this.onAllowItemSelection.bind(this);
         this.boundMainItemSelected = this.onMainItemSelected.bind(this);
     }
 
@@ -223,6 +224,7 @@ class Content1 extends React.Component {
 
     onSaveDialogResult(item, result) {
         if(result != Constants.DIALOG_OPTION_ABORT) {
+            item.setSelected(true);
             // user saved or discared changes and wants to continue
             EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
         }
@@ -230,12 +232,16 @@ class Content1 extends React.Component {
 
     onQueryItemSelected(item) {
         if(item.data && item.data.id) {
-            if(App.hasUnsavedChanges()) {
-                App.showSaveDialog(this.onSaveDialogResult.bind(this, item));
-            } else {
-                EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
-            }
+            EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
         }
+    }
+
+    onAllowItemSelection(item) {
+        if(App.hasUnsavedChanges()) {
+            App.showSaveDialog(this.onSaveDialogResult.bind(this, item));
+            return false;
+        }
+        return true;
     }
 
     renderOption(value, text) {
