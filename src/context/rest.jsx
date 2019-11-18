@@ -69,8 +69,16 @@ class Rest {
         this.get("/main/concepts?type=" + type, onSuccess, onError);
     }
 
+    getConceptsRange(type, offset, limit, onSuccess, onError) {
+        this.get("/main/concepts?type=" + type + "&offset=" + offset + "&limit=" + limit, onSuccess, onError);
+    }
+
     getConceptsSsyk(type, onSuccess, onError) {
         this.get("/specific/concepts/ssyk?type=" + type, onSuccess, onError);
+    }
+
+    getConceptsSsykRange(type, offset, limit, onSuccess, onError) {
+        this.get("/specific/concepts/ssyk?type=" + type + "&offset=" + offset + "&limit=" + limit, onSuccess, onError);
     }
 
     getConceptSsyk(id, onSuccess, onError) {
@@ -79,6 +87,10 @@ class Rest {
 
     getConceptsIsco08(type, onSuccess, onError) {
         this.get("/specific/concepts/isco?type=" + type, onSuccess, onError);
+    }
+
+    getConceptsIsco08Range(type, offset, limit, onSuccess, onError) {
+        this.get("/specific/concepts/isco?type=" + type + "&offset=" + offset + "&limit=" + limit, onSuccess, onError);
     }
 
     getConceptIsco08(id, onSuccess, onError) {

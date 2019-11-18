@@ -40,6 +40,7 @@ class Content1 extends React.Component {
         this.state = {
             data: [],
             queryType: this.TYPE_SSYK,
+            loadingData: false,
         };
         this.searchReference = null;
         this.expandedItem = null;
@@ -95,13 +96,70 @@ class Content1 extends React.Component {
         }
     }
     
-    populateTree(data) {
-        this.queryTreeView.clear();
+    populateTree(data) {        
         for(var i=0; i<data.length; ++i) {
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
             item.setShowButton(false);
             item.setText(data[i].ssyk ? this.getItemFormat(data[i]) : data[i].preferredLabel);
             this.queryTreeView.addRoot(item);
+        }
+    }
+
+    fetchRecursive(from, count) {
+        if(this.state.queryType == this.TYPE_SSYK) {
+            Rest.getConceptsSsykRange(this.state.queryType, from, count, (data) => {
+                if(data.length > 2) {
+                    console.log(data[0], data[data.length-1]);
+                }
+                this.state.data.push(...data);
+                this.setData(data);                
+                this.sortData(this.state.data);
+                this.queryTreeView.clear();
+                this.populateTree(this.state.data);
+                if(data.length == count) {
+                    this.fetchRecursive(from + count, count);
+                } else {
+                    this.setState({loadingData: false});
+                }
+            }, (status) => {
+                // TODO: display error
+            });
+        } else if(this.state.queryType == this.TYPE_ISCO_LEVEL_4) {
+            Rest.getConceptsIsco08Range(this.state.queryType, from, count, (data) => {
+                if(data.length > 2) {
+                    console.log(data[0], data[data.length-1]);
+                }
+                this.state.data.push(...data);
+                this.setData(data);
+                this.sortData(this.state.data);
+                this.queryTreeView.clear();
+                this.populateTree(this.state.data);
+                if(data.length == count) {
+                    this.fetchRecursive(from + count, count);
+                } else {                                        
+                    this.setState({loadingData: false});
+                }
+            }, (status) => {
+                // TODO: display error
+            });
+        } else {
+            Rest.getConceptsRange(this.state.queryType, from, count, (data) => {
+                if(data.length > 2) {
+                    console.log(data[0], data[data.length-1]);
+                }
+                this.state.data.push(...data);
+                this.setData(data);                
+                this.sortData(this.state.data);
+                this.queryTreeView.clear();
+                this.populateTree(this.state.data);
+                if(data.length == count) {
+                    this.fetchRecursive(from + count, count);
+                } else {
+                    this.setState({loadingData: false});
+                }
+            }, (status) => {
+                // TODO: display error
+            });
         }
     }
 
@@ -119,7 +177,9 @@ class Content1 extends React.Component {
             }
             item.preferredLabel = this.formatLabel(item.preferredLabel);
         }
+    }
 
+    sortData(data) {
         data.sort((a, b) => {
             if(a.ssyk) {
                 if(a.ssyk < b.ssyk) { 
@@ -135,7 +195,8 @@ class Content1 extends React.Component {
     }
 
     search(query) {
-        this.queryTreeView.clear();        
+        this.queryTreeView.clear();
+        this.state.data = [];
         Rest.abort();
         if(this.state.queryType == this.TYPE_SEARCH) {
             if(query && query.length > 0) {
@@ -143,47 +204,27 @@ class Content1 extends React.Component {
                 Rest.searchConcepts(query, (data) => {
                     this.state.data = data;
                     this.setData(data);
+                    this.sortData(data);
                     this.buildTree(data);
+                    this.setState({loadingData: false});
                 }, (status) => {
                     // TODO: display error
                 });
             }
         } else {
             this.showLoader();
-            if(this.state.queryType == this.TYPE_SSYK) {
-                Rest.getConceptsSsyk(this.state.queryType, (data) => {
-                    this.state.data = data;
-                    this.setData(data);                
-                    this.populateTree(data);
-                }, (status) => {
-                    // TODO: display error
-                });
-            } else if(this.state.queryType == this.TYPE_ISCO_LEVEL_4) {
-                Rest.getConceptsIsco08(this.state.queryType, (data) => {
-                    this.state.data = data;
-                    this.setData(data);                
-                    this.populateTree(data);
-                }, (status) => {
-                    // TODO: display error
-                });
-            } else {
-                Rest.getConcepts(this.state.queryType, (data) => {
-                    this.state.data = data;
-                    this.setData(data);                
-                    this.populateTree(data);
-                }, (status) => {
-                    // TODO: display error
-                });
-            }
+            this.fetchRecursive(0, 400);
         }
     }
 
     filterAndPopulate(query) {
+        this.queryTreeView.clear();
         if(query.length > 0) {
             var q = query.toLowerCase();
             var data = this.state.data.filter((item) => {
                 return item.preferredLabel.toLowerCase().indexOf(q) >= 0;
             });
+            this.sortData(data);
             this.populateTree(data);
         } else {
             this.populateTree(this.state.data);
@@ -191,9 +232,11 @@ class Content1 extends React.Component {
     }
 
     showLoader() {
-        var waitingForItem = ControlUtil.createTreeViewItem(this.queryTreeView, null);
-        waitingForItem.setText(<Loader/>);
-        this.queryTreeView.addRoot(waitingForItem);
+        //var waitingForItem = ControlUtil.createTreeViewItem(this.queryTreeView, null);
+        //waitingForItem.setText(<Loader/>);
+        //this.queryTreeView.addRoot(waitingForItem);
+        
+        this.setState({loadingData: true});
     }
 
     onMainItemSelected(item) {
@@ -295,11 +338,21 @@ class Content1 extends React.Component {
         );
     }
 
+    renderLoader() {
+        if(this.state.loadingData) {
+            return(
+                <Loader/>
+            );
+        }
+    }
+
     render() {
         return (
             <div className="side_content_1">
                 {this.renderQueary()}
-                <TreeView context={this.queryTreeView}/>
+                <TreeView context={this.queryTreeView}>
+                    {this.renderLoader()}
+                </TreeView>
             </div>
         );
     }

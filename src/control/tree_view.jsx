@@ -60,6 +60,7 @@ class TreeView extends React.Component {
     render() {
         return (
             <List css={this.props.css}>
+                {this.props.children}
                 {this.renderRoots()}
             </List>
         );
