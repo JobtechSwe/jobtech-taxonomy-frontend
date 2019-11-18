@@ -16,6 +16,7 @@ class TreeView extends React.Component {
             props.context.addRoot = this.addRoot.bind(this);
             props.context.removeRoot = this.removeRoot.bind(this);
             props.context.clear = this.clear.bind(this);
+            props.context.invalidate = this.invalidate.bind(this);
             this.state.context = props.context;
             this.setState({context: props.context});
         }
@@ -31,7 +32,9 @@ class TreeView extends React.Component {
 
     addRoot(root) {
         this.state.context.roots.push(root);
-        this.setState({context: this.state.context});
+        if(this.state.context.shouldUpdateState) {
+            this.setState({context: this.state.context});
+        }
     }
 
     removeRoot(root) {
@@ -47,6 +50,10 @@ class TreeView extends React.Component {
             this.state.context.selected = null;
             this.setState({context: this.state.context});
         }
+    }
+
+    invalidate() {
+        this.setState({context: this.state.context});
     }
 
     renderRoots() {

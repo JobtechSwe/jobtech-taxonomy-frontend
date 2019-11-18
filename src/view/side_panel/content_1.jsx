@@ -96,67 +96,50 @@ class Content1 extends React.Component {
         }
     }
     
-    populateTree(data) {        
+    populateTree(data) {
+        this.queryTreeView.shouldUpdateState = false;
         for(var i=0; i<data.length; ++i) {
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
             item.setShowButton(false);
             item.setText(data[i].ssyk ? this.getItemFormat(data[i]) : data[i].preferredLabel);
             this.queryTreeView.addRoot(item);
         }
+        this.queryTreeView.shouldUpdateState = true;
+        this.queryTreeView.invalidate();
+    }
+
+    onFetchResult(data, from, count) {
+        /*if(data.length > 2) {
+            console.log(data[0], data[data.length-1]);
+        }*/
+        this.state.data.push(...data);
+        this.setData(data);                
+        this.sortData(this.state.data);
+        this.queryTreeView.clear();
+        this.populateTree(this.state.data);
+        if(data.length == count) {
+            this.fetchRecursive(from + count, count);
+        } else {
+            this.setState({loadingData: false});
+        }
     }
 
     fetchRecursive(from, count) {
         if(this.state.queryType == this.TYPE_SSYK) {
             Rest.getConceptsSsykRange(this.state.queryType, from, count, (data) => {
-                if(data.length > 2) {
-                    console.log(data[0], data[data.length-1]);
-                }
-                this.state.data.push(...data);
-                this.setData(data);                
-                this.sortData(this.state.data);
-                this.queryTreeView.clear();
-                this.populateTree(this.state.data);
-                if(data.length == count) {
-                    this.fetchRecursive(from + count, count);
-                } else {
-                    this.setState({loadingData: false});
-                }
+                this.onFetchResult(data, from, count);
             }, (status) => {
                 // TODO: display error
             });
         } else if(this.state.queryType == this.TYPE_ISCO_LEVEL_4) {
             Rest.getConceptsIsco08Range(this.state.queryType, from, count, (data) => {
-                if(data.length > 2) {
-                    console.log(data[0], data[data.length-1]);
-                }
-                this.state.data.push(...data);
-                this.setData(data);
-                this.sortData(this.state.data);
-                this.queryTreeView.clear();
-                this.populateTree(this.state.data);
-                if(data.length == count) {
-                    this.fetchRecursive(from + count, count);
-                } else {                                        
-                    this.setState({loadingData: false});
-                }
+                this.onFetchResult(data, from, count);
             }, (status) => {
                 // TODO: display error
             });
         } else {
             Rest.getConceptsRange(this.state.queryType, from, count, (data) => {
-                if(data.length > 2) {
-                    console.log(data[0], data[data.length-1]);
-                }
-                this.state.data.push(...data);
-                this.setData(data);                
-                this.sortData(this.state.data);
-                this.queryTreeView.clear();
-                this.populateTree(this.state.data);
-                if(data.length == count) {
-                    this.fetchRecursive(from + count, count);
-                } else {
-                    this.setState({loadingData: false});
-                }
+                this.onFetchResult(data, from, count);
             }, (status) => {
                 // TODO: display error
             });
@@ -232,10 +215,6 @@ class Content1 extends React.Component {
     }
 
     showLoader() {
-        //var waitingForItem = ControlUtil.createTreeViewItem(this.queryTreeView, null);
-        //waitingForItem.setText(<Loader/>);
-        //this.queryTreeView.addRoot(waitingForItem);
-        
         this.setState({loadingData: true});
     }
 

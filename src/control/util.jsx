@@ -57,6 +57,7 @@ class Util {
             // members
             roots: [],
             selected: null,
+            shouldUpdateState: true,
             // utility
             isSelected: null,
             setSelected: null,
@@ -68,6 +69,7 @@ class Util {
             addRoot: null,
             removeRoot: null,
             clear: null,
+            invalidate: null,
         };
         // bind function pointers
         context.isSelected = this.__treeViewIsSelected.bind(this, context);
