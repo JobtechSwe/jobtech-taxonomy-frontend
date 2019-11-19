@@ -3,6 +3,7 @@ import Button from '../../control/button.jsx';
 import List from '../../control/list.jsx';
 import Label from '../../control/label.jsx';
 import Constants from '../../context/constants.jsx';
+import Util from '../../context/util.jsx';
 import Rest from '../../context/rest.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Localization from '../../context/localization.jsx';
@@ -12,11 +13,10 @@ class Description extends React.Component {
 
     constructor(props) {
         super(props);
-        var item = props.item;
         this.state = {
             isLocked: true,
-            preferredLabel: item ? item.preferredLabel : "",
-            definition: item ? item.definition : "",
+            preferredLabel: Util.getObjectValue(props.item, "preferredLabel", ""),
+            definition: Util.getObjectValue(props.item, "definition", ""),
         };
     }
 
@@ -32,10 +32,9 @@ class Description extends React.Component {
         if(props.groupContext) {
             props.groupContext.onLockChanged = this.onGroupLockedChanged.bind(this);
         }
-        var item = props.item;
         this.setState({
-            preferredLabel: item ? item.preferredLabel : "",
-            definition: item ? item.definition : "",
+            preferredLabel: Util.getObjectValue(props.item, "preferredLabel", ""),
+            definition: Util.getObjectValue(props.item, "definition", ""),
         });
     }
 

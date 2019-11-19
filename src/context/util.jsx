@@ -27,6 +27,13 @@ class Util {
         return 0;
     }
 
+    getObjectValue(object, value, defaultValue) {
+        if(object && object[value] != null) {
+            return object[value];
+        }
+        return defaultValue;
+    }
+
     getDefaultWorkMode() {
         var mode = Constants.URL_SEARCH_MODEMAP[this.getSearchUrlValue("tab")];
         return mode == null ? Constants.WORK_MODE_1 : mode;
