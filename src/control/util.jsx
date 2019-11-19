@@ -109,6 +109,17 @@ class Util {
         child.attached = true;
         item.children.push(child);
     }
+
+    __treeViewItemRebind(item) {
+        item.isSelected = this.__treeViewItemIsSelected.bind(this, item);
+        item.isLastChild = this.__treeViewItemIsLastChild.bind(this, item);  
+        item.refresh = () => {};
+        item.setText = this.__treeViewItemSetText.bind(this, item);
+        item.setExpanded = this.__treeViewItemSetExpanded.bind(this, item);
+        item.setSelected = this.__treeViewItemSetSelected.bind(this, item);
+        item.setShowButton = this.__treeViewItemSetShowButton.bind(this, item);
+        item.addChild = this.__treeViewItemAddChild.bind(this, item); 
+    }
     
     createTreeViewItem(context, data) {
         var pointer = {
@@ -126,6 +137,7 @@ class Util {
             isLastChild: null,
             isSelected: null,
             refresh: null,
+            rebind: null,
             // vtable
             setText: null,
             setExpanded: null,
@@ -138,15 +150,8 @@ class Util {
             onDeselected: null,
             onSelected: null,
         };
-        // bind function pointers for temporary functions
-        pointer.isSelected = this.__treeViewItemIsSelected.bind(this, pointer);
-        pointer.isLastChild = this.__treeViewItemIsLastChild.bind(this, pointer);  
-        pointer.refresh = () => {};
-        pointer.setText = this.__treeViewItemSetText.bind(this, pointer);
-        pointer.setExpanded = this.__treeViewItemSetExpanded.bind(this, pointer);
-        pointer.setSelected = this.__treeViewItemSetSelected.bind(this, pointer);
-        pointer.setShowButton = this.__treeViewItemSetShowButton.bind(this, pointer);
-        pointer.addChild = this.__treeViewItemAddChild.bind(this, pointer);      
+        pointer.rebind = this.__treeViewItemRebind.bind(this, pointer);
+        pointer.rebind();
         // store type used for mounting the pointer
         pointer.reactType = <TreeViewItem 
                                 key={"kid_" + this.TREEVIEW_ITEM_ID++} 

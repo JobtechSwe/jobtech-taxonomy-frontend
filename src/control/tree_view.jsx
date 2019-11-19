@@ -40,6 +40,7 @@ class TreeView extends React.Component {
 
     removeRoot(root, callback) {
         root.setSelected(false);
+        root.rebind();
         root.attached = false;
         var index = this.state.context.roots.indexOf(root);
         this.state.context.roots.splice(index, 1);

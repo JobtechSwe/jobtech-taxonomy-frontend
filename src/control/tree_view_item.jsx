@@ -71,6 +71,7 @@ class TreeViewItem extends React.Component {
 
     removeChild(item) {
         item.setSelected(false);
+        item.rebind();
         item.attached = false;
         var children = this.state.children;
         var index = children.indexOf(item);

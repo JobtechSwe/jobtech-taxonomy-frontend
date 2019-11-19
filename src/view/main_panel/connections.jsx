@@ -16,6 +16,7 @@ class Connections extends React.Component {
         super();
         this.state = {
             isLocked: true,
+            hasSelection: false,
         };
         this.relationTreeView = ControlUtil.createTreeView();
         this.relationTreeView.onItemSelected = this.onItemSelected.bind(this);
@@ -36,7 +37,9 @@ class Connections extends React.Component {
         if(props.groupContext) {
             props.groupContext.onLockChanged = this.onGroupLockedChanged.bind(this);
         }
+        this.selectedItem = null;
         this.setupRelationsFor(props.item);
+        this.setState({hasSelection: false});
     }
 
     createEditRequest(parent, item, isRemoved) {
@@ -79,16 +82,16 @@ class Connections extends React.Component {
         }
     }
     
-    removeConnection(parent, item) {
+    removeConnection(item) {
+        var parent = item.parent;
         App.addEditRequest(this.createEditRequest(parent, item, true));
-        var node = parent.children.find((x) => {
-            return x.data.id == item.data.id;
-        });
-        if(node) {
-            parent.removeChild(node);
-            if(parent.children.length == 0) {
-                this.relationTreeView.removeRoot(parent);
-            }
+        parent.removeChild(item);
+        if(parent.children.length == 0) {
+            this.relationTreeView.removeRoot(parent);
+        }
+        if(item == this.selectedItem) {
+            this.selectedItem = null;
+            this.setState({hasSelection: false});
         }
     }
 
@@ -119,7 +122,7 @@ class Connections extends React.Component {
 
     onRemoveConnectionClicked() {
         if(this.selectedItem && this.selectedItem.parent) {
-            this.removeConnection(this.selectedItem.parent, this.selectedItem);
+            this.removeConnection(this.selectedItem);
         } else {
             // TODO: allow user to remove all connections by removing root?
         }
@@ -127,6 +130,7 @@ class Connections extends React.Component {
 
     onItemSelected(item) {
         this.selectedItem = item;
+        this.setState({hasSelection: true});
     }
 
     findRootFor(type) {
@@ -241,6 +245,7 @@ class Connections extends React.Component {
                 <TreeView context={this.relationTreeView}/>
                 <div>
                     <Button 
+                        isEnabled={this.state.hasSelection}
                         text={localization.get("visit")} 
                         onClick={this.onVisitClicked.bind(this)}/>
                     <Button 
