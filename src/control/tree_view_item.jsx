@@ -59,19 +59,27 @@ class TreeViewItem extends React.Component {
     addChild(child) {
         var children = this.state.children;
         child.parent = this.props.pointer;
+        child.attached = true;
         children.push(child);
-        this.setState({children: children});
+        var index = children.length > 1 ? children.length - 2 : -1;
+        this.setState({children: children}, () => {
+            if(index != -1) {
+                children[index].refresh();
+            }
+        });
     }
 
     removeChild(item) {
         item.setSelected(false);
+        item.attached = false;
         var children = this.state.children;
         var index = children.indexOf(item);
         children.splice(index, 1);
-        this.setState({children: children});
-        if(children.length > 0) {
-            children[children.length - 1].refresh();
-        }
+        this.setState({children: children}, () => {
+            if(children.length > 0) {
+                children[children.length - 1].refresh();
+            }
+        });
     }
 
     clear() {

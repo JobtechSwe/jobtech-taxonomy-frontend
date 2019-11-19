@@ -34,7 +34,7 @@ class App {
         if(item) {
             item.timestamp = new Date().getTime();
             item.newValue = request.newValue;
-            if(item.newValue == item.oldValue) {
+            if((item.compare && item.compare(item.newValue, item.oldValue)) || (item.newValue == item.oldValue)) {
                 // when the new and old value are the same, the request is no longer valid
                 var index = this.editRequests.indexOf(item);
                 this.editRequests.splice(index, 1);

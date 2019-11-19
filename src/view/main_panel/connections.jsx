@@ -36,7 +36,60 @@ class Connections extends React.Component {
         if(props.groupContext) {
             props.groupContext.onLockChanged = this.onGroupLockedChanged.bind(this);
         }
-        this.getRelationsFor(props.item);
+        this.setupRelationsFor(props.item);
+    }
+
+    createEditRequest(parent, item, isRemoved) {
+        var request = App.createEditRequest(item.data.id);
+        request.newValue = {
+            parent: parent,
+            item: item,
+            isRemoved: isRemoved,
+        };
+        request.oldValue = {
+            parent: parent,
+            item: item,
+            isRemoved: !isRemoved,
+        };
+        request.compare = (newValue, oldValue) => {
+            return oldValue.isRemoved == newValue.isRemoved && oldValue.parent.id == newValue.parent.id;
+        };
+        request.objectId = this.props.item.id;
+        request.undoCallback = this.onUndoConnections.bind(this);
+        request.text = Localization.get("connections");
+        return request;
+    }
+
+    onUndoConnections(value) {
+        if(value.parent && !value.parent.attached && !value.parent.parent) {
+            this.relationTreeView.addRoot(value.parent, () => {
+                if(value.isRemoved) {
+                    value.parent.removeChild(value.item);
+                } else {
+                    value.parent.addChild(value.item);
+                }
+            });
+        } else {
+            // NOTE: potentially a problem, if parents parent is not bound this will give a error
+            if(value.isRemoved) {
+                value.parent.removeChild(value.item);
+            } else {
+                value.parent.addChild(value.item);
+            }
+        }
+    }
+    
+    removeConnection(parent, item) {
+        App.addEditRequest(this.createEditRequest(parent, item, true));
+        var node = parent.children.find((x) => {
+            return x.data.id == item.data.id;
+        });
+        if(node) {
+            parent.removeChild(node);
+            if(parent.children.length == 0) {
+                this.relationTreeView.removeRoot(parent);
+            }
+        }
     }
 
     onSaveDialogResult(item, result) {
@@ -57,6 +110,18 @@ class Connections extends React.Component {
             } else {
                 EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.selectedItem.data);
             }
+        }
+    }
+
+    onAddConnectionClicked() {
+
+    }
+
+    onRemoveConnectionClicked() {
+        if(this.selectedItem && this.selectedItem.parent) {
+            this.removeConnection(this.selectedItem.parent, this.selectedItem);
+        } else {
+            // TODO: allow user to remove all connections by removing root?
         }
     }
 
@@ -135,7 +200,7 @@ class Connections extends React.Component {
         });
     }
 
-    getRelationsFor(item) {        
+    setupRelationsFor(item) {        
         this.relationTreeView.clear();
         this.waitingFor = 0;
         this.waitingForItem = null;
@@ -152,7 +217,7 @@ class Connections extends React.Component {
     addRelationToTree(element) {
         var root = this.findRootFor(element.type);
         if(!root) {
-            root = ControlUtil.createTreeViewItem(this.relationTreeView, {type: element.type});
+            root = ControlUtil.createTreeViewItem(this.relationTreeView, element);
             root.setText(Localization.get("db_" + element.type));
             this.relationTreeView.addRoot(root);
         }
@@ -166,7 +231,7 @@ class Connections extends React.Component {
             element.type === Constants.CONCEPT_SSYK_LEVEL_2 || 
             element.type === Constants.CONCEPT_SSYK_LEVEL_3 || 
             element.type === Constants.CONCEPT_SSYK_LEVEL_4) {
-                this.getSsykCodeFor(child);
+            this.getSsykCodeFor(child);
         }
     }
 
@@ -180,10 +245,12 @@ class Connections extends React.Component {
                         onClick={this.onVisitClicked.bind(this)}/>
                     <Button 
                         isEnabled={!this.state.isLocked}
-                        text={localization.get("add")}/>
+                        text={localization.get("add")}
+                        onClick={this.onAddConnectionClicked.bind(this)}/>
                     <Button 
                         isEnabled={!this.state.isLocked}
-                        text={localization.get("remove")}/>
+                        text={localization.get("remove")}
+                        onClick={this.onRemoveConnectionClicked.bind(this)}/>
                 </div>
             </div>
         );

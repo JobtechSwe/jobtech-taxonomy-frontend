@@ -106,12 +106,14 @@ class Util {
     
     __treeViewItemAddChild(item, child) {
         child.parent = item;
+        child.attached = true;
         item.children.push(child);
     }
     
     createTreeViewItem(context, data) {
         var pointer = {
             // members
+            attached: false,
             expanded: false,
             showingButton: true,
             text: "item",
@@ -138,12 +140,13 @@ class Util {
         };
         // bind function pointers for temporary functions
         pointer.isSelected = this.__treeViewItemIsSelected.bind(this, pointer);
+        pointer.isLastChild = this.__treeViewItemIsLastChild.bind(this, pointer);  
+        pointer.refresh = () => {};
         pointer.setText = this.__treeViewItemSetText.bind(this, pointer);
         pointer.setExpanded = this.__treeViewItemSetExpanded.bind(this, pointer);
         pointer.setSelected = this.__treeViewItemSetSelected.bind(this, pointer);
         pointer.setShowButton = this.__treeViewItemSetShowButton.bind(this, pointer);
-        pointer.addChild = this.__treeViewItemAddChild.bind(this, pointer);
-        pointer.isLastChild = this.__treeViewItemIsLastChild.bind(this, pointer);        
+        pointer.addChild = this.__treeViewItemAddChild.bind(this, pointer);      
         // store type used for mounting the pointer
         pointer.reactType = <TreeViewItem 
                                 key={"kid_" + this.TREEVIEW_ITEM_ID++} 

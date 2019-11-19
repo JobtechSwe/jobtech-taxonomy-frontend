@@ -30,18 +30,20 @@ class TreeView extends React.Component {
         this.__init(props);
     }
 
-    addRoot(root) {
+    addRoot(root, callback) {
         this.state.context.roots.push(root);
+        root.attached = true;
         if(this.state.context.shouldUpdateState) {
-            this.setState({context: this.state.context});
+            this.setState({context: this.state.context}, callback);
         }
     }
 
-    removeRoot(root) {
+    removeRoot(root, callback) {
         root.setSelected(false);
+        root.attached = false;
         var index = this.state.context.roots.indexOf(root);
         this.state.context.roots.splice(index, 1);
-        this.setState({context: this.state.context});
+        this.setState({context: this.state.context}, callback);
     }
 
     clear() {
