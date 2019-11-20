@@ -58,6 +58,7 @@ class AddConnection extends React.Component {
         if(this.selectedItem) {
             if(this.selectedItem.parent) {
                 this.props.callback(this.selectedItem.data);
+                Rest.abort();
                 EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
             } else {
                 // TODO: show warning
@@ -136,7 +137,10 @@ class AddConnection extends React.Component {
                         onClick={this.onAddClicked.bind(this)}
                         text={Localization.get("add")}/>
                     <Button 
-                        onClick={() => EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY)}
+                        onClick={() => {
+                            Rest.abort();
+                            EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
+                        }}
                         text={Localization.get("abort")}/>
                 </div>
             </div>

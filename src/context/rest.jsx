@@ -4,31 +4,31 @@ import Constants from './constants.jsx';
 class Rest { 
 
     setupCallbacks(http, onSuccess, onError) {
+        this.currentRequest = http;
+        this.currentSuccessCallback = onSuccess;
+        this.currentErrorCallback = onError;
         http.onerror = () => {
-            if(onError != null) {
-                onError(http.status);
+            if(this.currentErrorCallback != null) {
+                this.currentErrorCallback(http.status);
             }
         }
         http.onload = () => {
             if(http.status >= 200 && http.status < 300) {
-                if(onSuccess != null) {
+                if(this.currentSuccessCallback != null) {
                     try {
                         var response = http.response.split("\"taxonomy/").join("\"");
                         response = response.split("preferred-label").join("preferredLabel");
-                        onSuccess(JSON.parse(response));
+                        this.currentSuccessCallback(JSON.parse(response));
                     } catch(err) {
                         console.log("Exception", err);
                     }
                 }
             } else {
-                if(onError != null) {
-                    onError(http.status);
+                if(this.currentErrorCallback != null) {
+                    this.currentErrorCallback(http.status);
                 }
             }
         }
-        this.currentRequest = null;
-        this.currentSuccessCallback = null;
-        this.currentErrorCallback = null;
     }
 
     abort() {
