@@ -12,10 +12,15 @@ class NavBar extends React.Component {
         this.state = {
             selected: Util.getDefaultWorkMode(),
         };
+        this.boundOnSetWorkMode = this.onSetWorkMode.bind(this);
     }
 
     componentDidMount() {
+        EventDispatcher.add(this.boundOnSetWorkMode, Constants.ID_NAVBAR)
+    }
 
+    componentWillUnmount() {
+        EventDispatcher.remove(this.boundOnSetWorkMode);
     }
 
     setWorkmode(id) {
@@ -24,6 +29,10 @@ class NavBar extends React.Component {
         EventDispatcher.fire(Constants.EVENT_SET_WORKMODE, id);
         Util.setSearchUrlValue("tab", Constants.URL_MODE_SEARCHMAP[id]);
         this.setState({selected: id});
+    }
+
+    onSetWorkMode(mode) {
+        this.setWorkmode(mode);
     }
 
     onSaveDialogResult(id, result) {

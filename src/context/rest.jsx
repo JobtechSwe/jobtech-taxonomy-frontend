@@ -121,6 +121,10 @@ class Rest {
         this.get("/private/delete-concept", id, onSuccess, onError);
     }
 
+    getGraph(relationType, sourceType, targetType, onSuccess, onError) {
+        this.get("/main/graph?edge-relation-type=" + relationType + "&source-concept-type=" + sourceType + "&target-concept-type=" + targetType, onSuccess, onError)
+    }
+
 }
 
 export default new Rest;

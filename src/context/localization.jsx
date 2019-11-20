@@ -82,7 +82,7 @@ class Localization {
                 title_filter: "Filter",
                 filter: "Filtrera",
                 search: "Sök",
-                loading: "laddar...",
+                loading: "laddar",
                 deprecated: "Avaktualiserad",
                 deprecate: "Avaktualisera",
                 dialog_deprecate: "Är du säker på att du vill avaktualisera",
@@ -91,6 +91,12 @@ class Localization {
                 show: "Visa",
                 change_note: "Anteckning",
                 add_connection: "Lägg till koppling",
+                of: "av",
+                to: "till",
+                are_missing_connections: "saknar kopplingar",
+                no_items_connected: "Inga kopplingar funna",
+                all_items_connected: "Alla element är kopplade",
+                statistics: "Statistik",                
             },
             // english
             en: {

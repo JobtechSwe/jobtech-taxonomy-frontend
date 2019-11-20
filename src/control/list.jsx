@@ -48,7 +48,8 @@ class List extends React.Component {
                     <div 
                         className={s}
                         key={index}
-                        onMouseUp={this.onItemClicked.bind(this, index, item)}>
+                        onMouseUp={this.onItemClicked.bind(this, index, item)}
+                    >
                         {this.props.dataRender(item)}
                     </div>
                 );

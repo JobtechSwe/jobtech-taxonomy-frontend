@@ -6,7 +6,7 @@ class Loader extends React.Component {
 
     constructor() {
         super();
-        this.text = Localization.get("loading");
+        this.text = Localization.get("loading") + "...";
         this.css = "loader_group font";
     }
 
