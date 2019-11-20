@@ -98,11 +98,11 @@ class Description extends React.Component {
 
     renderDeprecateDialog() {
         return (
-            <div className="dialog_save">
+            <div className="dialog_content">
                 <div>
                     {Localization.get("dialog_deprecate")} "{this.state.preferredLabel}"?
                 </div>
-                <div className="dialog_save_buttons">
+                <div className="dialog_content_buttons">
                     <Button 
                         text={Localization.get("yes")}
                         onClick={this.onDeprecateYesClicked.bind(this)}/>

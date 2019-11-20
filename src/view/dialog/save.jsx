@@ -41,7 +41,7 @@ class Save extends React.Component {
             );
         });
         return (
-            <div className="dialog_save">
+            <div className="dialog_content">
                 <div>{Localization.get("dialog_unsaved_changes")}</div>
                 <ul>{changes}</ul>
                 <div>{Localization.get("change_note")}</div>
@@ -49,7 +49,7 @@ class Save extends React.Component {
                     className="rounded"
                     value={this.state.note}
                     onChange={this.onNoteChanged.bind(this)}/>
-                <div className="dialog_save_buttons">
+                <div className="dialog_content_buttons">
                     <Button 
                         onClick={this.onSaveClicked.bind(this)}
                         text={Localization.get("save")}/>

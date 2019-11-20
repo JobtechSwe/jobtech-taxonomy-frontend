@@ -55,8 +55,8 @@ class TreeView extends React.Component {
         }
     }
 
-    invalidate() {
-        this.setState({context: this.state.context});
+    invalidate(callback) {
+        this.setState({context: this.state.context}, callback);
     }
 
     renderRoots() {

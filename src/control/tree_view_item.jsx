@@ -11,6 +11,7 @@ class TreeViewItem extends React.Component {
             children: [],
             expanded: false,
             showingButton: true,
+            forceShowingButton: false,
             selected: false,
         };
     }
@@ -33,6 +34,7 @@ class TreeViewItem extends React.Component {
             children: pointer.children,
             expanded: pointer.expanded,
             showingButton: pointer.showingButton,
+            forceShowingButton: pointer.forceShowingButton,
             selected: pointer.isSelected(),
         });
     }
@@ -54,6 +56,11 @@ class TreeViewItem extends React.Component {
     setShowButton(show) {
         this.props.pointer.showingButton = show;
         this.setState({showingButton: show});
+    }
+
+    setForceShowButton(show) {
+        this.props.pointer.forceShowingButton = show;
+        this.setState({forceShowingButton: show});
     }
 
     addChild(child) {
@@ -107,6 +114,9 @@ class TreeViewItem extends React.Component {
     }
 
     onExpandClicked() {
+        if(this.props.pointer.onExpandClicked) {
+            this.props.pointer.onExpandClicked(this.props.pointer, !this.state.expanded);
+        }
         this.setExpanded(!this.state.expanded);
     }
     
@@ -134,7 +144,10 @@ class TreeViewItem extends React.Component {
     }
 
     renderExpanded() {
-        if(this.state.children && this.state.children.length > 0 && this.state.showingButton) {
+        if(this.state.forceShowingButton ||
+           (this.state.children && 
+           this.state.children.length > 0 && 
+           this.state.showingButton)) {
             return (
                 <Button 
                     css="tree_view_expand" 

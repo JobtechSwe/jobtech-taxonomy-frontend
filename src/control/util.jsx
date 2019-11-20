@@ -103,6 +103,10 @@ class Util {
     __treeViewItemSetShowButton(item, show) {
         item.showingButton = show;
     }
+
+    __treeViewItemSetForceShowButton(item, show) {
+        item.forceShowingButton = show;
+    }
     
     __treeViewItemAddChild(item, child) {
         child.parent = item;
@@ -118,6 +122,7 @@ class Util {
         item.setExpanded = this.__treeViewItemSetExpanded.bind(this, item);
         item.setSelected = this.__treeViewItemSetSelected.bind(this, item);
         item.setShowButton = this.__treeViewItemSetShowButton.bind(this, item);
+        item.setForceShowButton = this.__treeViewItemSetForceShowButton.bind(this, item);
         item.addChild = this.__treeViewItemAddChild.bind(this, item); 
     }
     
@@ -143,12 +148,14 @@ class Util {
             setExpanded: null,
             setSelected: null,
             setShowButton: null,
+            setForceShowButton: null,
             addChild: null,
             removeChild: null,
             clear: null,
             sortChildren: null,
             onDeselected: null,
             onSelected: null,
+            onExpandClicked: null,
         };
         pointer.rebind = this.__treeViewItemRebind.bind(this, pointer);
         pointer.rebind();

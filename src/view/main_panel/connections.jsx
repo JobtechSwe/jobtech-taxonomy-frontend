@@ -9,6 +9,7 @@ import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import localization from '../../context/localization.jsx';
+import AddConnection from './../dialog/add_connection.jsx';
 
 class Connections extends React.Component { 
 
@@ -80,6 +81,9 @@ class Connections extends React.Component {
                 value.parent.addChild(value.item);
             }
         }
+        if(value.parent.children.length == 0) {
+            this.relationTreeView.removeRoot(value.parent);
+        }
     }
     
     removeConnection(item) {
@@ -116,8 +120,35 @@ class Connections extends React.Component {
         }
     }
 
-    onAddConnectionClicked() {
+    onConnectionAdded(item) {
+        // check for parent
+        var parent = null;
+        for(var i=0; i<this.relationTreeView.roots.length; ++i) {
+            var root = this.relationTreeView.roots[i];
+            if(root.data.type == item.type) {
+                parent = root;
+                break;
+            }
+        }
+        if(parent == null) {
+            // setup new parent
+            parent = ControlUtil.createTreeViewItem(this.relationTreeView, {type: item.type});
+            parent.setText(Localization.get("db_" + item.type));
+            this.relationTreeView.addRoot(parent);
+        }
+        // setup item
+        var child = ControlUtil.createTreeViewItem(this.relationTreeView, item);
+        child.setText(item.preferredLabel);
+        parent.addChild(child);
+        // setup change request item
+        App.addEditRequest(this.createEditRequest(parent, child, false));
+    }
 
+    onAddConnectionClicked() {
+        EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
+            title: Localization.get("add_connection"),
+            content: <AddConnection callback={this.onConnectionAdded.bind(this)}/>
+        });
     }
 
     onRemoveConnectionClicked() {
@@ -253,7 +284,7 @@ class Connections extends React.Component {
                         text={localization.get("add")}
                         onClick={this.onAddConnectionClicked.bind(this)}/>
                     <Button 
-                        isEnabled={!this.state.isLocked}
+                        isEnabled={!this.state.isLocked && this.state.hasSelection}
                         text={localization.get("remove")}
                         onClick={this.onRemoveConnectionClicked.bind(this)}/>
                 </div>

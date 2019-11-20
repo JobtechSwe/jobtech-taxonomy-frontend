@@ -13,6 +13,10 @@ class Index extends React.Component {
 	constructor() {
         super();
         Support.init();
+        // state
+        this.state = {
+            overlay: null
+        };
         // callbacks
         this.boundShowOverlayWindow = this.onShowOverlayWindow.bind(this);
         this.boundHideOverlayWindow = this.onHideOverlayWindow.bind(this);
@@ -33,11 +37,7 @@ class Index extends React.Component {
         var window = document.getElementById("overlay_window");
         container.classList.add("overlay_effect");
         window.classList.add("overlay_window");
-        ReactDOM.render(
-            <DialogWindow title={data.title}>
-                {data.content}
-            </DialogWindow>, 
-            window);
+        this.setState({overlay: data});
     }
 
     onHideOverlayWindow() {
@@ -45,6 +45,18 @@ class Index extends React.Component {
         var window = document.getElementById("overlay_window");
         container.classList.remove("overlay_effect");
         window.classList.remove("overlay_window");
+        this.setState({overlay: null});
+    }
+
+    renderOverlay() {
+        if(this.state.overlay) {
+            var data = this.state.overlay;
+            return (
+                <DialogWindow title={data.title}>
+                    {data.content}
+                </DialogWindow>
+            );
+        }
     }
 
     render() {
@@ -56,7 +68,9 @@ class Index extends React.Component {
                     <SidePanel/>
                     <MainPanel/>
                 </div>
-                <div id="overlay_window"/>
+                <div id="overlay_window">
+                    {this.renderOverlay()}
+                </div>
             </div>
         );
     }

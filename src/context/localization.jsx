@@ -90,6 +90,7 @@ class Localization {
                 close: "Stäng",
                 show: "Visa",
                 change_note: "Anteckning",
+                add_connection: "Lägg till koppling",
             },
             // english
             en: {
