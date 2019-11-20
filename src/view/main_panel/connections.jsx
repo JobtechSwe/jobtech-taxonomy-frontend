@@ -235,7 +235,7 @@ class Connections extends React.Component {
         });
     }
 
-    setupRelationsFor(item) {        
+    setupRelationsFor(item) {      
         this.relationTreeView.clear();
         this.waitingFor = 0;
         this.waitingForItem = null;

@@ -5,27 +5,25 @@ class Rest {
 
     setupCallbacks(http, onSuccess, onError) {
         this.currentRequest = http;
-        this.currentSuccessCallback = onSuccess;
-        this.currentErrorCallback = onError;
         http.onerror = () => {
-            if(this.currentErrorCallback != null) {
-                this.currentErrorCallback(http.status);
+            if(this.onError != null) {
+                onError(http.status);
             }
         }
         http.onload = () => {
             if(http.status >= 200 && http.status < 300) {
-                if(this.currentSuccessCallback != null) {
+                if(onSuccess != null) {
                     try {
                         var response = http.response.split("\"taxonomy/").join("\"");
                         response = response.split("preferred-label").join("preferredLabel");
-                        this.currentSuccessCallback(JSON.parse(response));
+                        onSuccess(JSON.parse(response));
                     } catch(err) {
                         console.log("Exception", err);
                     }
                 }
             } else {
-                if(this.currentErrorCallback != null) {
-                    this.currentErrorCallback(http.status);
+                if(onError != null) {
+                    onError(http.status);
                 }
             }
         }
@@ -39,8 +37,6 @@ class Rest {
             this.currentErrorCallback(499); //Client Closed Request
         }
         this.currentRequest = null;
-        this.currentSuccessCallback = null;
-        this.currentErrorCallback = null;
     }
 
     get(func, onSuccess, onError) {
