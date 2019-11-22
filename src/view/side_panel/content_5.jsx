@@ -108,13 +108,15 @@ class Content5 extends React.Component {
     }
 
     renderOptions() {
-        var options = this.options.map(o => this.renderOption(o.value, o.text));
+        var options = this.options.map((o, i) => {
+            return this.renderOption(o.value, o.text, i);
+        });
         return options;
     }
 
-    renderOption(value, text) {
+    renderOption(value, text, key) {
         return (
-            <option value={value}>
+            <option value={value} key={key}>
                 {Localization.get(text)}
             </option>
         );

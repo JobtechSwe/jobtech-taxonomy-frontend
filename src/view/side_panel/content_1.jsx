@@ -42,6 +42,7 @@ class Content1 extends React.Component {
             queryType: this.TYPE_SSYK,
             loadingData: false,
         };
+        this.options = this.populateOptions();
         this.searchReference = null;
         this.expandedItem = null;
         this.queryTreeView = ControlUtil.createTreeView();
@@ -57,6 +58,41 @@ class Content1 extends React.Component {
 
     componentWillUnmount() {
         EventDispatcher.remove(this.boundMainItemSelected);
+    }
+
+    populateOptions() {
+        var options = [];
+        options.push({value: this.TYPE_CONTINENT, text: Localization.get("db_continent")});
+        options.push({value: this.TYPE_COUNTRY, text: Localization.get("db_country")});
+        options.push({value: this.TYPE_DRIVING_LICENCE, text: Localization.get("db_driving-licence")});
+        options.push({value: this.TYPE_EMPLOYMENT_DURATION, text: Localization.get("db_employment-duration")});
+        options.push({value: this.TYPE_EMPLOYMENT_TYPE, text: Localization.get("db_employment-type")});
+        options.push({value: this.TYPE_ISCO_LEVEL_4, text: Localization.get("db_isco-level-4")});
+        options.push({value: this.TYPE_KEYWORD, text: Localization.get("db_keyword")});
+        options.push({value: this.TYPE_LANGUAGE, text: Localization.get("db_language")});
+        options.push({value: this.TYPE_LANGUAGE_LEVEL, text: Localization.get("db_language-level")});
+        options.push({value: this.TYPE_MUNICIPALITY, text: Localization.get("db_municipality")});
+        options.push({value: this.TYPE_OCCUPATION_COLLECTION, text: Localization.get("db_occupation-collection")});
+        options.push({value: this.TYPE_OCCUPATION_FIELD, text: Localization.get("db_occupation-field")});
+        options.push({value: this.TYPE_OCCUPATION_NAME, text: Localization.get("db_occupation-name")});
+        options.push({value: this.TYPE_REGION, text: Localization.get("db_region")});
+        options.push({value: this.TYPE_SKILL, text: Localization.get("db_skill")});
+        options.push({value: this.TYPE_SNI, text: Localization.get("db_sni")});
+        options.push({value: this.TYPE_SSYK, text: Localization.get("db_ssyk")});
+        options.push({value: this.TYPE_SUN_EDUCATION_FIELD, text: Localization.get("db_sun-education-field")});
+        options.push({value: this.TYPE_SUN_EDUCATION_LEVEL, text: Localization.get("db_sun-education-level")});
+        options.push({value: this.TYPE_WAGE_TYPE, text: Localization.get("db_wage-type")});
+        options.push({value: this.TYPE_WORKTIME_EXTENT, text: Localization.get("db_worktime-extent")});
+        options.sort((a, b) => {
+            if(a.text < b.text) {
+                return -1;
+            }
+            if(a.text > b.text) {
+                return 1;
+            }
+            return 0;
+        });
+        return options;
     }
 
     formatLabel(label) {
@@ -95,7 +131,65 @@ class Content1 extends React.Component {
             this.queryTreeView.addRoot(roots[i]);
         }
     }
+
+    findParent(element) {
+        var getItem = (length, expanded) => {
+            var tmp = this.state.data.find((d) => {
+                return d.ssyk.length == length && element.ssyk.startsWith(d.ssyk);
+            });
+            var item = ControlUtil.createTreeViewItem(this.queryTreeView, tmp);
+            item.setText(/*this.getItemFormat(tmp)*/tmp.preferredLabel);
+            item.setExpanded(expanded);
+            return item;
+        }
+        var lambda = (root, depth, func) => {
+            var tmp = root.children.find((c) => {
+                return element.ssyk.startsWith(c.data.ssyk);
+            });
+            if(tmp == null) {
+                tmp = getItem(depth, true);
+                root.addChild(tmp);
+            }
+            if(element.ssyk.length - 1 == tmp.data.ssyk.length) {
+                return tmp;
+            } else {
+                return func(tmp, depth + 1, func);
+            }
+        };
+        if(element.ssyk.length == 1) {
+            return null;
+        }
+        var root = this.queryTreeView.roots.find((d) => {
+            return element.ssyk.startsWith(d.data.ssyk);
+        });
+        if(root == null) {
+            root = getItem(1, true);            
+            this.queryTreeView.addRoot(root);
+        }
+        if(element.ssyk.length == 2) {
+            return root;
+        }
+        return lambda(root, 2, lambda);
+    }
     
+    populateTreeSsyk(data) {
+        this.queryTreeView.shouldUpdateState = false;
+        for(var i=0; i<data.length; ++i) {
+            var element = data[i];
+            var parent = this.findParent(element);
+            var item = ControlUtil.createTreeViewItem(this.queryTreeView, element);
+            item.setText(/*element.ssyk ? this.getItemFormat(element) : */element.preferredLabel);
+            item.setExpanded(true);
+            if(parent) {
+                parent.addChild(item);
+            } else {
+                this.queryTreeView.addRoot(item);
+            }
+        }
+        this.queryTreeView.shouldUpdateState = true;
+        this.queryTreeView.invalidate();
+    }
+
     populateTree(data) {
         this.queryTreeView.shouldUpdateState = false;
         for(var i=0; i<data.length; ++i) {
@@ -108,12 +202,22 @@ class Content1 extends React.Component {
         this.queryTreeView.invalidate();
     }
 
-    onFetchResult(data, from, count) {
-        /*if(data.length > 2) {
-            console.log(data[0], data[data.length-1]);
-        }*/
+    onFetchSsykResult(data, from, count) {
         this.state.data.push(...data);
-        this.setData(data);                
+        if(data.length == count) {
+            this.fetchRecursive(from + count, count);
+        } else {
+            this.setData(this.state.data);
+            this.sortData(this.state.data);
+            this.queryTreeView.clear();
+            this.populateTreeSsyk(this.state.data);
+            this.setState({loadingData: false});
+        }
+    }
+
+    onFetchResult(data, from, count) {
+        this.state.data.push(...data);
+        this.setData(data);
         this.sortData(this.state.data);
         this.queryTreeView.clear();
         this.populateTree(this.state.data);
@@ -127,7 +231,7 @@ class Content1 extends React.Component {
     fetchRecursive(from, count) {
         if(this.state.queryType == this.TYPE_SSYK) {
             Rest.getConceptsSsykRange(this.state.queryType, from, count, (data) => {
-                this.onFetchResult(data, from, count);
+                this.onFetchSsykResult(data, from, count);
             }, (status) => {
                 // TODO: display error
             });
@@ -153,10 +257,7 @@ class Content1 extends React.Component {
         for(var i=0; i<data.length; ++i) {
             var item = data[i];
             if(item["ssyk-code-2012"]) {
-                item.ssyk = item["ssyk-code-2012"];            
-                while(item.ssyk.length < 4) {
-                    item.ssyk = "0" + item.ssyk;
-                }                
+                item.ssyk = item["ssyk-code-2012"];                                         
             }
             item.preferredLabel = this.formatLabel(item.preferredLabel);
         }
@@ -208,9 +309,17 @@ class Content1 extends React.Component {
                 return item.preferredLabel.toLowerCase().indexOf(q) >= 0;
             });
             this.sortData(data);
-            this.populateTree(data);
+            if(this.state.queryType == this.TYPE_SSYK) {
+                this.populateTreeSsyk(data);
+            } else {
+                this.populateTree(data);
+            }
         } else {
-            this.populateTree(this.state.data);
+            if(this.state.queryType == this.TYPE_SSYK) {
+                this.populateTreeSsyk(this.state.data);
+            } else {
+                this.populateTree(this.state.data);
+            }
         }
     }
 
@@ -266,9 +375,16 @@ class Content1 extends React.Component {
         return true;
     }
 
-    renderOption(value, text) {
+    renderOptions() {
+        var options = this.options.map((o, i) => {
+            return this.renderOption(o.value, o.text, i);
+        });
+        return options;
+    }
+
+    renderOption(value, text, key) {
         return (
-            <option value={value}>
+            <option value={value} key={key}>
                 {Localization.get(text)}
             </option>
         );
@@ -282,27 +398,7 @@ class Content1 extends React.Component {
                     value={this.state.queryType}
                     onChange={this.onTypeChanged.bind(this)}>
                     {this.renderOption(this.TYPE_SEARCH, "search")}
-                    {this.renderOption(this.TYPE_CONTINENT, "db_continent")}
-                    {this.renderOption(this.TYPE_COUNTRY, "db_country")}
-                    {this.renderOption(this.TYPE_DRIVING_LICENCE, "db_driving-licence")}
-                    {this.renderOption(this.TYPE_EMPLOYMENT_DURATION, "db_employment-duration")}
-                    {this.renderOption(this.TYPE_EMPLOYMENT_TYPE, "db_employment-type")}
-                    {this.renderOption(this.TYPE_ISCO_LEVEL_4, "db_isco-level-4")}
-                    {this.renderOption(this.TYPE_KEYWORD, "db_keyword")}
-                    {this.renderOption(this.TYPE_LANGUAGE, "db_language")}
-                    {this.renderOption(this.TYPE_LANGUAGE_LEVEL, "db_language-level")}
-                    {this.renderOption(this.TYPE_MUNICIPALITY, "db_municipality")}
-                    {this.renderOption(this.TYPE_OCCUPATION_COLLECTION, "db_occupation-collection")}
-                    {this.renderOption(this.TYPE_OCCUPATION_FIELD, "db_occupation-field")}
-                    {this.renderOption(this.TYPE_OCCUPATION_NAME, "db_occupation-name")}
-                    {this.renderOption(this.TYPE_REGION, "db_region")}
-                    {this.renderOption(this.TYPE_SKILL, "db_skill")}
-                    {this.renderOption(this.TYPE_SNI, "db_sni")}
-                    {this.renderOption(this.TYPE_SSYK, "db_ssyk")}
-                    {this.renderOption(this.TYPE_SUN_EDUCATION_FIELD, "db_sun-education-field")}
-                    {this.renderOption(this.TYPE_SUN_EDUCATION_LEVEL, "db_sun-education-level")}
-                    {this.renderOption(this.TYPE_WAGE_TYPE, "db_wage-type")}
-                    {this.renderOption(this.TYPE_WORKTIME_EXTENT, "db_worktime-extent")}                    
+                    {this.renderOptions()}
                 </select>
                 <div className="sub_panel_search">
                     <input 

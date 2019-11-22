@@ -24,7 +24,7 @@ class Content4 extends React.Component {
                 if(item["ssyk-code-2012"]) {
                     item.ssyk = item["ssyk-code-2012"];            
                     while(item.ssyk.length < 4) {
-                        item.ssyk = "0" + item.ssyk;
+                        item.ssyk += "0";
                     }                
                 }
                 item.preferredLabel = this.formatLabel(item.preferredLabel);
