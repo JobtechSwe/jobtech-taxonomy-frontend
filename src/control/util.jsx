@@ -1,6 +1,7 @@
 import React from 'react';
 import Hint from './hint.jsx';
 import TreeViewItem from './tree_view_item.jsx';
+import ContextUtil from './../context/util.jsx';
 
 class Util { 
 
@@ -114,6 +115,10 @@ class Util {
         item.children.push(child);
     }
 
+    __treViewItemSortChildren(item) {
+        ContextUtil.sortByKey(item.children, "text", true);
+    }
+
     __treeViewItemRebind(item) {
         item.isSelected = this.__treeViewItemIsSelected.bind(this, item);
         item.isLastChild = this.__treeViewItemIsLastChild.bind(this, item);  
@@ -124,6 +129,7 @@ class Util {
         item.setShowButton = this.__treeViewItemSetShowButton.bind(this, item);
         item.setForceShowButton = this.__treeViewItemSetForceShowButton.bind(this, item);
         item.addChild = this.__treeViewItemAddChild.bind(this, item); 
+        item.sortChildren = this.__treViewItemSortChildren.bind(this, item);
     }
     
     createTreeViewItem(context, data) {

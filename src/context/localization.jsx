@@ -10,11 +10,11 @@ class Localization {
             sv: {
                 locale: "sv-SE",
                 /* db types */
-                db_continent: "Kontinent",
+                db_continent: "Världsdel",
                 db_country: "Land",
                 "db_driving-licence": "Körkort",
                 "db_driving-licence-combination": "Körkorts-kombination",
-                "db_employment-duration": "Varaktighet",
+                "db_employment-duration": "Anställningsvaraktighet",
                 "db_employment-type": "Anställningstyp",
                 "db_isco-level-1": "ISCO nivå 1",
                 "db_isco-level-4": "ISCO nivå 4",
@@ -25,7 +25,7 @@ class Localization {
                 "db_occupation-collection": "Yrkessamling",
                 "db_occupation-field": "Yrkesområde",
                 "db_occupation-name": "Benämning",
-                db_region: "Region",
+                db_region: "EU-Region",
                 db_skill: "Kompetens",
                 "db_skill-headline": "Kompetens",
                 "db_sni": "SNI",
@@ -46,7 +46,7 @@ class Localization {
                 "db_sun-education-level-2": "Utbildningsnivå",
                 "db_sun-education-level-3": "Utbildningsnivå",
                 "db_wage-type": "Löneform",
-                "db_worktime-extent": "Arbetstidsomfattning",
+                "db_worktime-extent": "Arbetstid",
                 /* Actions */
                 CREATED: "Skapad",
                 UPDATED: "Uppdaterad",

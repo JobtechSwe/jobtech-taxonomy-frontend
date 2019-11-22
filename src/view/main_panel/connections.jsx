@@ -8,7 +8,7 @@ import App from '../../context/app.jsx';
 import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
-import localization from '../../context/localization.jsx';
+import Util from '../../context/util.jsx';
 import AddConnection from './../dialog/add_connection.jsx';
 
 class Connections extends React.Component { 
@@ -173,20 +173,18 @@ class Connections extends React.Component {
     fetch(item, type) {
         this.waitingFor++;
         Rest.getAllConceptRelations(item.id, type, (data) => {
-            this.waitingFor--;
-            if(this.waitingFor <= 0) {
-                this.hideLoader();
-            }
-            for(var i=0; i<data.length; ++i) {         
+            for(var i=0; i<data.length; ++i) {
                 this.addRelationToTree(data[i]);
             }
-            for(var i=0; i<this.relationTreeView.roots; ++i) {
+            for(var i=0; i<this.relationTreeView.roots.length; ++i) {
                 this.relationTreeView.roots[i].sortChildren();
+            }
+            if(--this.waitingFor <= 0) {
+                this.hideLoader();
             }
         }, () => {
             // TODO: Handle error
-            this.waitingFor--;
-            if(this.waitingFor <= 0) {
+            if(--this.waitingFor <= 0) {
                 this.hideLoader();
             }
         }); 
@@ -207,10 +205,11 @@ class Connections extends React.Component {
                 if(item.data["isco-code-08"]) {
                     item.data.isco = item.data["isco-code-08"];            
                     while(item.data.isco.length < 4) {
-                        item.data.isco = "0" + item.data.isco;
+                        item.data.isco += "+";
                     }                
                 }
                 item.setText(item.data.isco + "-" + item.data.preferredLabel);
+                item.parent.sortChildren(Util.sortTreeViewItemsByIsco.bind(this));
             }
         }, () => {
             // TODO: Handle error
@@ -225,10 +224,11 @@ class Connections extends React.Component {
                 if(item.data["ssyk-code-2012"]) {
                     item.data.ssyk = item.data["ssyk-code-2012"];            
                     while(item.data.ssyk.length < 4) {
-                        item.data.ssyk = "0" + item.data.ssyk;
+                        item.data.ssyk += "0";
                     }                
                 }
                 item.setText(item.data.ssyk + "-" + item.data.preferredLabel);
+                item.parent.sortChildren(Util.sortTreeViewItemsBySsyk.bind(this));
             }
         }, () => {
             // TODO: Handle error
@@ -283,15 +283,15 @@ class Connections extends React.Component {
                 <div>
                     <Button 
                         isEnabled={this.state.hasSelection}
-                        text={localization.get("visit")} 
+                        text={Localization.get("visit")} 
                         onClick={this.onVisitClicked.bind(this)}/>
                     <Button 
                         isEnabled={!this.state.isLocked}
-                        text={localization.get("add")}
+                        text={Localization.get("add")}
                         onClick={this.onAddConnectionClicked.bind(this)}/>
                     <Button 
                         isEnabled={!this.state.isLocked && this.state.hasSelection}
-                        text={localization.get("remove")}
+                        text={Localization.get("remove")}
                         onClick={this.onRemoveConnectionClicked.bind(this)}/>
                 </div>
             </div>

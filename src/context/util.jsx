@@ -15,14 +15,44 @@ class Util {
         });
         return items;
     }
+
+    sortTreeViewItemsBySsyk(items) {
+        items.sort((a, b) => {
+            if(a.data.ssyk) {
+                if(a.data.ssyk < b.data.ssyk) { 
+                    return -1; 
+                }
+                return a.data.ssyk > b.data.ssyk ? 1 : 0;
+            }
+            if(a.data.preferredLabel < b.data.preferredLabel) { 
+                return -1; 
+            }
+            return a.data.preferredLabel > b.data.preferredLabel ? 1 : 0;
+        });
+    }
+
+    sortTreeViewItemsByIsco(items) {
+        items.sort((a, b) => {
+            if(a.data.isco) {
+                if(a.data.isco < b.data.isco) { 
+                    return -1; 
+                }
+                return a.data.isco > b.data.isco ? 1 : 0;
+            }
+            if(a.data.preferredLabel < b.data.preferredLabel) { 
+                return -1; 
+            }
+            return a.data.preferredLabel > b.data.preferredLabel ? 1 : 0;
+        });
+    }
     
     sortValue(direction, a, b) {
         if(direction) {
-            if(a < b) return 1;
-            if(a > b) return -1;
-        } else {
             if(a < b) return -1;
             if(a > b) return 1;
+        } else {
+            if(a < b) return 1;
+            if(a > b) return -1;
         }
         return 0;
     }

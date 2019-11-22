@@ -24,6 +24,7 @@ class TreeViewItem extends React.Component {
         pointer.addChild = this.addChild.bind(this);
         pointer.removeChild = this.removeChild.bind(this);
         pointer.clear = this.clear.bind(this);
+        pointer.sortChildren = this.sortChildren.bind(this);
         pointer.setExpanded = this.setExpanded.bind(this);
         pointer.setShowButton = this.setShowButton.bind(this);
         pointer.onDeselected = this.onDeselected.bind(this);
@@ -100,8 +101,13 @@ class TreeViewItem extends React.Component {
         });
     }
 
-    sortChildren() {
-        Util.sortByKey(children, "text", true);
+    sortChildren(method) {
+        var children = this.state.children;
+        if(method) {
+            method(children);
+        } else {
+            Util.sortByKey(children, "text", true);
+        }
         this.setState({children: children});
     }
 

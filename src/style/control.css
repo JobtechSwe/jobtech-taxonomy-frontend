@@ -248,6 +248,7 @@ select.rounded:focus {
 }
 
 .tree_view_item_section {
+    flex-shrink: 0;
     background: #bbb;
     width: 19px;
     height: 19px;
@@ -267,6 +268,7 @@ select.rounded:focus {
 
 .tree_view_item_label {
     cursor: pointer;
+    white-space: pre;
 }
 
 .tree_view_item_label:hover {
