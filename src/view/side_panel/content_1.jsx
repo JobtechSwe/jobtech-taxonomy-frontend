@@ -139,7 +139,6 @@ class Content1 extends React.Component {
             });
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, tmp);
             item.setText(/*this.getItemFormat(tmp)*/tmp.preferredLabel);
-            item.setExpanded(expanded);
             return item;
         }
         var lambda = (root, depth, func) => {
@@ -164,6 +163,7 @@ class Content1 extends React.Component {
         });
         if(root == null) {
             root = getItem(1, true);            
+            item.setExpanded(expanded);
             this.queryTreeView.addRoot(root);
         }
         if(element.ssyk.length == 2) {
@@ -179,10 +179,10 @@ class Content1 extends React.Component {
             var parent = this.findParent(element);
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, element);
             item.setText(/*element.ssyk ? this.getItemFormat(element) : */element.preferredLabel);
-            item.setExpanded(true);
             if(parent) {
                 parent.addChild(item);
             } else {
+                item.setExpanded(true);
                 this.queryTreeView.addRoot(item);
             }
         }
