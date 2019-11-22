@@ -29,6 +29,7 @@ class Constants {
         this.CONCEPT_SSYK_LEVEL_4 = "ssyk-level-4";
         this.CONCEPT_OCCUPATION_NAME = "occupation-name";
         this.CONCEPT_SKILL = "skill";
+        this.CONCEPT_SKILL_HEADLINE = "skill-headline"
         // events
         this.EVENT_SET_WORKMODE = "EVENT_SET_WORKMODE";
         this.EVENT_SHOW_OVERLAY = "EVENT_SHOW_OVERLAY";

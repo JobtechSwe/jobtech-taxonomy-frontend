@@ -28,8 +28,7 @@ class Content1 extends React.Component {
         this.TYPE_OCCUPATION_FIELD = "occupation-field";
         this.TYPE_OCCUPATION_NAME = "occupation-name";
         this.TYPE_REGION = "region";
-        //this.TYPE_SKILL = "skill-headline skill";
-        this.TYPE_SKILL = "skill-headline";
+        this.TYPE_SKILL = "skill-headline skill";
         this.TYPE_SNI = "sni-level-1 sni-level-2";
         this.TYPE_SSYK = "ssyk-level-1 ssyk-level-2 ssyk-level-3 ssyk-level-4";
         this.TYPE_SUN_EDUCATION_FIELD = "sun-ecucation-field-1 sun-ecucation-field-2 sun-ecucation-field-3 sun-ecucation-field-4";
@@ -138,7 +137,7 @@ class Content1 extends React.Component {
                 return d.ssyk.length == length && element.ssyk.startsWith(d.ssyk);
             });
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, tmp);
-            item.setText(/*this.getItemFormat(tmp)*/tmp.preferredLabel);
+            item.setText(tmp.preferredLabel);
             return item;
         }
         var lambda = (root, depth, func) => {
@@ -178,7 +177,7 @@ class Content1 extends React.Component {
             var element = data[i];
             var parent = this.findParent(element);
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, element);
-            item.setText(/*element.ssyk ? this.getItemFormat(element) : */element.preferredLabel);
+            item.setText(element.preferredLabel);
             if(parent) {
                 parent.addChild(item);
             } else {
@@ -188,6 +187,45 @@ class Content1 extends React.Component {
         }
         this.queryTreeView.shouldUpdateState = true;
         this.queryTreeView.invalidate();
+    }
+
+    populateTreeSkill(data) {
+        this.queryTreeView.shouldUpdateState = false;
+        if(data == null) {
+            var test = this.state.data.nodes[0];
+            for(var i=0; i<this.state.data.nodes.length; ++i) {
+                var element = this.state.data.nodes[i];                
+                if(element.type === Constants.CONCEPT_SKILL_HEADLINE) {
+                    var root = this.queryTreeView.roots.find((d) => {
+                        return d.data.id === element.id;
+                    });
+                    if(root == null) {
+                        root = ControlUtil.createTreeViewItem(this.queryTreeView, element);
+                        root.setText(element.preferredLabel);
+                        this.queryTreeView.addRoot(root);
+                    }
+                }
+            }            
+            for(var i=0; i<this.state.data.edges.length; ++i) {
+                var edge = this.state.data.edges[i];
+                var root = this.queryTreeView.roots.find((d) => {
+                    return d.data.id === edge.target;
+                });
+                if(root) {
+                    var item = this.state.data.nodes.find((d) => {
+                        return d.id === edge.source;
+                    });
+                    var child = ControlUtil.createTreeViewItem(this.queryTreeView, item);
+                    child.setText(item.preferredLabel);
+                    root.addChild(child);
+                } else {
+                    console.log("no root found for", edge);
+                }
+            }
+        }
+        this.queryTreeView.shouldUpdateState = true;
+        this.queryTreeView.invalidate();
+        console.log(this.queryTreeView.roots.length);
     }
 
     populateTree(data) {
@@ -226,6 +264,16 @@ class Content1 extends React.Component {
         } else {
             this.setState({loadingData: false});
         }
+    }
+
+    fetchSkills() {
+        Rest.getGraph(Constants.RELATION_NARROWER, Constants.CONCEPT_SKILL_HEADLINE, Constants.CONCEPT_SKILL, (data) => {            
+            this.state.data = data.graph;
+            this.populateTreeSkill(null);
+            this.setState({loadingData: false});
+        }, (status) => {
+            // TODO: display error
+        });
     }
 
     fetchRecursive(from, count) {
@@ -297,7 +345,11 @@ class Content1 extends React.Component {
             }
         } else {
             this.showLoader();
-            this.fetchRecursive(0, 400);
+            if(this.state.queryType == this.TYPE_SKILL) {
+                this.fetchSkills();
+            } else {
+                this.fetchRecursive(0, 400);
+            }
         }
     }
 
@@ -311,12 +363,16 @@ class Content1 extends React.Component {
             this.sortData(data);
             if(this.state.queryType == this.TYPE_SSYK) {
                 this.populateTreeSsyk(data);
+            } else if(this.state.queryType == this.TYPE_SKILL) {
+                this.populateTreeSkill(data, false);
             } else {
                 this.populateTree(data);
             }
         } else {
             if(this.state.queryType == this.TYPE_SSYK) {
                 this.populateTreeSsyk(this.state.data);
+            } else if(this.state.queryType == this.TYPE_SKILL) {
+                this.populateTreeSkill(this.state.data, true);
             } else {
                 this.populateTree(this.state.data);
             }
