@@ -132,43 +132,50 @@ class Content1 extends React.Component {
     }
 
     findParent(element) {
-        var getItem = (length, expanded) => {
+        var getItem = (type, expanded) => {
             var tmp = this.state.data.find((d) => {
-                return d.ssyk.length == length && element.ssyk.startsWith(d.ssyk);
+                return d.type === type && element.ssyk.startsWith(d["ssyk-code-2012"]);
             });
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, tmp);
-            item.setText(tmp.preferredLabel);
+            item.setText(tmp.ssyk ? this.getItemFormat(tmp) : tmp.preferredLabel);
+            item.setExpanded(expanded);
             return item;
         }
-        var lambda = (root, depth, func) => {
+        var lambda = (root, type, func) => {
             var tmp = root.children.find((c) => {
-                return element.ssyk.startsWith(c.data.ssyk);
+                return element.ssyk.startsWith(c.data["ssyk-code-2012"]);
             });
             if(tmp == null) {
-                tmp = getItem(depth, true);
+                tmp = getItem(type, false);
                 root.addChild(tmp);
             }
-            if(element.ssyk.length - 1 == tmp.data.ssyk.length) {
+            var nextType = null;
+            if(type == Constants.CONCEPT_SSYK_LEVEL_2) {
+                nextType = Constants.CONCEPT_SSYK_LEVEL_3;
+            } else if(type == Constants.CONCEPT_SSYK_LEVEL_3) {
+                nextType = Constants.CONCEPT_SSYK_LEVEL_4;
+            }
+            if(element.type == nextType) {
                 return tmp;
-            } else {
-                return func(tmp, depth + 1, func);
+            } else if(nextType) {
+                return func(tmp, nextType, func);
             }
         };
-        if(element.ssyk.length == 1) {
+        if(element.type == Constants.CONCEPT_SSYK_LEVEL_1) {
             return null;
         }
         var root = this.queryTreeView.roots.find((d) => {
-            return element.ssyk.startsWith(d.data.ssyk);
+            return element.ssyk.startsWith(d.data["ssyk-code-2012"]);
         });
         if(root == null) {
-            root = getItem(1, true);            
-            item.setExpanded(expanded);
+            root = getItem(Constants.CONCEPT_SSYK_LEVEL_1, true);            
+            root.setExpanded(true);
             this.queryTreeView.addRoot(root);
         }
-        if(element.ssyk.length == 2) {
+        if(element.type == Constants.CONCEPT_SSYK_LEVEL_2) {
             return root;
         }
-        return lambda(root, 2, lambda);
+        return lambda(root, Constants.CONCEPT_SSYK_LEVEL_2, lambda);
     }
     
     populateTreeSsyk(data) {
@@ -177,7 +184,7 @@ class Content1 extends React.Component {
             var element = data[i];
             var parent = this.findParent(element);
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, element);
-            item.setText(element.preferredLabel);
+            item.setText(element.ssyk ? this.getItemFormat(element) : element.preferredLabel);
             if(parent) {
                 parent.addChild(item);
             } else {
@@ -192,9 +199,8 @@ class Content1 extends React.Component {
     populateTreeSkill(data) {
         this.queryTreeView.shouldUpdateState = false;
         if(data == null) {
-            var test = this.state.data.nodes[0];
             for(var i=0; i<this.state.data.nodes.length; ++i) {
-                var element = this.state.data.nodes[i];                
+                var element = this.state.data.nodes[i];                                
                 if(element.type === Constants.CONCEPT_SKILL_HEADLINE) {
                     var root = this.queryTreeView.roots.find((d) => {
                         return d.data.id === element.id;
@@ -218,22 +224,69 @@ class Content1 extends React.Component {
                     var child = ControlUtil.createTreeViewItem(this.queryTreeView, item);
                     child.setText(item.preferredLabel);
                     root.addChild(child);
-                } else {
-                    console.log("no root found for", edge);
                 }
             }
+        } else {
+            for(var i=0; i<this.state.data.edges.length; ++i) {
+                var edge = this.state.data.edges[i];
+                var target = data.find((d) => {
+                    return d.id === edge.target;
+                });
+                var source = data.find((d) => {
+                    return d.id === edge.source;
+                });
+                if(source) {
+                    var root = this.queryTreeView.roots.find((d) => {
+                        return d.data.id === edge.target;
+                    });
+                    if(root == null) {
+                        if(target == null) {
+                            var target = this.state.data.nodes.find((d) => {
+                                return d.id === edge.target;
+                            });
+                        }
+                        root = ControlUtil.createTreeViewItem(this.queryTreeView, target);
+                        root.setText(target.preferredLabel);
+                        root.setExpanded(true);
+                        this.queryTreeView.addRoot(root);
+                    }
+                    var child = ControlUtil.createTreeViewItem(this.queryTreeView, source);
+                    child.setText(source.preferredLabel);
+                    root.addChild(child);
+                } else if(target) {
+                    var root = this.queryTreeView.roots.find((d) => {
+                        return d.data.id === edge.target;
+                    });
+                    if(root == null) {
+                        root = ControlUtil.createTreeViewItem(this.queryTreeView, target);
+                        root.setText(target.preferredLabel);
+                        root.setExpanded(true);
+                        this.queryTreeView.addRoot(root);
+                    }                    
+                }
+            }            
+        }
+        //sort
+        for(var i=0; i<this.queryTreeView.roots.length; ++i) {
+            var root = this.queryTreeView.roots[i];
+            root.children.sort((a, b) => {
+                if(a.text < b.text) { 
+                    return -1; 
+                }
+                return a.text > b.text ? 1 : 0;
+            });
         }
         this.queryTreeView.shouldUpdateState = true;
         this.queryTreeView.invalidate();
-        console.log(this.queryTreeView.roots.length);
     }
 
     populateTree(data) {
         this.queryTreeView.shouldUpdateState = false;
         for(var i=0; i<data.length; ++i) {
-            var item = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
+            var element = data[i];
+            var item = ControlUtil.createTreeViewItem(this.queryTreeView, element);
             item.setShowButton(false);
-            item.setText(data[i].ssyk ? this.getItemFormat(data[i]) : data[i].preferredLabel);
+            item.setText(element.ssyk ? this.getItemFormat(element) : element.preferredLabel);
             this.queryTreeView.addRoot(item);
         }
         this.queryTreeView.shouldUpdateState = true;
@@ -269,6 +322,7 @@ class Content1 extends React.Component {
     fetchSkills() {
         Rest.getGraph(Constants.RELATION_NARROWER, Constants.CONCEPT_SKILL_HEADLINE, Constants.CONCEPT_SKILL, (data) => {            
             this.state.data = data.graph;
+            this.sortData(this.state.data.nodes);
             this.populateTreeSkill(null);
             this.setState({loadingData: false});
         }, (status) => {
@@ -305,7 +359,10 @@ class Content1 extends React.Component {
         for(var i=0; i<data.length; ++i) {
             var item = data[i];
             if(item["ssyk-code-2012"]) {
-                item.ssyk = item["ssyk-code-2012"];                                         
+                item.ssyk = item["ssyk-code-2012"];
+                while(item.ssyk.length < 4) {
+                    item.ssyk += "0";
+                }
             }
             item.preferredLabel = this.formatLabel(item.preferredLabel);
         }
@@ -323,7 +380,7 @@ class Content1 extends React.Component {
                 return -1; 
             }
             return a.preferredLabel > b.preferredLabel ? 1 : 0;
-        });        
+        });
     }
 
     search(query) {
@@ -357,22 +414,28 @@ class Content1 extends React.Component {
         this.queryTreeView.clear();
         if(query.length > 0) {
             var q = query.toLowerCase();
-            var data = this.state.data.filter((item) => {
-                return item.preferredLabel.toLowerCase().indexOf(q) >= 0;
-            });
-            this.sortData(data);
-            if(this.state.queryType == this.TYPE_SSYK) {
-                this.populateTreeSsyk(data);
-            } else if(this.state.queryType == this.TYPE_SKILL) {
-                this.populateTreeSkill(data, false);
+            if(this.state.queryType == this.TYPE_SKILL) {
+                var data = this.state.data.nodes.filter((item) => {
+                    return item.preferredLabel.toLowerCase().indexOf(q) >= 0;
+                });
+                this.sortData(data);
+                this.populateTreeSkill(data);
             } else {
-                this.populateTree(data);
+                var data = this.state.data.filter((item) => {
+                    return item.preferredLabel.toLowerCase().indexOf(q) >= 0;
+                });
+                this.sortData(data);
+                if(this.state.queryType == this.TYPE_SSYK) {
+                    this.populateTreeSsyk(data);
+                } else {
+                    this.populateTree(data);
+                }
             }
         } else {
             if(this.state.queryType == this.TYPE_SSYK) {
                 this.populateTreeSsyk(this.state.data);
             } else if(this.state.queryType == this.TYPE_SKILL) {
-                this.populateTreeSkill(this.state.data, true);
+                this.populateTreeSkill(null);
             } else {
                 this.populateTree(this.state.data);
             }
@@ -419,7 +482,15 @@ class Content1 extends React.Component {
 
     onQueryItemSelected(item) {
         if(item.data && item.data.id) {
-            EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
+            if(item.data.definition && item.data.relations) {
+                EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
+            } else {
+                Rest.getConcept(item.data.id, (data) => {                    
+                    EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, data[0]);
+                }, (status) => {
+                    //TODO: error handling
+                });
+            }
         }
     }
 
