@@ -44,9 +44,9 @@
 }
 /* Left */
 ::-webkit-scrollbar-button:single-button:horizontal:decrement {
-    border-width: 8px 0px 8px 8px;
-    border-color: transparent transparent #555555 transparent;
-    /*border-bottom-left-radius: 5px;*/
+    border-width: 8px 8px 8px 0px;
+    border-color: transparent #555555 transparent transparent;
+    border-bottom-left-radius: 5px;
 }
 
 ::-webkit-scrollbar-button:single-button:horizontal:decrement:hover {
@@ -54,9 +54,9 @@
 }
 /* Right */
 ::-webkit-scrollbar-button:single-button:horizontal:increment {
-    border-width: 8px 8px 8px 0px;
-    border-color: transparent transparent #555555 transparent;
-    /*border-bottom-right-radius: 5px;*/
+    border-width: 8px 0px 8px 8px;
+    border-color: transparent transparent transparent #555555;
+    border-bottom-right-radius: 5px;
 }
 
 ::-webkit-scrollbar-button:single-button:horizontal:increment:hover {
