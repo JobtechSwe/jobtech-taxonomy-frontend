@@ -96,7 +96,8 @@ class Localization {
                 are_missing_connections: "saknar kopplingar",
                 no_items_connected: "Inga kopplingar funna",
                 all_items_connected: "Alla element är kopplade",
-                statistics: "Statistik",                
+                statistics: "Statistik",     
+                relation_type: "Relationstyp",           
             },
             // english
             en: {

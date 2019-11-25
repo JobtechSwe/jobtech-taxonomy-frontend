@@ -48,6 +48,24 @@ class Rest {
         http.send();
     }
 
+    post(func, key, onSuccess, onError) {
+        var http = new XMLHttpRequest();
+        this.setupCallbacks(http, onSuccess, onError);
+        http.open("POST", Constants.REST_IP + func, true);
+        http.setRequestHeader("api-key", key);
+        http.setRequestHeader("Accept", "application/json");
+        http.send();
+    }
+
+    patch(func, key, onSuccess, onError) {
+        var http = new XMLHttpRequest();
+        this.setupCallbacks(http, onSuccess, onError);
+        http.open("PATCH", Constants.REST_IP + func, true);
+        http.setRequestHeader("api-key", key);
+        http.setRequestHeader("Accept", "application/json");
+        http.send();
+    }
+
     delete(func, onSuccess, onError) {
         var http = new XMLHttpRequest();
         this.setupCallbacks(http, onSuccess, onError);
@@ -121,6 +139,13 @@ class Rest {
         this.get("/main/graph?edge-relation-type=" + relationType + "&source-concept-type=" + sourceType + "&target-concept-type=" + targetType, onSuccess, onError)
     }
 
+    patchConcept(id, args, onSuccess, onError) {
+        this.patch("/private/accumulate-concept?id=" + id + args, Constants.REST_API_KEY_PRIV, onSuccess, onError);
+    }
+
+    postAddRelation(conceptId, relationId, relationType, definition, substitutability, onSuccess, onError) {
+        this.post("/private/relation?concept-1=" + conceptId + "&concept-2=" + relationId + "&relation=" + relationType + "&definition=" + definition + "&substitutability-to=" + substitutability, Constants.REST_API_KEY_PRIV, onSuccess, onError);
+    }
 }
 
 export default new Rest;

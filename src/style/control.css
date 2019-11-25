@@ -388,7 +388,7 @@ select.rounded:focus {
     box-sizing: border-box;
 }
 
-.dialog_window .label {
+.dialog_window > .label {
     background: #386479;
     color: #fff;
     margin-bottom: 5px;

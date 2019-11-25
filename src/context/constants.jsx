@@ -66,6 +66,7 @@ class Constants {
         // settings
         this.REST_IP = "http://jobtech-taxonomy-sidecar-taxonomy-frontend.test.services.jtech.se/v1/taxonomy";
         this.REST_API_KEY = "";
+        this.REST_API_KEY_PRIV = "";
         // resources
         this.ICON_TMP_1 = "./resource/icon_tmp_1.png";
         this.ICON_TMP_2 = "./resource/icon_tmp_2.png";
@@ -81,6 +82,10 @@ class Constants {
         var apikey = this.getArg("apikey");
         if(apikey) {
             this.REST_API_KEY = apikey;
+        }
+        apikey = this.getArg("apikeypriv");
+        if(apikey) {
+            this.REST_API_KEY_PRIV = apikey;
         }
 		this.lang = this.getArg("lang");
     }

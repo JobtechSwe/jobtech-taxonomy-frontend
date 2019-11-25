@@ -60,6 +60,7 @@ class Connections extends React.Component {
         };
         request.objectId = this.props.item.id;
         request.undoCallback = this.onUndoConnections.bind(this);
+        request.saveCallback = this.onSave.bind(this);
         request.text = Localization.get("connections");
         return request;
     }
@@ -83,6 +84,26 @@ class Connections extends React.Component {
         }
         if(value.parent.children.length == 0) {
             this.relationTreeView.removeRoot(value.parent);
+        }
+    }
+    
+    onSave(changes) {
+        console.log(changes);
+        var targetId = this.props.item.id;
+        for (var prop in changes) {
+            var item = changes[prop].item;
+            var data = item.data;
+            var id = data.id;
+            if(item.isRemoved) {
+                
+            } else {
+                Rest.postAddRelation(targetId, id, data.relationType, App.editNote, data.substitutability, (response) => {
+                    console.log("yay", response);
+                }, () => {
+                    console.log("noo");
+                    // TODO: display error
+                });
+            }
         }
     }
     

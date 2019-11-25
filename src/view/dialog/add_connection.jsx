@@ -6,6 +6,7 @@ import Localization from './../../context/localization.jsx';
 import Rest from './../../context/rest.jsx';
 import Constants from './../../context/constants.jsx';
 import TreeView from './../../control/tree_view.jsx';
+import Label from './../../control/label.jsx';
 import ControlUtil from './../../control/util.jsx';
 import Loader from './../../control/loader.jsx';
 
@@ -16,6 +17,8 @@ class AddConnection extends React.Component {
         // state
         this.state = {
             loadingRoots: true,
+            relationType: "narrower",
+            substitutability: "0",
         }
         // variables
         this.queryTreeView = ControlUtil.createTreeView();
@@ -50,6 +53,14 @@ class AddConnection extends React.Component {
         this.fetchRoot(this.roots[0]);
     }
 
+    onRelationTypeChanged(e) {
+        this.setState({relationType: e.target.value});
+    }
+
+    onSubstitutabilityChanged(e) {
+        this.setState({substitutability: e.target.value});
+    }
+
     onQueryItemSelected(item) {
         this.selectedItem = item;
     }
@@ -57,7 +68,12 @@ class AddConnection extends React.Component {
     onAddClicked() {
         if(this.selectedItem) {
             if(this.selectedItem.parent) {
-                this.props.callback(this.selectedItem.data);
+                var item = this.selectedItem.data;
+                // update item to include other values
+                item.relationType = this.state.relationType;
+                item.substitutability = this.state.substitutability;
+                // show item in connections list
+                this.props.callback(item);
                 Rest.abort();
                 EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
             } else {
@@ -117,6 +133,21 @@ class AddConnection extends React.Component {
             // TODO: show error
         });
     }
+
+    renderRelationTypeDropdown() {
+        return (
+            <select
+                className="rounded"
+                value={this.state.relationType}
+                onChange={this.onRelationTypeChanged.bind(this)}>
+                <option value="narrower">Narrower</option>
+                <option value="broader">Broader</option>
+                <option value="related">Related</option>
+            </select>
+        );
+        /*<option value="substitutability-from">Substitutability-from</option>
+        <option value="substitutability-to">Substitutability-to</option>*/
+    }
     
     renderLoader() {
         if(this.state.loadingRoots) {
@@ -132,6 +163,18 @@ class AddConnection extends React.Component {
                 <TreeView context={this.queryTreeView}>
                     {this.renderLoader()}
                 </TreeView>
+                <div className="add_connection_row">
+                    <Label text={Localization.get("relation_type") + ":"}/>
+                    {this.renderRelationTypeDropdown()}
+                </div>
+                <div className="add_connection_row">
+                    <Label text="Substitutability:"/>
+                    <input 
+                        className="rounded"
+                        type="text"
+                        value={this.state.substitutability}
+                        onChange={this.onSubstitutabilityChanged.bind(this)}/>
+                </div>
                 <div className="dialog_content_buttons">
                     <Button 
                         onClick={this.onAddClicked.bind(this)}

@@ -50,17 +50,30 @@ class Description extends React.Component {
         this.setState({definition: value});
     }
 
+    onSave(changes) {
+        var args = "";
+        for (var prop in changes) {
+            args += "&" + prop + "=" + changes[prop]; 
+        }
+        Rest.patchConcept(this.props.item.id, args, (data) => {
+            // TODO: display save success?
+        }, () => {
+            // TODO: display error
+        });
+    }
+
     createEditRequest(id, value, undoCallback) {
         var request = App.createEditRequest(id);
         request.newValue = value;
         request.oldValue = this.state[id];
         request.objectId = this.props.item.id;
         request.undoCallback = undoCallback;
+        request.saveCallback = this.onSave.bind(this);
         return request;
     }
 
     onLabelChanged(e) {
-        var request = this.createEditRequest("preferredLabel", e.target.value, this.onUndoLabel.bind(this));
+        var request = this.createEditRequest("preferred-label", e.target.value, this.onUndoLabel.bind(this));
         request.text = Localization.get("name");
         App.addEditRequest(request);
         this.setState({preferredLabel: e.target.value});
