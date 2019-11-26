@@ -232,17 +232,18 @@ class Content4 extends React.Component {
     }
 
     onSideItemSelected(item) {
+        var cpy = JSON.parse(JSON.stringify(item));
         var d = {nodes: [], edges: []};
-        item.label = item.preferredLabel;
-        item.title = Localization.get("db_" + item.type);
-        item.group = this.getGroupFor(item.type);
-        d.nodes.push(item);
+        cpy.label = cpy.preferredLabel;
+        cpy.title = Localization.get("db_" + cpy.type);
+        cpy.group = this.getGroupFor(cpy.type);
+        d.nodes.push(cpy);
         this.edges.clear();
         this.edges.add(d.edges);
         this.nodes.clear();
         this.nodes.add(d.nodes);
         this.setState({data: d});
-        this.updateRelations(item, 0, 0);
+        this.updateRelations(cpy, 0, 0);
     }
 
     onElementSelected(event) {
