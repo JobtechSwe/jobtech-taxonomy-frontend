@@ -618,7 +618,12 @@ body {
     margin-right: 5px;
 }
 
-.add_connection_row > .label:not(:first-child) {
+.add_connection_row > .add_connection_row {
+    margin-left: 5px;
+    margin-top: unset;
+}
+
+.add_connection_row > .add_connection_row .label {
     margin-left: 5px;
 }
 

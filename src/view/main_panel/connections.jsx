@@ -88,7 +88,6 @@ class Connections extends React.Component {
     }
     
     onSave(changes) {
-        console.log(changes);
         var targetId = this.props.item.id;
         for (var prop in changes) {
             var item = changes[prop].item;
@@ -98,9 +97,8 @@ class Connections extends React.Component {
                 
             } else {
                 Rest.postAddRelation(targetId, id, data.relationType, data.note, data.substitutability, (response) => {
-                    console.log("yay", response);
+                    
                 }, () => {
-                    console.log("noo");
                     // TODO: display error
                 });
             }

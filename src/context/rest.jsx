@@ -144,7 +144,7 @@ class Rest {
     }
 
     postAddRelation(conceptId, relationId, relationType, definition, substitutability, onSuccess, onError) {
-        this.post("/private/relation?concept-1=" + conceptId + "&concept-2=" + relationId + "&relation=" + relationType + "&definition=" + definition + "&substitutability-to=" + substitutability, Constants.REST_API_KEY_PRIV, onSuccess, onError);
+        this.post("/private/relation?concept-1=" + conceptId + "&concept-2=" + relationId + "&relation=" + relationType + "&definition=" + definition + "&substitutability-percentage=" + substitutability, Constants.REST_API_KEY_PRIV, onSuccess, onError);
     }
 }
 

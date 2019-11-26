@@ -71,7 +71,21 @@ class AddConnection extends React.Component {
     }
 
     onSubstitutabilityChanged(e) {
-        this.setState({substitutability: e.target.value});
+        var value = e.target.value.trim();
+        if(value == "0") { 
+            this.setState({substitutability: value});
+        } else if(value != "") {
+            while(value.startsWith("0")) {
+                value = value.substring(1, value.length);
+            }
+            var i = parseInt(value);
+            if(i > 100) {
+                value = "100";
+            }
+            this.setState({substitutability: value});
+        } else {
+            this.setState({substitutability: "0"});
+        }
     }
 
     onNoteChanged(e) {
@@ -171,10 +185,27 @@ class AddConnection extends React.Component {
                 <option value="narrower">Narrower</option>
                 <option value="broader">Broader</option>
                 <option value="related">Related</option>
+                <option value="substitutability">Substitutability</option>
             </select>
         );
-        /*<option value="substitutability-from">Substitutability-from</option>
-        <option value="substitutability-to">Substitutability-to</option>*/
+    }
+
+    renderSubstituability() {
+        if(this.state.relationType == "substitutability") {
+            return (
+                <div className="add_connection_row">
+                    <input 
+                        className="rounded"
+                        type="number" 
+                        min="0" 
+                        max="100"
+                        dir="rtl"
+                        value={this.state.substitutability}
+                        onChange={this.onSubstitutabilityChanged.bind(this)}/>
+                        <Label text="%"/>
+                </div>
+            );
+        }
     }
     
     renderError() {
@@ -207,12 +238,7 @@ class AddConnection extends React.Component {
                 <div className="add_connection_row">
                     <Label text={Localization.get("relation_type") + ":"}/>
                     {this.renderRelationTypeDropdown()}
-                    <Label text="Substitutability:"/>
-                    <input 
-                        className="rounded"
-                        type="text"
-                        value={this.state.substitutability}
-                        onChange={this.onSubstitutabilityChanged.bind(this)}/>
+                    {this.renderSubstituability()}
                 </div>
                 <Label text={Localization.get("note")}/>
                 <textarea 
