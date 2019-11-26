@@ -36,6 +36,7 @@ body {
     display: flex;
     margin-top: 10px;
     align-self: flex-end;
+    align-items: center;
 }
 
 .dialog_content_buttons > .button:nth-child(3) {
@@ -598,6 +599,15 @@ body {
     min-height: 420px;
 }
 
+.add_connection_tree {
+    min-height: 300px;
+}
+
+.add_connection_error {
+    color: #f00;
+    font-weight: bold;
+}
+
 .add_connection_row {
     display: flex;
     align-items: center;
@@ -606,5 +616,19 @@ body {
 
 .add_connection_row > .label {
     margin-right: 5px;
-    min-width: 120px;
+}
+
+.add_connection_row > .label:not(:first-child) {
+    margin-left: 5px;
+}
+
+.add_connection_bottom {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    justify-content: space-between;
+}
+
+.add_connection_bottom .dialog_content_buttons {
+    margin-top: unset;
 }

@@ -97,7 +97,7 @@ class Connections extends React.Component {
             if(item.isRemoved) {
                 
             } else {
-                Rest.postAddRelation(targetId, id, data.relationType, App.editNote, data.substitutability, (response) => {
+                Rest.postAddRelation(targetId, id, data.relationType, data.note, data.substitutability, (response) => {
                     console.log("yay", response);
                 }, () => {
                     console.log("noo");

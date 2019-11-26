@@ -14,12 +14,25 @@ class AddConnection extends React.Component {
 
     constructor(props) {
         super(props);
+        // constants
+        this.ERROR_NONE = 0;
+        this.ERROR_NOTE = 1; // user must provide a note
+        this.ERROR_NODE = 2; // user must select a node
+        this.ERROR_ROOT = 3; // user cant select the root as node
+        this.ERROR_MESSAGE = [
+            "",
+            Localization.get("error_add_connection_1"),
+            Localization.get("error_add_connection_2"),
+            Localization.get("error_add_connection_3"),
+        ];
         // state
         this.state = {
             loadingRoots: true,
             relationType: "narrower",
             substitutability: "0",
-        }
+            note: "",
+            error: this.ERROR_NONE,
+        };
         // variables
         this.queryTreeView = ControlUtil.createTreeView();
         this.queryTreeView.onItemSelected = this.onQueryItemSelected.bind(this);
@@ -61,6 +74,10 @@ class AddConnection extends React.Component {
         this.setState({substitutability: e.target.value});
     }
 
+    onNoteChanged(e) {
+        this.setState({note: e.target.value});
+    }
+
     onQueryItemSelected(item) {
         this.selectedItem = item;
     }
@@ -68,19 +85,30 @@ class AddConnection extends React.Component {
     onAddClicked() {
         if(this.selectedItem) {
             if(this.selectedItem.parent) {
+                if(this.state.note.trim() == "") {
+                    this.setState({error: this.ERROR_NOTE});
+                    return;
+                }
                 var item = this.selectedItem.data;
                 // update item to include other values
                 item.relationType = this.state.relationType;
-                item.substitutability = this.state.substitutability;
+                item.substitutability = this.state.substitutability.trim();
+                if(item.substitutability == "") {
+                    item.substitutability = "0";
+                }
+                item.note = this.state.note.trim();
+                if(item.note == "") {
+                    item.note = " ";
+                }
                 // show item in connections list
                 this.props.callback(item);
                 Rest.abort();
                 EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
             } else {
-                // TODO: show warning
+                this.setState({error: this.ERROR_ROOT});
             }
         } else {
-            // TODO: show warning
+            this.setState({error: this.ERROR_NODE});
         }
     }
 
@@ -149,6 +177,17 @@ class AddConnection extends React.Component {
         <option value="substitutability-to">Substitutability-to</option>*/
     }
     
+    renderError() {
+        if(this.state.error != this.ERROR_NONE) {
+            return (
+                <div className="add_connection_error">
+                    <Label text={this.ERROR_MESSAGE[this.state.error]}/>
+                </div>
+            );
+        }
+        return ( <div/> );
+    }
+
     renderLoader() {
         if(this.state.loadingRoots) {
             return(
@@ -160,14 +199,14 @@ class AddConnection extends React.Component {
     render() {
         return (
             <div className="dialog_content add_connection_content">
-                <TreeView context={this.queryTreeView}>
+                <TreeView 
+                    css="add_connection_tree"
+                    context={this.queryTreeView}>
                     {this.renderLoader()}
                 </TreeView>
                 <div className="add_connection_row">
                     <Label text={Localization.get("relation_type") + ":"}/>
                     {this.renderRelationTypeDropdown()}
-                </div>
-                <div className="add_connection_row">
                     <Label text="Substitutability:"/>
                     <input 
                         className="rounded"
@@ -175,16 +214,25 @@ class AddConnection extends React.Component {
                         value={this.state.substitutability}
                         onChange={this.onSubstitutabilityChanged.bind(this)}/>
                 </div>
-                <div className="dialog_content_buttons">
-                    <Button 
-                        onClick={this.onAddClicked.bind(this)}
-                        text={Localization.get("add")}/>
-                    <Button 
-                        onClick={() => {
-                            Rest.abort();
-                            EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
-                        }}
-                        text={Localization.get("abort")}/>
+                <Label text={Localization.get("note")}/>
+                <textarea 
+                    rows="5" 
+                    className="rounded"
+                    value={this.state.note}
+                    onChange={this.onNoteChanged.bind(this)}/>
+                <div className="add_connection_bottom">    
+                    {this.renderError()}
+                    <div className="dialog_content_buttons">
+                        <Button 
+                            onClick={this.onAddClicked.bind(this)}
+                            text={Localization.get("add")}/>
+                        <Button 
+                            onClick={() => {
+                                Rest.abort();
+                                EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
+                            }}
+                            text={Localization.get("abort")}/>
+                    </div>
                 </div>
             </div>
         );

@@ -97,7 +97,11 @@ class Localization {
                 no_items_connected: "Inga kopplingar funna",
                 all_items_connected: "Alla element är kopplade",
                 statistics: "Statistik",     
-                relation_type: "Relationstyp",           
+                relation_type: "Relationstyp",  
+                note: "Antekning",
+                error_add_connection_1: "Antekning kan inte vara blank, vänligen ange förklaring till koppling",
+                error_add_connection_2: "Ingen koppling är markerad",
+                error_add_connection_3: "Ogilltig koppling, rötter kan inte väljas som koppling",
             },
             // english
             en: {
