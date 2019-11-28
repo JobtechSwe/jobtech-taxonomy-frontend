@@ -59,18 +59,36 @@ class Util {
 
     getHttpMessage(status) {
         switch(status) {
-            case 400:
-                return "" + status + " (bad request)";
-            case 401:
-                return "" + status + " (unauthorized)";
-            case 403:
-                return "" + status + " (forbidden)";
-            case 404:
-                return "" + status + " (not found)";
-            case 408:
-                return "" + status + " (request timeout)";
-            case 409:
-                return "" + status + " (conflict)";
+            // standard codes
+            case 400: return "" + status + " (bad request)";
+            case 401: return "" + status + " (unauthorized)";
+            case 403: return "" + status + " (forbidden)";
+            case 404: return "" + status + " (not found)";
+            case 408: return "" + status + " (request timeout)";
+            case 409: return "" + status + " (conflict)";
+            case 500: return "" + status + " (internal server error)";
+            case 501: return "" + status + " (not implemented)";
+            case 502: return "" + status + " (bad gateway)";
+            case 503: return "" + status + " (service unavailable)";
+            case 504: return "" + status + " (gateway timeout)";
+            case 511: return "" + status + " (network authentication required)";
+            // nginx specific
+            case 444: return "" + status + " (no response)";
+            case 495: return "" + status + " (ssl certificate error)";
+            case 496: return "" + status + " (ssl certificate required)";
+            case 497: return "" + status + " (http request sent to https port)";
+            case 499: return "" + status + " (client closed request)";
+            // cloudflare specific
+            case 520: return "" + status + " (web server returned an unknwon error)";
+            case 521: return "" + status + " (web server is down)";
+            case 522: return "" + status + " (connection timed out)";
+            case 523: return "" + status + " (origin is unreachable)";
+            case 524: return "" + status + " (a timeout occurred)";
+            case 525: return "" + status + " (ssl handshake failed)";
+            case 526: return "" + status + " (invalid ssl certificate)";
+            case 527: return "" + status + " (railgun error)";
+            // unofficial
+            case 598: return "" + status + " (network read timeout error)";
         }
         return "" + status;
     }
