@@ -55,9 +55,11 @@ class Description extends React.Component {
         for (var prop in changes) {
             args += "&" + prop + "=" + changes[prop]; 
         }
+        App.addSaveRequest();
         Rest.patchConcept(this.props.item.id, args, (data) => {
-            // TODO: display save success?
+            App.removeSaveRequest();
         }, () => {
+            App.removeSaveRequest();
             // TODO: display error
         });
     }

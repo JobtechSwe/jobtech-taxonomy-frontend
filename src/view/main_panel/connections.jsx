@@ -88,6 +88,7 @@ class Connections extends React.Component {
     }
     
     onSave(changes) {
+        // TODO: we need to apply changes localy is some nice way
         var targetId = this.props.item.id;
         for (var prop in changes) {
             var item = changes[prop].item;
@@ -96,9 +97,11 @@ class Connections extends React.Component {
             if(item.isRemoved) {
                 
             } else {
+                App.addSaveRequest();
                 Rest.postAddRelation(targetId, id, data.relationType, data.note, data.substitutability, (response) => {
-                    
+                    App.removeSaveRequest();
                 }, () => {
+                    App.removeSaveRequest();
                     // TODO: display error
                 });
             }

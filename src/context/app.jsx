@@ -10,6 +10,7 @@ class App {
     constructor() {
         this.editRequests = [];
         this.editNote = "";
+        this.pendingSaveRequests = 0;
     }
 
     createEditRequest(id) {
@@ -52,6 +53,10 @@ class App {
     }
 
     commitEditRequests() {
+        if(this.editRequests.length) {
+            // show save popup since we are about to save changes
+            EventDispatcher.fire(Constants.EVENT_SHOW_SAVE_INDICATOR);
+        }
         // merge requests if possible
         var objectGroups = [];
         for(var i=0; i<this.editRequests.length; ++i) {
@@ -90,15 +95,31 @@ class App {
         }
         this.editRequests = [];
         this.editNote = "";
+        this.pendingSaveRequests = 0;
     }
 
     discardEditRequest() {
         this.editRequests = [];
         this.editNote = "";
+        this.pendingSaveRequests = 0;
+    }
+
+    addSaveRequest() {
+        this.pendingSaveRequests++;
+    }
+
+    removeSaveRequest() {
+        if(--this.pendingSaveRequests == 0) {
+            EventDispatcher.fire(Constants.EVENT_HIDE_SAVE_INDICATOR);
+        }
     }
 
     hasUnsavedChanges() {
         return this.editRequests.length > 0;
+    }
+
+    hasPendingSaveRequests() {
+        return this.pendingSaveRequests > 0;
     }
 
     showSaveDialog(callback) {

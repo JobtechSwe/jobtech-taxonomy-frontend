@@ -74,6 +74,7 @@ class Localization {
                 no: "Nej",
                 ignore: "Ignorera",
                 reset: "Återställ",
+                saving: "Sparar",
                 change_log: "Förändringslogg",
                 value_storage: "Värdeförråd",
                 event: "Händelse",
