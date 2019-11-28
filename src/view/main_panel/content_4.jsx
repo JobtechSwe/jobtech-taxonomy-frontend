@@ -1,12 +1,9 @@
 import React from 'react';
 import Vis from 'vis-network';
-import Label from '../../control/label.jsx';
-import Group from '../../control/group.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Rest from'../../context/rest.jsx';
-import { DH_NOT_SUITABLE_GENERATOR } from 'constants';
 
 class Content4 extends React.Component { 
 
@@ -66,16 +63,21 @@ class Content4 extends React.Component {
             }
         };
         this.state = {
+            workmode: 0,
             data: {
-            nodes: [],
-            edges: []
-        }};
+                nodes: [],
+                edges: []
+            }
+        };
+        this.startFrom = null;
         this.boundSideItemSelected = this.onSideItemSelected.bind(this);
+        this.boundGraphModeSelected = this.onGraphModeSelected.bind(this);
         this.boundElementSelected = this.onElementSelected.bind(this);
     }
 
     componentDidMount() {
         EventDispatcher.add(this.boundSideItemSelected, Constants.EVENT_SIDEPANEL_ITEM_SELECTED);        
+        EventDispatcher.add(this.boundGraphModeSelected, Constants.EVENT_GRAPH_MODE_SELECTED);        
         this.edges = new Vis.DataSet(this.state.data.edges);
         this.nodes = new Vis.DataSet(this.state.data.nodes);
         var container = document.getElementById("vis_network_id");
@@ -84,6 +86,7 @@ class Content4 extends React.Component {
 
     componentWillUnmount() {
         EventDispatcher.remove(this.boundSideItemSelected);
+        EventDispatcher.remove(this.boundGraphModeSelected);
     }
 
     componentDidUpdate() {
@@ -156,6 +159,34 @@ class Content4 extends React.Component {
         }
     }
 
+    getRelations(id, type, x, y) {
+        Rest.getAllConceptRelations(id, type, (data) => {
+            var nodes = [];
+            var edges = [];
+            for(var i=0; i<data.length; ++i) {
+                var p = data[i];
+                p.title = Localization.get("db_" + p.type) + "<br \>" + p.preferredLabel;
+                p.group = "notFetched";                    
+                p.x = x;
+                p.y = y;
+                if(!this.findNodeById(p.id)) {
+                    nodes.push(p);
+                    edges.push({
+                        from: id,
+                        to: p.id,
+                    });
+                }
+            }   
+            this.nodes.add(nodes);
+            this.edges.add(edges);
+            this.state.data.nodes.push(...nodes);
+            this.state.data.edges.push(...edges);
+            this.setState({data: this.state.data});
+        }, (status) => {
+            // TODO: error handling
+        });
+    }
+
     updateRelations(item, x, y) {        
         if(!item) {
             console.log("Nothing selected");
@@ -171,59 +202,17 @@ class Content4 extends React.Component {
         item.x = undefined;
         item.y = undefined;
         this.nodes.update([item]);
-        if(item.relations.broader > 0) {
-            Rest.getAllConceptRelations(item.id, Constants.RELATION_BROADER, (data) => {
-                var nodes = [];
-                var edges = [];
-                for(var i=0; i<data.length; ++i) {
-                    var p = data[i];
-                    p.title = Localization.get("db_" + p.type) + "<br \>" + p.preferredLabel;
-                    p.group = "notFetched";                    
-                    p.x = x;
-                    p.y = y;
-                    if(!this.findNodeById(p.id)) {
-                        nodes.push(p);
-                        edges.push({
-                            from: item.id,
-                            to: p.id,
-                        });
-                    }
-                }   
-                this.nodes.add(nodes);
-                this.edges.add(edges);
-                this.state.data.nodes.push(...nodes);
-                this.state.data.edges.push(...edges);
-                this.setState({data: this.state.data});
-            }, (status) => {
-                // TODO: error handling
-            });
-        }
-        if(item.relations.narrower > 0) {
-            Rest.getAllConceptRelations(item.id, Constants.RELATION_NARROWER, (data) => {
-                var nodes = [];
-                var edges = [];
-                for(var i=0; i<data.length; ++i) {
-                    var p = data[i];
-                    p.title = Localization.get("db_" + p.type) + "<br \>" + p.preferredLabel;
-                    p.group = "notFetched";                    
-                    p.x = x;
-                    p.y = y;
-                    if(!this.findNodeById(p.id)) {
-                        nodes.push(p);
-                        edges.push({
-                            from: p.id,
-                            to: item.id,                            
-                        });
-                    }
-                }
-                this.nodes.add(nodes);
-                this.edges.add(edges);
-                this.state.data.nodes.push(...nodes);
-                this.state.data.edges.push(...edges);
-                this.setState({data: this.state.data});
-            }, (status) => {
-                // TODO: error handling
-            });
+        if(this.state.workmode == 0) {
+            if(item.relations.broader > 0) {
+                this.getRelations(item.id, Constants.RELATION_BROADER, x, y);
+            }
+            if(item.relations.narrower > 0) {
+                this.getRelations(item.id, Constants.RELATION_NARROWER, x, y);
+            }
+        } else {
+            if(item.relations.related > 0) {
+                this.getRelations(item.id, Constants.RELATION_RELATED, x, y);
+            }
         }
     }
 
@@ -231,7 +220,25 @@ class Content4 extends React.Component {
         return this.state.data.nodes.find((n) => {return n.id === id});
     }
 
+    onGraphModeSelected(mode) {
+        if(this.startFrom) {
+            this.state.workmode = mode;
+            this.onSideItemSelected(this.startFrom);
+        } else {
+            var d = {nodes: [], edges: []};
+            this.edges.clear();
+            this.edges.add(d.edges);
+            this.nodes.clear();
+            this.nodes.add(d.nodes);
+            this.setState({
+                workmode: mode,
+                data: d
+            });
+        }
+    }
+
     onSideItemSelected(item) {
+        this.startFrom = item;
         var cpy = JSON.parse(JSON.stringify(item));
         var d = {nodes: [], edges: []};
         cpy.label = cpy.preferredLabel;

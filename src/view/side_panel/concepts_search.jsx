@@ -515,7 +515,9 @@ class ConceptsSearch extends React.Component {
 
     renderOption(value, text, key) {
         return (
-            <option value={value} key={key}>
+            <option 
+                value={value} 
+                key={key}>
                 {Localization.get(text)}
             </option>
         );
