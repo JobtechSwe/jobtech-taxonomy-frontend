@@ -19,6 +19,7 @@ class App {
             timestamp: new Date().getTime(),
             id: id,
             objectId: null,
+            groupId: null,
             newValue: null,
             oldValue: null,
             // callbacks triggered by user interface
@@ -62,13 +63,14 @@ class App {
         for(var i=0; i<this.editRequests.length; ++i) {
             var request = this.editRequests[i];
             var group = objectGroups.find((x) => {
-                return x.id == request.objectId;
+                return x.id == request.objectId && x.groupId == request.groupId;
             });
             if(group) {
                 group.changes[request.id] = request.newValue;
             } else {
                 group = {
                     id: request.objectId,
+                    groupId: request.groupId,
                     callback: request.saveCallback,
                     changes: {},
                 };
@@ -120,6 +122,10 @@ class App {
 
     hasPendingSaveRequests() {
         return this.pendingSaveRequests > 0;
+    }
+
+    showError(message) {
+        EventDispatcher.fire(Constants.EVENT_SHOW_ERROR, message);
     }
 
     showSaveDialog(callback) {

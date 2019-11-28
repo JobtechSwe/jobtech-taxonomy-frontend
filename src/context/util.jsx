@@ -57,6 +57,24 @@ class Util {
         return 0;
     }
 
+    getHttpMessage(status) {
+        switch(status) {
+            case 400:
+                return "" + status + " (bad request)";
+            case 401:
+                return "" + status + " (unauthorized)";
+            case 403:
+                return "" + status + " (forbidden)";
+            case 404:
+                return "" + status + " (not found)";
+            case 408:
+                return "" + status + " (request timeout)";
+            case 409:
+                return "" + status + " (conflict)";
+        }
+        return "" + status;
+    }
+
     getObjectValue(object, value, defaultValue) {
         if(object && object[value] != null) {
             return object[value];

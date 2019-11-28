@@ -17,12 +17,14 @@ class Index extends React.Component {
         // state
         this.state = {
             overlay: null,
+            errors: [],
         };
         // callbacks
         this.boundShowSaveIndicator = this.onShowSaveIndicator.bind(this);
         this.boundHideSaveIndicator = this.onHideSaveIndicator.bind(this);
         this.boundShowOverlayWindow = this.onShowOverlayWindow.bind(this);
         this.boundHideOverlayWindow = this.onHideOverlayWindow.bind(this);
+        this.boundAddError = this.onAddError.bind(this);
     }
 
     componentDidMount() {
@@ -31,10 +33,34 @@ class Index extends React.Component {
         EventDispatcher.add(this.boundHideSaveIndicator, Constants.EVENT_HIDE_SAVE_INDICATOR);
         EventDispatcher.add(this.boundShowOverlayWindow, Constants.EVENT_SHOW_OVERLAY);
         EventDispatcher.add(this.boundHideOverlayWindow, Constants.EVENT_HIDE_OVERLAY);
+        EventDispatcher.add(this.boundAddError, Constants.EVENT_SHOW_ERROR);
         /*EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
             title: "Hello",
             content: <div>Content div right here</div>
         });*/
+    }
+
+    onAddError(message) {
+        var error = {
+            message: message,
+            active: true,
+        };
+        this.state.errors.push(error);
+        this.setState({errors: this.state.errors});
+        // set timeout to inactivate the element
+        setTimeout(() => {
+            error.active = false;
+            this.setState({errors: this.state.errors});
+            // set timeout check if we should clear the list
+            setTimeout(() => {
+                var keep = this.state.errors.find((x) => {
+                    return x.active;
+                }) != null;
+                if(!keep) {
+                    this.setState({errors: []});
+                }
+            }, 500);
+        }, 10000);
     }
 
     onShowSaveIndicator() {
@@ -61,6 +87,27 @@ class Index extends React.Component {
         container.classList.remove("overlay_effect");
         window.classList.remove("overlay_window");
         this.setState({overlay: null});
+    }
+
+    renderErrors() {
+        if(this.state.errors.length) {
+            var items = this.state.errors.map((element, i) => {
+                return (
+                    <div
+                        className={element.active ? "" : "app_error_inactive"} 
+                        key={i}>
+                        {element.message}
+                    </div>
+                );
+            });
+            return (
+                <div className="app_error_content">
+                    <div className="app_error_list font">
+                        {items}
+                    </div>
+                </div>
+            );
+        }
     }
 
     renderSaveIndicator() {
@@ -98,6 +145,7 @@ class Index extends React.Component {
                     <SidePanel/>
                     <MainPanel/>
                 </div>
+                {this.renderErrors()}
                 {this.renderSaveIndicator()}
                 <div id="overlay_window">
                     {this.renderOverlay()}

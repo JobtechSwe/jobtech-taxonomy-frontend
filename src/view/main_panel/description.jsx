@@ -58,9 +58,9 @@ class Description extends React.Component {
         App.addSaveRequest();
         Rest.patchConcept(this.props.item.id, args, (data) => {
             App.removeSaveRequest();
-        }, () => {
+        }, (status) => {
+            App.showError(Util.getHttpMessage(status) + " : sparning misslyckades");
             App.removeSaveRequest();
-            // TODO: display error
         });
     }
 
@@ -69,6 +69,7 @@ class Description extends React.Component {
         request.newValue = value;
         request.oldValue = this.state[id];
         request.objectId = this.props.item.id;
+        request.groupId = "description";
         request.undoCallback = undoCallback;
         request.saveCallback = this.onSave.bind(this);
         return request;
@@ -102,7 +103,7 @@ class Description extends React.Component {
             EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.props.item);
             EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
         }, () => {
-            // TODO: notify error
+            App.showError(Util.getHttpMessage(status) + " : Avaktualisering misslyckades");
             EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
         });
     }

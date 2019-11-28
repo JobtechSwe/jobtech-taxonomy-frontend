@@ -59,6 +59,7 @@ class Connections extends React.Component {
             return oldValue.isRemoved == newValue.isRemoved && oldValue.parent.id == newValue.parent.id;
         };
         request.objectId = this.props.item.id;
+        request.groupId = "connections";
         request.undoCallback = this.onUndoConnections.bind(this);
         request.saveCallback = this.onSave.bind(this);
         request.text = Localization.get("connections");
@@ -100,9 +101,9 @@ class Connections extends React.Component {
                 App.addSaveRequest();
                 Rest.postAddRelation(targetId, id, data.relationType, data.note, data.substitutability, (response) => {
                     App.removeSaveRequest();
-                }, () => {
+                }, (status) => {
+                    App.showError(Util.getHttpMessage(status) + " : " + data.preferredLabel);
                     App.removeSaveRequest();
-                    // TODO: display error
                 });
             }
         }
@@ -205,10 +206,10 @@ class Connections extends React.Component {
                 this.hideLoader();
             }
         }, () => {
-            // TODO: Handle error
             if(--this.waitingFor <= 0) {
                 this.hideLoader();
             }
+            App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta concept av typ '" + type + "'");
         }); 
     }
 
@@ -226,15 +227,15 @@ class Connections extends React.Component {
                 item.data = data[0];
                 if(item.data["isco-code-08"]) {
                     item.data.isco = item.data["isco-code-08"];            
-                    while(item.data.isco.length < 4) {
-                        item.data.isco += "+";
-                    }                
+                    /*while(item.data.isco.length < 4) {
+                        item.data.isco += "0";
+                    }*/               
                 }
-                item.setText(item.data.isco + "-" + item.data.preferredLabel);
+                item.setText(item.data.preferredLabel);
                 item.parent.sortChildren(Util.sortTreeViewItemsByIsco.bind(this));
             }
-        }, () => {
-            // TODO: Handle error
+        }, (status) => {
+            App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta ISCO");
         });
     }
 
@@ -245,15 +246,15 @@ class Connections extends React.Component {
                 item.data = data[0];
                 if(item.data["ssyk-code-2012"]) {
                     item.data.ssyk = item.data["ssyk-code-2012"];            
-                    while(item.data.ssyk.length < 4) {
+                    /*while(item.data.ssyk.length < 4) {
                         item.data.ssyk += "0";
-                    }                
+                    }*/               
                 }
-                item.setText(item.data.ssyk + "-" + item.data.preferredLabel);
+                item.setText(item.data.preferredLabel);
                 item.parent.sortChildren(Util.sortTreeViewItemsBySsyk.bind(this));
             }
-        }, () => {
-            // TODO: Handle error
+        }, (status) => {
+            App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta SSYK");
         });
     }
 
