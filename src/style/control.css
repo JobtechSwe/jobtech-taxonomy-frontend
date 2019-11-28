@@ -63,6 +63,10 @@
     background: #c0c0c0;
 }
 
+::-webkit-scrollbar-corner {
+    border-bottom-right-radius: 5px;
+}
+
 input.rounded {
     border-radius: 5px;
     border-width: 1px;

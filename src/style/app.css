@@ -671,3 +671,9 @@ body {
 .add_connection_bottom .dialog_content_buttons {
     margin-top: unset;
 }
+
+.concepts_search {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
