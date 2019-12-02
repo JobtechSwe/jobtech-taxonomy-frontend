@@ -640,10 +640,6 @@ body {
     padding-right: 10px;
 }
 
-.changes_group {
-    height: 100%;
-}
-
 .loader_child {
     font-weight: normal;
     font-variant-caps: normal;
