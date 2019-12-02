@@ -21,15 +21,29 @@ class Constants {
         this.RELATION_RELATED = "related";
         this.RELATION_AFFINITY = "----";
         // concept types
+        this.CONCEPT_COUNTRY = "country";
+        this.CONCEPT_DRIVING_LICENCE = "driving-licence";
+        this.CONCEPT_EMPLOYMENT_DURATION = "employment-duration";
         this.CONCEPT_ISCO_LEVEL_1 = "isco-level-1";
         this.CONCEPT_ISCO_LEVEL_4 = "isco-level-4";
+        this.CONCEPT_LANGUAGE = "language";
+        this.CONCEPT_OCCUPATION_NAME = "occupation-name";
+        this.CONCEPT_REGION = "region";
+        this.CONCEPT_SNI_LEVEL_1 = "sni-level-1";
+        this.CONCEPT_SNI_LEVEL_2 = "sni-level-2";
         this.CONCEPT_SSYK_LEVEL_1 = "ssyk-level-1";
         this.CONCEPT_SSYK_LEVEL_2 = "ssyk-level-2";
         this.CONCEPT_SSYK_LEVEL_3 = "ssyk-level-3";
-        this.CONCEPT_SSYK_LEVEL_4 = "ssyk-level-4";
-        this.CONCEPT_OCCUPATION_NAME = "occupation-name";
+        this.CONCEPT_SSYK_LEVEL_4 = "ssyk-level-4";        
         this.CONCEPT_SKILL = "skill";
         this.CONCEPT_SKILL_HEADLINE = "skill-headline"
+        this.CONCEPT_SUN_EDUCATION_FIELD_1 = "sun-education-field-1";
+        this.CONCEPT_SUN_EDUCATION_FIELD_2 = "sun-education-field-2";
+        this.CONCEPT_SUN_EDUCATION_FIELD_3 = "sun-education-field-3";
+        this.CONCEPT_SUN_EDUCATION_FIELD_4 = "sun-education-field-4";
+        this.CONCEPT_SUN_EDUCATION_LEVEL_1 = "sun-education-level-1";
+        this.CONCEPT_SUN_EDUCATION_LEVEL_2 = "sun-education-level-2";
+        this.CONCEPT_SUN_EDUCATION_LEVEL_3 = "sun-education-level-3";
         // events
         this.EVENT_SET_WORKMODE = "EVENT_SET_WORKMODE";
         this.EVENT_SHOW_OVERLAY = "EVENT_SHOW_OVERLAY";

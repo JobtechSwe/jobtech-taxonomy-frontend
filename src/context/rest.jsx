@@ -111,6 +111,38 @@ class Rest {
         this.get("/specific/concepts/isco?id=" + id, onSuccess, onError);
     }
 
+    getConceptCountry(id, onSuccess, onError) {
+        this.get("/specific/concepts/country?id=" + id, onSuccess, onError);
+    }
+
+    getConceptDrivingLicence(id, onSuccess, onError) {
+        this.get("/specific/concepts/driving-licence?id=" + id, onSuccess, onError);
+    }
+
+    getConceptEmploymentDuration(id, onSuccess, onError) {
+        this.get("/specific/concepts/employment-duration?id=" + id, onSuccess, onError);
+    }
+
+    getConceptLanguage(id, onSuccess, onError) {
+        this.get("/specific/concepts/language?id=" + id, onSuccess, onError);
+    }
+
+    getConceptRegion(id, onSuccess, onError) {
+        this.get("/specific/concepts/region?id=" + id, onSuccess, onError);
+    }
+
+    getConceptSniLevel(id, onSuccess, onError) {
+        this.get("/specific/concepts/sni-level?id=" + id, onSuccess, onError);
+    }
+
+    getConceptSunEducationField(id, onSuccess, onError) {
+        this.get("/specific/concepts/sun-education-field?id=" + id, onSuccess, onError);
+    }
+
+    getConceptSunEducationLevel(id, onSuccess, onError) {
+        this.get("/specific/concepts/sun-education-level?id=" + id, onSuccess, onError);
+    }
+
     getConceptRelations(id, type, relationType, onSuccess, onError) {
         this.get("/main/concepts?related-ids=" + id + "&relation=" + relationType + "&type=" + type, onSuccess, onError);
     }

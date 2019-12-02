@@ -1,5 +1,7 @@
 import React from 'react';
 import Constants from './constants.jsx';
+import Rest from './rest.jsx';
+import rest from './rest.jsx';
 
 class Util {
     sortByKey(items, key, direction) {
@@ -127,6 +129,53 @@ class Util {
             p.append("tab", page);
             window.location.search = p.toString();
         }*/
+    }
+
+    getConcept(id, type, onSuccess, onError) {
+        switch(type) {
+            case Constants.CONCEPT_COUNTRY:
+                Rest.getConceptCountry(id, onSuccess, onError);
+                break;
+            case Constants.CONCEPT_DRIVING_LICENCE:
+                Rest.getConceptDrivingLicence(id, onSuccess, onError);
+                break;
+            case Constants.CONCEPT_EMPLOYMENT_DURATION:
+                Rest.getConceptEmploymentDuration(id, onSuccess, onError);
+                break;
+            case Constants.CONCEPT_ISCO_LEVEL_4:                
+                Rest.getConceptIsco08(id, onSuccess, onError);
+                break;
+            case Constants.CONCEPT_LANGUAGE:
+                Rest.getConceptLanguage(id, onSuccess, onError);
+                break;
+            case Constants.CONCEPT_REGION:
+                Rest.getConceptRegion(id, onSuccess, onError);
+                break;
+            case Constants.CONCEPT_SNI_LEVEL_1:
+            case Constants.CONCEPT_SNI_LEVEL_2:
+                Rest.getConceptSniLevel(id, onSuccess, onError);
+                break;
+            case Constants.CONCEPT_SSYK_LEVEL_1:
+            case Constants.CONCEPT_SSYK_LEVEL_2:
+            case Constants.CONCEPT_SSYK_LEVEL_3:
+            case Constants.CONCEPT_SSYK_LEVEL_4:
+                Rest.getConceptSsyk(id, onSuccess, onError);
+                break;
+            case Constants.CONCEPT_SUN_EDUCATION_FIELD_1:
+            case Constants.CONCEPT_SUN_EDUCATION_FIELD_2:
+            case Constants.CONCEPT_SUN_EDUCATION_FIELD_3:
+            case Constants.CONCEPT_SUN_EDUCATION_FIELD_4:
+                Rest.getConceptSunEducationField(id, onSuccess, onError);
+                break;
+            case Constants.CONCEPT_SUN_EDUCATION_LEVEL_1:
+            case Constants.CONCEPT_SUN_EDUCATION_LEVEL_2:
+            case Constants.CONCEPT_SUN_EDUCATION_LEVEL_3:
+                Rest.getConceptSunEducationLevel(id, onSuccess, onError);
+                break;
+            default:
+                Rest.getConcept(id, onSuccess, onError);
+                break;
+        }
     }
 }
 

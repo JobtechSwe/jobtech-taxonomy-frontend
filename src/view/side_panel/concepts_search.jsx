@@ -4,6 +4,7 @@ import Loader from '../../control/loader.jsx';
 import TreeView from '../../control/tree_view.jsx';
 import ControlUtil from '../../control/util.jsx';
 import Rest from '../../context/rest.jsx';
+import Util from '../../context/util.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
@@ -469,15 +470,12 @@ class ConceptsSearch extends React.Component {
 
     onQueryItemSelected(item) {
         if(item.data && item.data.id) {
-            if(item.data.definition && item.data.relations) {
-                EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
-            } else {
-                Rest.getConcept(item.data.id, (data) => {                    
-                    EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, data[0]);
-                }, (status) => {
-                    //TODO: error handling
-                });
-            }
+            Util.getConcept(item.data.id, item.data.type, (data) => {          
+                console.log(data[0]);          
+                EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, data[0]);
+            }, (status) => {
+                //TODO: error handling
+            });
         }
     }
 
