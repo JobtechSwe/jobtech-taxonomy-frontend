@@ -41,7 +41,7 @@ class Content4 extends React.Component {
                         </option>
                     </select>
                 </div>                
-                <ConceptsSearch lockToType="ssyk-level-1 ssyk-level-2 ssyk-level-3 ssyk-level-4"/>
+                <ConceptsSearch />
             </div>
         );
     }
