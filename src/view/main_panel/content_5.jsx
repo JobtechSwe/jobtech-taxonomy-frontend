@@ -292,10 +292,7 @@ class Content5 extends React.Component {
             <div className="main_content_5_list_item">
                 <div>
                     {item.id}
-                </div>
-                <div>
-                    {item["ssyk-code-2012"]}
-                </div>
+                </div>                
                 <div>
                     {item.preferredLabel}
                 </div>
