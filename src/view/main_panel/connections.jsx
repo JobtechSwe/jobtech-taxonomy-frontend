@@ -144,6 +144,7 @@ class Connections extends React.Component {
     }
 
     onConnectionAdded(item) {
+        // TODO: need to handle skill (display parent chain as tree)
         // check for parent
         var parent = null;
         for(var i=0; i<this.relationTreeView.roots.length; ++i) {
@@ -175,7 +176,7 @@ class Connections extends React.Component {
     }
 
     onRemoveConnectionClicked() {
-        if(this.selectedItem && this.selectedItem.parent) {
+        if(this.selectedItem && this.selectedItem.parent && this.selectedItem.children.length == 0) {
             this.removeConnection(this.selectedItem);
         } else {
             // TODO: allow user to remove all connections by removing root?
@@ -193,16 +194,56 @@ class Connections extends React.Component {
         });
     }
 
+    fetchSkill(item) {
+        this.waitingFor += item.data.relations.broader;
+        Rest.getAllConceptRelations(item.data.id, Constants.RELATION_BROADER, (data) => {
+            for(var i=0; i<data.length; ++i) {
+                if(data[i].type == "skill" || data[i].type == "skill-headline") {
+                    var child = ControlUtil.createTreeViewItem(this.relationTreeView, data[i]);
+                    child.setText(data[i].preferredLabel);
+                    child.addChild(item);
+                    if(data[i].relations.broader == 0) {
+                        var root = this.findRootFor(data[i].type);
+                        if(!root) {
+                            root = ControlUtil.createTreeViewItem(this.relationTreeView, data[i]);
+                            root.setText(Localization.get("db_" + data[i].type));
+                            this.relationTreeView.addRoot(root);
+                        }
+                        root.addChild(child);
+                    } else {
+                        this.fetchSkill(child);
+                    }
+                }
+            }
+            if(--this.waitingFor <= 0) {
+                Util.sortByKey(this.relationTreeView.roots, "text", true);
+                this.hideLoader();
+            }
+        }, () => {
+            if(--this.waitingFor <= 0) {
+                this.hideLoader();
+            }
+            App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta concept av typ '" + type + "'");
+        }); 
+    }
+
     fetch(item, type) {
         this.waitingFor++;
         Rest.getAllConceptRelations(item.id, type, (data) => {
             for(var i=0; i<data.length; ++i) {
-                this.addRelationToTree(data[i]);
+                if(data[i].type == "skill") {
+                    var child = ControlUtil.createTreeViewItem(this.relationTreeView, data[i]);
+                    child.setText(data[i].preferredLabel);
+                    this.fetchSkill(child);
+                } else {
+                    this.addRelationToTree(data[i]);  
+                }
             }
             for(var i=0; i<this.relationTreeView.roots.length; ++i) {
                 this.relationTreeView.roots[i].sortChildren();
             }
             if(--this.waitingFor <= 0) {
+                Util.sortByKey(this.relationTreeView.roots, "text", true);
                 this.hideLoader();
             }
         }, () => {
