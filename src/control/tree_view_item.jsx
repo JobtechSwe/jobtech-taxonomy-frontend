@@ -103,12 +103,21 @@ class TreeViewItem extends React.Component {
 
     sortChildren(method) {
         var children = this.state.children;
+        var lastChild = children.length > 0 ? children[children.length - 1] : null;
         if(method) {
             method(children);
         } else {
             Util.sortByKey(children, "text", true);
         }
-        this.setState({children: children});
+        this.setState({children: children}, () => {
+            if(lastChild) {
+                lastChild.refresh();
+            }
+            if(children.length > 0) {
+                children[0].refresh();
+                children[children.length - 1].refresh();
+            }
+        });
     }
 
     onDeselected() {

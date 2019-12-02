@@ -4,6 +4,7 @@ import App from './../../context/app.jsx';
 import EventDispatcher from './../../context/event_dispatcher.jsx';
 import Localization from './../../context/localization.jsx';
 import Rest from './../../context/rest.jsx';
+import ContextUtil from './../../context/util.jsx';
 import Constants from './../../context/constants.jsx';
 import TreeView from './../../control/tree_view.jsx';
 import Label from './../../control/label.jsx';
@@ -63,7 +64,9 @@ class AddConnection extends React.Component {
             "worktime-extent",
         ];
         //"skill"
-        this.fetchRoot(this.roots[0]);
+        this.fetchRoot(0, 6);
+        this.fetchRoot(7, 12);
+        this.fetchRoot(13, this.roots.length - 1);
     }
 
     onRelationTypeChanged(e) {
@@ -142,21 +145,23 @@ class AddConnection extends React.Component {
         return node;
     }
     
-    fetchRoot(type) {
-        Rest.getConcepts(type, (data) => {
+    fetchRoot(offset, index) {
+        Rest.getConcepts(this.roots[index], (data) => {
             // setup root
-            var root = ControlUtil.createTreeViewItem(this.queryTreeView, {type: type});
+            var root = ControlUtil.createTreeViewItem(this.queryTreeView, {type: this.roots[index]});
             root.data.loaded = true;
-            root.setText(Localization.get("db_" + type));
+            root.setText(Localization.get("db_" + this.roots[index]));
             // add initial children
             for(var i=0; i<data.length; ++i) {
                 root.addChild(this.createNode(data[i]));
             }
+            root.sortChildren();
             this.queryTreeView.addRoot(root);
-            if(++this.rootIndex < this.roots.length) {
-                this.fetchRoot(this.roots[this.rootIndex]);
-            } else {
-                // TODO: sort?
+            ContextUtil.sortByKey(this.queryTreeView.roots, "text", true);
+            this.rootIndex++;
+            if(--index - offset >= 0) {
+                this.fetchRoot(offset, index);
+            } else if(this.rootIndex == this.roots.length) {
                 this.setState({loadingRoots: false});
             }
         }, () => {
@@ -171,6 +176,7 @@ class AddConnection extends React.Component {
                 item.addChild(this.createNode(data[i]));
             }
             item.removeChild(item.children[0]);
+            item.sortChildren();
         }, () => {
             // TODO: show error
         });
