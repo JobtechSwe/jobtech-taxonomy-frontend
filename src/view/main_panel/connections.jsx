@@ -195,7 +195,7 @@ class Connections extends React.Component {
     }
 
     fetchSkill(item) {
-        this.waitingFor += item.data.relations.broader;
+        this.waitingFor++;
         Rest.getAllConceptRelations(item.data.id, Constants.RELATION_BROADER, (data) => {
             for(var i=0; i<data.length; ++i) {
                 if(data[i].type == "skill" || data[i].type == "skill-headline") {
