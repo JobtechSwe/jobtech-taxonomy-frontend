@@ -17,7 +17,6 @@ class Content4 extends React.Component {
     }
 
     onModeChanged(e) {
-        console.log(e.target.value);
         EventDispatcher.fire(Constants.EVENT_GRAPH_MODE_SELECTED, e.target.value);
         this.setState({mode: e.target.value});
     }
