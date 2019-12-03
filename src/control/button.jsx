@@ -8,13 +8,20 @@ class Button extends React.Component {
         this.css = "button no_select font hint_source";
     }
 
+    onClick() {
+        var isEnabled = this.props.isEnabled == null ? true : this.props.isEnabled;
+        if(isEnabled && this.props.onClick) {
+            this.props.onClick();
+        }
+    }
+
     render() {
         var isEnabled = this.props.isEnabled == null ? true : this.props.isEnabled;
         var css = Util.getStyle(this) + (isEnabled ? "" : " button_disabled");
         return (
             <div 
                 className={css}
-                onMouseUp={this.props.onClick}>
+                onMouseUp={this.onClick.bind(this)}>
                 <div>{this.props.text}</div>
                 {Util.renderHint(this)}
             </div>
