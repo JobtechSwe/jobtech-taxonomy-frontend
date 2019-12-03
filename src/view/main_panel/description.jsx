@@ -191,6 +191,7 @@ class Description extends React.Component {
                     onChange={this.onDefinitionChanged.bind(this)}/>
                 <div>
                     <Button 
+                        css="deprecate_button"
                         isEnabled={!this.state.isLocked}
                         text={Localization.get("deprecate")}
                         onClick={this.onDeprecateClicked.bind(this)}/>

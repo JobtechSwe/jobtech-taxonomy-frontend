@@ -433,7 +433,20 @@ body {
 }
 
 .main_content_title_deprecated {
-    color: #dd0000;
+    color: #d00;
+}
+
+.deprecate_button {
+    background: #d00;
+    border-color: #900;
+}
+
+.deprecate_button:hover {
+    background: #f33;
+}
+
+.deprecate_button:active {
+    background: #c00;
 }
 
 .description {    
