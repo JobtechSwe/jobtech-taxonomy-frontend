@@ -10,6 +10,7 @@ import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Util from '../../context/util.jsx';
 import AddConnection from './../dialog/add_connection.jsx';
+import CreateConcept from './../dialog/create_concept.jsx';
 
 class Connections extends React.Component { 
 
@@ -170,7 +171,7 @@ class Connections extends React.Component {
 
     onAddConnectionClicked() {
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
-            title: Localization.get("add_connection"),
+            title: Localization.get("add_connection") + " " + Localization.getLower("from") + " " + this.props.item.preferredLabel,
             content: <AddConnection callback={this.onConnectionAdded.bind(this)}/>
         });
     }
@@ -181,6 +182,13 @@ class Connections extends React.Component {
         } else {
             // TODO: allow user to remove all connections by removing root?
         }
+    }
+
+    onCreateValueClicked() {
+        EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
+            title: Localization.get("new_value"),
+            content: <CreateConcept />
+        });
     }
 
     onItemSelected(item) {
@@ -296,6 +304,12 @@ class Connections extends React.Component {
     }
 
     render() {
+        /*
+        <Button 
+            isEnabled={!this.state.isLocked}
+            text={Localization.get("new_value")}
+            onClick={this.onCreateValueClicked.bind(this)}/>
+        */
         return (
             <div className="connections">
                 <TreeView context={this.relationTreeView}/>
