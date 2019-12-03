@@ -29,7 +29,6 @@ class Description extends React.Component {
     }
 
     init(props) {
-        console.log(props.item);
         if(props.groupContext) {
             props.groupContext.onLockChanged = this.onGroupLockedChanged.bind(this);
         }
@@ -131,9 +130,27 @@ class Description extends React.Component {
         );
     }
 
-    render() {
-        return (
-            <div className="description">
+    renderSpecialValue(elements, key, text) {
+        if(this.props.item[key]) {
+            elements.push(
+                <div 
+                    className="description_special_value" 
+                    key={key}>
+                    <Label text={text}/>
+                    <input 
+                        type="text" 
+                        className="rounded"
+                        disabled="disabled"
+                        value={this.props.item[key]}/>
+                </div>
+            );
+        } 
+    }
+
+    renderNameAndMisc() {
+        var elements = [];
+        elements.push(
+            <div key="name-key">
                 <Label text={Localization.get("name")}/>
                 <input 
                     type="text" 
@@ -141,6 +158,30 @@ class Description extends React.Component {
                     disabled={this.state.isLocked ? "disabled" : ""}
                     value={this.state.preferredLabel}
                     onChange={this.onLabelChanged.bind(this)}/>
+            </div>
+        );
+        this.renderSpecialValue(elements, "ssyk-code-2012", "SSYK");
+        this.renderSpecialValue(elements, "isco-code-08", "ISCO");
+        this.renderSpecialValue(elements, "iso-3166-1-alpha-2-2013", "Kod"); // land
+        this.renderSpecialValue(elements, "iso-3166-1-alpha-3-2013", Localization.get("name"));
+        this.renderSpecialValue(elements, "driving-licence-code-2013", "Typ"); // körkort
+        this.renderSpecialValue(elements, "eures-code-2014", "Typ"); // anställningsvaraktighet
+        this.renderSpecialValue(elements, "iso-639-3-alpha-2-2007", "Kod"); // språk
+        this.renderSpecialValue(elements, "iso-639-3-alpha-3-2007", Localization.get("name")); 
+        this.renderSpecialValue(elements, "nuts-level-3-code-2013", "NUTS");  // eu region
+        this.renderSpecialValue(elements, "sni-level-code-2007", "SNI"); 
+        // TODO: sun edeucation x2
+        return (
+            <div className="description_name_and_misc">
+                {elements}
+            </div>
+        );
+    }
+
+    render() {
+        return (
+            <div className="description">
+                {this.renderNameAndMisc()}
                 <Label text={Localization.get("description")}/>
                 <textarea 
                     rows="10" 

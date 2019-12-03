@@ -457,6 +457,25 @@ body {
     display: flex;
 }
 
+.description_name_and_misc {
+    display: flex;
+}
+
+.description_name_and_misc > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+.description_name_and_misc > div > .label {
+    font-weight: bold;
+}
+
+.description_special_value {
+    max-width: 80px;
+    margin-left: 5px;
+}
+
 .connections {    
     display: flex;
     flex-direction: column;
