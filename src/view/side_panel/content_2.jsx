@@ -1,6 +1,8 @@
 import React from 'react';
 import Rest from '../../context/rest.jsx';
 import Constants from '../../context/constants.jsx';
+import App from '../../context/app.jsx';
+import Util from '../../context/util.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import List from '../../control/list.jsx';
@@ -28,7 +30,7 @@ class Content2 extends React.Component {
                 loadingData: false,
             });
         }, (status) => {
-            // TODO: display error
+            App.showError(Util.getHttpMessage(status) + " : misslyckades med att hämta verisioner");
         });
     }
 

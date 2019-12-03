@@ -9,6 +9,8 @@ import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Rest from '../../context/rest.jsx';
+import Util from '../../context/util.jsx';
+import App from '../../context/app.jsx';
 
 class Content5 extends React.Component { 
 
@@ -71,7 +73,7 @@ class Content5 extends React.Component {
             }
             this.setState({statistics: {data: test}});
         }, (status) => {
-            // TODO: handle error
+            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta förändringar");
         });
     }
 
@@ -149,12 +151,14 @@ class Content5 extends React.Component {
                     this.concepts.push({type: type, data: data});
                     this.createReports();
                 }, (status) => {
-                    //TODO: Error handling
+                    App.showError(Util.getHttpMessage(status) + " : misslyckades hämta ssyk concept");
                 });
             } else {
                 Rest.getConcepts(type, (data) => {
                     this.concepts.push({type: type, data: data});
                     this.createReports();
+                }, (status) => {
+                    App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
                 });
             }    
         });
@@ -178,7 +182,7 @@ class Content5 extends React.Component {
                 });
                 this.createReports();
             }, (status) => {
-                //TODO: Error handling
+                App.showError(Util.getHttpMessage(status) + " : misslyckades hämta graph");
             });
         });
     }

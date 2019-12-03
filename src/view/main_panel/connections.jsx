@@ -246,7 +246,7 @@ class Connections extends React.Component {
                 Util.sortByKey(this.relationTreeView.roots, "text", true);
                 this.hideLoader();
             }
-        }, () => {
+        }, (status) => {
             if(--this.waitingFor <= 0) {
                 this.hideLoader();
             }

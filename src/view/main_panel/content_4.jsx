@@ -4,6 +4,8 @@ import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Rest from'../../context/rest.jsx';
+import Util from'../../context/util.jsx';
+import App from'../../context/app.jsx';
 
 class Content4 extends React.Component { 
 
@@ -183,7 +185,7 @@ class Content4 extends React.Component {
             this.state.data.edges.push(...edges);
             this.setState({data: this.state.data});
         }, (status) => {
-            // TODO: error handling
+            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta relationer");
         });
     }
 

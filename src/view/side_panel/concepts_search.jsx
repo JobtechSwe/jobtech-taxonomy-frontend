@@ -348,7 +348,7 @@ class ConceptsSearch extends React.Component {
             this.populateTreeSkill(null);
             this.setState({loadingData: false});
         }, (status) => {
-            // TODO: display error
+            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta graph");
         });
     }
 
@@ -357,19 +357,19 @@ class ConceptsSearch extends React.Component {
             Rest.getConceptsSsykRange(this.state.queryType, from, count, (data) => {
                 this.onFetchSsykResult(data, from, count);
             }, (status) => {
-                // TODO: display error
+                App.showError(Util.getHttpMessage(status) + " : misslyckades hämta ssyk concept");
             });
         } else if(this.state.queryType == this.TYPE_ISCO_LEVEL_4) {
             Rest.getConceptsIsco08Range(this.state.queryType, from, count, (data) => {
                 this.onFetchResult(data, from, count);
             }, (status) => {
-                // TODO: display error
+                App.showError(Util.getHttpMessage(status) + " : misslyckades hämta isco08 concept");
             });
         } else {
             Rest.getConceptsRange(this.state.queryType, from, count, (data) => {
                 this.onFetchResult(data, from, count);
             }, (status) => {
-                // TODO: display error
+                App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
             });
         }
     }
@@ -415,7 +415,7 @@ class ConceptsSearch extends React.Component {
                     this.buildTree(data);
                     this.setState({loadingData: false});
                 }, (status) => {
-                    // TODO: display error
+                    App.showError(Util.getHttpMessage(status) + " : sökning misslyckades");
                 });
             }
         } else {

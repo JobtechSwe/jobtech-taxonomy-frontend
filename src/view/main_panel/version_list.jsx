@@ -6,6 +6,7 @@ import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Util from '../../context/util.jsx';
+import App from '../../context/app.jsx';
 
 class VersionList extends React.Component { 
 
@@ -75,7 +76,7 @@ class VersionList extends React.Component {
                     loadingData: false,
                 });
             }, (status) => {
-                // TODO: handle error
+                App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta förändringar");
                 this.setState({loadingData: false});
             });
         }

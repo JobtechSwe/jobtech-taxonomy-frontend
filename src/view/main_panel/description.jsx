@@ -29,6 +29,7 @@ class Description extends React.Component {
     }
 
     init(props) {
+        console.log(props.item);
         if(props.groupContext) {
             props.groupContext.onLockChanged = this.onGroupLockedChanged.bind(this);
         }

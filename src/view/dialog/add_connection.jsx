@@ -165,7 +165,7 @@ class AddConnection extends React.Component {
                 this.setState({loadingRoots: false});
             }
         }, () => {
-            // TODO: show error
+            App.showError(ContextUtil.getHttpMessage(status) + " : misslyckades hämta concept");
         });
     }
 
@@ -178,7 +178,7 @@ class AddConnection extends React.Component {
             item.removeChild(item.children[0]);
             item.sortChildren();
         }, () => {
-            // TODO: show error
+            App.showError(ContextUtil.getHttpMessage(status) + " : misslyckades hämta relationer");
         });
     }
 
