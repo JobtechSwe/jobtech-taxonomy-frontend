@@ -6,7 +6,7 @@ import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Changes from './changes.jsx';
 
-class Content3 extends React.Component { 
+class Content5 extends React.Component { 
 
     constructor() {
         super();
@@ -29,4 +29,4 @@ class Content3 extends React.Component {
 	
 }
 
-export default Content3;
+export default Content5;

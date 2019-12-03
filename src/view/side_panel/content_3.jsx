@@ -4,7 +4,7 @@ import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 
-class Content4 extends React.Component { 
+class Content3 extends React.Component { 
 
     constructor() {
         super();
@@ -48,4 +48,4 @@ class Content4 extends React.Component {
 	
 }
 
-export default Content4;
+export default Content3;

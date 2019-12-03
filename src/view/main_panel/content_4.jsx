@@ -8,7 +8,7 @@ import Statistics from './statistics.jsx';
 import MissingConnections from './missing_connections.jsx';
 import ChangeLog from './change_log.jsx';
 
-class Content5 extends React.Component { 
+class Content4 extends React.Component { 
 
     constructor() {
         super();
@@ -110,4 +110,4 @@ class Content5 extends React.Component {
     }	
 }
 
-export default Content5;
+export default Content4;

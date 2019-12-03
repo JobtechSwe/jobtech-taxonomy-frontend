@@ -6,7 +6,7 @@ import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Button from '../../control/button.jsx';
 import Label from '../../control/label.jsx';
 
-class Content5 extends React.Component { 
+class Content4 extends React.Component { 
 
     constructor() {
         super();
@@ -203,4 +203,4 @@ class Content5 extends React.Component {
 	
 }
 
-export default Content5;
+export default Content4;

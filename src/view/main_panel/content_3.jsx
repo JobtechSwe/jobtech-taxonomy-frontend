@@ -7,7 +7,7 @@ import Rest from'../../context/rest.jsx';
 import Util from'../../context/util.jsx';
 import App from'../../context/app.jsx';
 
-class Content4 extends React.Component { 
+class Content3 extends React.Component { 
 
     constructor() {
         super();
@@ -293,4 +293,4 @@ class Content4 extends React.Component {
 	
 }
 
-export default Content4;
+export default Content3;
