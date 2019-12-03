@@ -470,8 +470,7 @@ class ConceptsSearch extends React.Component {
 
     onQueryItemSelected(item) {
         if(item.data && item.data.id) {
-            Util.getConcept(item.data.id, item.data.type, (data) => {          
-                console.log(data[0]);          
+            Util.getConcept(item.data.id, item.data.type, (data) => {     
                 EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, data[0]);
             }, (status) => {
                 //TODO: error handling

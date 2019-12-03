@@ -1,9 +1,10 @@
 import React from 'react';
-import Rest from '../../context/rest.jsx';
+import DatePicker from 'react-datepicker';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Button from '../../control/button.jsx';
+import Label from '../../control/label.jsx';
 
 class Content5 extends React.Component { 
 
@@ -40,6 +41,8 @@ class Content5 extends React.Component {
         this.state = {
             queryType1: this.TYPE_SSYK,
             queryType2: this.TYPE_SKILL,
+            fromDate: new Date(),
+            toDate: new Date(),
         };
     }
 
@@ -95,6 +98,11 @@ class Content5 extends React.Component {
         });
     }
 
+    onChangeLogClicked() {
+        EventDispatcher.fire(Constants.EVENT_SIDEPANEL_TIME_PERIOD_SELECTED, this.getSelectedPeriod()); 
+    }
+
+
     onTypeChanged(id, e) {
         if(id == 1) {
             this.setState({
@@ -105,6 +113,23 @@ class Content5 extends React.Component {
                 queryType2: e.target.value,
             });
         }
+    }
+    
+    getSelectedPeriod() {
+        return {
+            from: this.state.fromDate,
+            to: this.state.toDate,
+        };
+    }
+
+    setFromDate(date) {
+        console.log(date);
+        this.setState({fromDate: date});
+    }
+
+    setToDate(date) {
+        console.log(date);
+        this.setState({toDate: date});
     }
 
     renderOptions() {
@@ -148,6 +173,28 @@ class Content5 extends React.Component {
                     <Button 
                         text={Localization.get("connections")}
                         onClick={this.onConnectionsClicked.bind(this)}
+                    />
+                </div>
+                <div className="sub_panel">
+                    <div>
+                        <Label text={Localization.get("from")}/>
+                        <DatePicker 
+                            selected={this.state.fromDate} 
+                            onChange={this.setFromDate.bind(this)}
+                            locale={Localization.get("locale")}
+                            dateFormat="yyyy-MM-dd"/>
+                    </div>
+                    <div>
+                        <Label text={Localization.get("to")}/>
+                        <DatePicker 
+                            selected={this.state.toDate} 
+                            onChange={this.setToDate.bind(this)}
+                            locale={Localization.get("locale")}
+                            dateFormat="yyyy-MM-dd"/>
+                    </div>
+                    <Button 
+                        text={Localization.get("changes")}
+                        onClick={this.onChangeLogClicked.bind(this)}
                     />
                 </div>
             </div>
