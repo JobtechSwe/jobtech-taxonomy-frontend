@@ -44,7 +44,7 @@ class ChangeLog extends React.Component {
         this.setState({components: components});
     }
 
-    renderGroup(){
+    render() {
         if(this.state.period) {
             return( 
                 <Group 
@@ -53,15 +53,14 @@ class ChangeLog extends React.Component {
                     <Changes period={this.state.period}/>
                 </Group>
             );
+        } else {
+            return(
+                <Group 
+                    css="changes_group"
+                    text={Localization.get("changes")}>
+                </Group>
+            );
         }
-    }
-
-    render() {
-        return (
-            <div className="main_content_3">
-                {this.renderGroup()}
-            </div>
-        );
     }
 	
 }

@@ -243,7 +243,7 @@ class MissingConnections extends React.Component {
 
     renderItem(item) {
         return (
-            <div className="main_content_5_list_item">
+            <div className="main_content_4_list_item">
                 <div>
                     {item.id}
                 </div>                
@@ -258,7 +258,7 @@ class MissingConnections extends React.Component {
         if(data != null && data.length > 0) {
             return (
                 <List
-                    css="main_content_5_list"
+                    css="main_content_4_list"
                     data={data}
                     onItemSelected={onItemSelected}
                     dataRender={this.renderItem.bind(this)}
@@ -274,7 +274,7 @@ class MissingConnections extends React.Component {
         return (
             <div>
                 <Group text={Localization.get("db_"+this.state.type1) + " " + Localization.get("to") + " " + Localization.get("db_"+this.state.type2)}>
-                    <div className="main_content_5_connections">                        
+                    <div className="main_content_4_connections">                        
                         {this.renderInfo(
                             this.state.noConnectionsData1,
                             this.state.type1,
@@ -291,7 +291,7 @@ class MissingConnections extends React.Component {
                     </div>
                 </Group>                
                 <Group text={Localization.get("db_"+this.state.type2) + " " + Localization.get("to") + " " + Localization.get("db_"+this.state.type1)}>
-                    <div className="main_content_5_connections">                        
+                    <div className="main_content_4_connections">                        
                         {this.renderInfo(
                             this.state.noConnectionsData2,
                             this.state.type2,

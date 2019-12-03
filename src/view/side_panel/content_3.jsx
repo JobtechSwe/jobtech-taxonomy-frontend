@@ -1,23 +1,51 @@
 import React from 'react';
-import DatePicker from 'react-datepicker';
+import ConceptsSearch from './concepts_search.jsx';
+import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
-import EventDispatcher from '../../context/event_dispatcher.jsx';
-import Label from '../../control/label.jsx';
 
-class Content3 extends React.Component { 
+class Content4 extends React.Component { 
 
     constructor() {
-        super();       
+        super();
+        this.state = {
+            mode: 0
+        };
+    }
+
+    componentDidMount() {        
+    }
+
+    onModeChanged(e) {
+        EventDispatcher.fire(Constants.EVENT_GRAPH_MODE_SELECTED, e.target.value);
+        this.setState({mode: e.target.value});
     }
 
     render() {
         return (
-            <div className="side_content_3">               
+            <div className="side_content_3">
+                <div className="sub_panel">
+                    <select 
+                        className="sub_panel_select rounded"
+                        value={this.state.mode}
+                        onChange={this.onModeChanged.bind(this)}>
+                        <option 
+                            value="1" 
+                            key="1">
+                            {Localization.get("horizontal_connections")}
+                        </option>
+                        <option 
+                            value="0" 
+                            key="0">
+                            {Localization.get("vertical_connections")}
+                        </option>
+                    </select>
+                </div>                
+                <ConceptsSearch />
             </div>
         );
     }
 	
 }
 
-export default Content3;
+export default Content4;

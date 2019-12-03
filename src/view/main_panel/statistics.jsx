@@ -62,14 +62,14 @@ class Statistics extends React.Component {
     render() {
         return(
             <Group text="charts">
-                <div className="main_content_5_chart">
+                <div className="main_content_4_chart">
                     <VictoryBar 
                         data={this.state.statistics.data}
                         x="x"
                         y="y"
                     />
                 </div>
-                <div className="main_content_5_chart">
+                <div className="main_content_4_chart">
                     <VictoryPie
                         labelComponent={<VictoryTooltip/>}
                         cornerRadius="5"
