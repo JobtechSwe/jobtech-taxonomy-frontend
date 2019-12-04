@@ -473,7 +473,7 @@ class ConceptsSearch extends React.Component {
             Util.getConcept(item.data.id, item.data.type, (data) => {     
                 EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, data[0]);
             }, (status) => {
-                //TODO: error handling
+                App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
             });
         }
     }
