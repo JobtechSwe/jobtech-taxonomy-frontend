@@ -749,3 +749,26 @@ body {
     flex-direction: column;
     flex: 1 1 auto;
 }
+
+.new_concept_wizard {
+    min-width: 540px;
+    min-height: 320px;
+}
+
+.new_concept_wizard_step_headline {
+    font-weight: bold;
+    font-size: 16pt;
+    margin-bottom: 10px;
+}
+
+.new_concept_wizard_buttons {
+    display: flex;
+    margin-top: 10px;
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.new_concept_wizard > div {
+    display: flex;
+    flex-direction: column;
+}
