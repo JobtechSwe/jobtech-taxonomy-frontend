@@ -766,9 +766,11 @@ body {
     margin-top: 10px;
     align-self: flex-end;
     align-items: flex-end;
+    flex: 1 1 auto;
 }
 
 .new_concept_wizard > div {
     display: flex;
     flex-direction: column;
+    height: 100%;
 }

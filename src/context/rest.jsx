@@ -175,6 +175,10 @@ class Rest {
         this.patch("/private/accumulate-concept?id=" + id + args, Constants.REST_API_KEY_PRIV, onSuccess, onError);
     }
 
+    postConcept(type, preferredLabel, definition, onSuccess, onError) {
+        this.post("/private/concept?type=" + type + "&definition=" + definition + "&preferred-label=" + preferredLabel, Constants.REST_API_KEY_PRIV, onSuccess, onError);
+    }
+
     postAddRelation(conceptId, relationId, relationType, definition, substitutability, onSuccess, onError) {
         this.post("/private/relation?concept-1=" + conceptId + "&concept-2=" + relationId + "&relation=" + relationType + "&definition=" + definition + "&substitutability-percentage=" + substitutability, Constants.REST_API_KEY_PRIV, onSuccess, onError);
     }

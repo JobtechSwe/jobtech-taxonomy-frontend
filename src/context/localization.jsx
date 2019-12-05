@@ -105,6 +105,7 @@ class Localization {
                 relation_type: "Relationstyp",  
                 value_type: "Värde typ",
                 note: "Antekning",
+                default_option: "-- välj",
                 error_add_connection_1: "Antekning kan inte vara blank, vänligen ange förklaring till koppling",
                 error_add_connection_2: "Ingen koppling är markerad",
                 error_add_connection_3: "Ogilltig koppling, rötter kan inte väljas som koppling",

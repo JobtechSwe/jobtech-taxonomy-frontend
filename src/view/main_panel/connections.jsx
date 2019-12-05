@@ -144,7 +144,7 @@ class Connections extends React.Component {
         }
     }
 
-    onConnectionAdded(item) {
+    onConnectionAdded(item, ignoreEditRequest) {
         // TODO: need to handle skill (display parent chain as tree)
         // check for parent
         var parent = null;
@@ -165,8 +165,14 @@ class Connections extends React.Component {
         var child = ControlUtil.createTreeViewItem(this.relationTreeView, item);
         child.setText(item.preferredLabel);
         parent.addChild(child);
-        // setup change request item
-        App.addEditRequest(this.createEditRequest(parent, child, false));
+        if(!ignoreEditRequest) {
+            // setup change request item
+            App.addEditRequest(this.createEditRequest(parent, child, false));
+        }
+    }
+
+    onConnectionCreated(concept) {
+        this.onConnectionAdded(concept, true);
     }
 
     onAddConnectionClicked() {
@@ -187,7 +193,9 @@ class Connections extends React.Component {
     onCreateValueClicked() {
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
             title: Localization.get("new_value"),
-            content: <CreateConcept />
+            content: <CreateConcept 
+                        callback={this.onConnectionCreated.bind(this)}
+                        conceptId={this.props.item.id}/>
         });
     }
 
