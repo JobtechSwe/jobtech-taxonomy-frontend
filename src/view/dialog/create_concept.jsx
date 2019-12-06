@@ -232,31 +232,36 @@ class CreateConcept extends React.Component {
     }
 
 	renderWizardStep0() {
-		/*
-			"ssyk-level-1"
-			"isco-level-4"
-			"sni-level-1"
-		*/
+		var createOptionElement = (value) => {
+			return {
+				text: Localization.get("db_" + value),
+				value: value,
+			};
+		}
 		var roots = [
-			Localization.get("default_option"),
-            "continent",
-            "country",
-            "driving-licence",
-            "employment-duration",
-            "employment-type",
-            "keyword",
-            "language",
-            "language-level",
-            "municipality",
-            "occupation-collection",
-            "occupation-field",
-            "occupation-name",
-            "region",
-			"skill-headline",
-			"skill",
-            "wage-type",
-            "worktime-extent",
+            createOptionElement("continent"),
+            createOptionElement("country"),
+            createOptionElement("driving-licence"),
+            createOptionElement("employment-duration"),
+            createOptionElement("employment-type"),
+            createOptionElement("keyword"),
+            createOptionElement("language"),
+            createOptionElement("language-level"),
+            createOptionElement("municipality"),
+            createOptionElement("occupation-collection"),
+            createOptionElement("occupation-field"),
+            createOptionElement("occupation-name"),
+            createOptionElement("region"),
+			createOptionElement("skill-headline"),
+			createOptionElement("skill"),
+            createOptionElement("wage-type"),
+            createOptionElement("worktime-extent"),
 		];
+		Util.sortByKey(roots, "text", true);
+		roots.splice(0, 0, {
+			text: Localization.get("default_option"),
+			value: "default_option",
+		});
 		return (
 			<div>
 				<Label 
@@ -266,18 +271,12 @@ class CreateConcept extends React.Component {
 					className="rounded"
 					value={this.state.type}
 					onChange={this.onTypeChanged.bind(this)}>
-					{roots.map((value, index) => {
-						var name = Localization.get("db_" + value);
-						if(value == "skill-headline") {
-							name = Localization.get("skill_headline");
-						} else if(index == 0) {
-							name = value;
-						}
+					{roots.map((element, index) => {
 						return (
 							<option 
 								key={index}
-								value={value}>
-								{name}
+								value={element.value}>
+								{element.text}
 							</option>
 						);
 					})}
