@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Support from './support.jsx';
+import Settings from './context/settings.jsx';
 import EventDispatcher from './context/event_dispatcher.jsx';
 import Constants from './context/constants.jsx';
 import Util from './context/util.jsx';
@@ -14,6 +15,7 @@ class Index extends React.Component {
 	constructor() {
         super();
         Support.init();
+        Settings.load();
         // state
         this.state = {
             overlay: null,

@@ -4,6 +4,7 @@ import Label from '../../control/label.jsx';
 import Button from '../../control/button.jsx';
 import Group from '../../control/group.jsx';
 import Constants from '../../context/constants.jsx';
+import Settings from '../../context/settings.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import App from '../../context/app.jsx';
@@ -73,13 +74,14 @@ class Content1 extends React.Component {
         var key = 0;
         if(item) {
             var isDeprecated = item.deprecated ? item.deprecated : false;
+            var isEditable = Settings.isEditable(item.type);
             // add content for item
             var infoContext = ControlUtil.createGroupContext();
             var connectionsContext = ControlUtil.createGroupContext();
             components.push(
                 <Group 
                     text="Info"
-                    useLock={true}
+                    useLock={true && isEditable}
                     context={infoContext}
                     unlockable={!isDeprecated}
                     key={key++}>
@@ -91,7 +93,7 @@ class Content1 extends React.Component {
             components.push(
                 <Group 
                     text={Localization.get("connections")}
-                    useLock={true}
+                    useLock={true && isEditable}
                     context={connectionsContext}
                     unlockable={!isDeprecated}
                     key={key++}>
