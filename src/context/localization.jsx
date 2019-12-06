@@ -24,7 +24,7 @@ class Localization {
                 db_municipality: "Kommun",
                 "db_occupation-collection": "Yrkessamling",
                 "db_occupation-field": "Yrkesområde",
-                "db_occupation-name": "Benämning",
+                "db_occupation-name": "Yrkesbenämning",
                 db_region: "EU-Region",
                 db_skill: "Kompetens",
                 "db_skill-headline": "Kompetens",
@@ -54,7 +54,7 @@ class Localization {
                 /* regular words */
                 "occupation-group": "Yrkesgrupp",
                 "common-name": "Folkligsynonym",
-                "occupation-name": "Benämning",
+                "occupation-name": "Yrkesbenämning",
                 "occupation-field": "Yrkesområde",
                 competense: "Kompetens",
                 connections: "Kopplingar",
