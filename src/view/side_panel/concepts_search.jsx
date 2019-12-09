@@ -32,7 +32,10 @@ class ConceptsSearch extends React.Component {
         this.TYPE_REGION = "region";
         this.TYPE_SKILL = "skill-headline skill";
         this.TYPE_SNI = "sni-level-1 sni-level-2";
-        this.TYPE_SSYK = "ssyk-level-1 ssyk-level-2 ssyk-level-3 ssyk-level-4";
+        this.TYPE_SSYK_LEVEL_1 = "ssyk-level-1";
+        this.TYPE_SSYK_LEVEL_2 = "ssyk-level-2";
+        this.TYPE_SSYK_LEVEL_3 = "ssyk-level-3";
+        this.TYPE_SSYK_LEVEL_4 = "ssyk-level-4";
         this.TYPE_SUN_EDUCATION_FIELD = "sun-ecucation-field-1 sun-ecucation-field-2 sun-ecucation-field-3 sun-ecucation-field-4";
         this.TYPE_SUN_EDUCATION_LEVEL = "sun-ecucation-level-1 sun-ecucation-level-2 sun-ecucation-level-3";
         this.TYPE_WAGE_TYPE = "wage-type";
@@ -40,7 +43,7 @@ class ConceptsSearch extends React.Component {
 
         this.state = {
             data: [],
-            queryType: this.TYPE_SSYK,
+            queryType: this.TYPE_SSYK_LEVEL_4,
             selectableType: true,
             loadingData: false,
         };
@@ -94,7 +97,10 @@ class ConceptsSearch extends React.Component {
         options.push({value: this.TYPE_REGION, text: Localization.get("db_region")});
         options.push({value: this.TYPE_SKILL, text: Localization.get("db_skill")});
         options.push({value: this.TYPE_SNI, text: Localization.get("db_sni")});
-        options.push({value: this.TYPE_SSYK, text: Localization.get("db_ssyk")});
+        options.push({value: this.TYPE_SSYK_LEVEL_1, text: Localization.get("db_ssyk-level-1")});
+        options.push({value: this.TYPE_SSYK_LEVEL_2, text: Localization.get("db_ssyk-level-2")});
+        options.push({value: this.TYPE_SSYK_LEVEL_3, text: Localization.get("db_ssyk-level-3")});
+        options.push({value: this.TYPE_SSYK_LEVEL_4, text: Localization.get("db_ssyk-level-4")});
         options.push({value: this.TYPE_SUN_EDUCATION_FIELD, text: Localization.get("db_sun-education-field")});
         options.push({value: this.TYPE_SUN_EDUCATION_LEVEL, text: Localization.get("db_sun-education-level")});
         options.push({value: this.TYPE_WAGE_TYPE, text: Localization.get("db_wage-type")});
@@ -142,80 +148,6 @@ class ConceptsSearch extends React.Component {
         for(var i=0; i<roots.length; ++i) {
             this.queryTreeView.addRoot(roots[i]);
         }
-    }
-
-    findParent(element) {
-        var getItem = (type, expanded) => {
-            var tmp = this.state.data.find((d) => {
-                return d.type === type && element["ssyk-code-2012"].startsWith(d["ssyk-code-2012"]);
-            });
-            var item = ControlUtil.createTreeViewItem(this.queryTreeView, tmp);
-            item.setText(tmp.ssyk ? this.getItemFormat(tmp) : tmp.preferredLabel);
-            item.setExpanded(expanded);
-            return item;
-        }
-        var lambda = (root, type, func) => {
-            var tmp = root.children.find((c) => {
-                return element["ssyk-code-2012"].startsWith(c.data["ssyk-code-2012"]);
-            });
-            if(tmp == null) {
-                tmp = getItem(type, false);
-                root.addChild(tmp);
-            }
-            var nextType = null;
-            if(type == Constants.CONCEPT_SSYK_LEVEL_2) {
-                nextType = Constants.CONCEPT_SSYK_LEVEL_3;
-            } else if(type == Constants.CONCEPT_SSYK_LEVEL_3) {
-                nextType = Constants.CONCEPT_SSYK_LEVEL_4;
-            }
-            if(element.type == nextType) {
-                return tmp;
-            } else if(nextType) {
-                return func(tmp, nextType, func);
-            }
-        };
-        if(element.type == Constants.CONCEPT_SSYK_LEVEL_1) {
-            return null;
-        }
-        var root = this.queryTreeView.roots.find((d) => {
-            return element["ssyk-code-2012"].startsWith(d.data["ssyk-code-2012"]);
-        });
-        if(root == null) {
-            root = getItem(Constants.CONCEPT_SSYK_LEVEL_1, true);            
-            root.setExpanded(true);
-            this.queryTreeView.addRoot(root);
-        }
-        if(element.type == Constants.CONCEPT_SSYK_LEVEL_2) {
-            return root;
-        }
-        return lambda(root, Constants.CONCEPT_SSYK_LEVEL_2, lambda);
-    }
-    
-    populateTreeSsykLevel(data, level) {
-        for(var i=0; i<data.length; ++i) {
-            var element = data[i];
-            if(element.type === level) {
-                var parent = this.findParent(element);
-                var item = ControlUtil.createTreeViewItem(this.queryTreeView, element);
-                item.setText(element.ssyk ? this.getItemFormat(element) : element.preferredLabel);
-                if(parent) {
-                    parent.addChild(item);
-                } else {
-                    item.setExpanded(true);
-                    this.queryTreeView.addRoot(item);
-                }
-            }
-        }
-    }
-
-    populateTreeSsyk(data) {
-        this.queryTreeView.shouldUpdateState = false;
-        this.populateTreeSsykLevel(data, Constants.CONCEPT_SSYK_LEVEL_1);
-        this.populateTreeSsykLevel(data, Constants.CONCEPT_SSYK_LEVEL_2);
-        this.populateTreeSsykLevel(data, Constants.CONCEPT_SSYK_LEVEL_3);
-        this.populateTreeSsykLevel(data, Constants.CONCEPT_SSYK_LEVEL_4);
-        this.queryTreeView.shouldUpdateState = true;
-        this.queryTreeView.invalidate();
     }
 
     populateTreeSkill(data) {
@@ -315,19 +247,6 @@ class ConceptsSearch extends React.Component {
         this.queryTreeView.invalidate();
     }
 
-    onFetchSsykResult(data, from, count) {
-        this.state.data.push(...data);
-        if(data.length == count) {
-            this.fetchRecursive(from + count, count);
-        } else {
-            this.setData(this.state.data);
-            this.sortData(this.state.data);
-            this.queryTreeView.clear();
-            this.populateTreeSsyk(this.state.data);
-            this.setState({loadingData: false});
-        }
-    }
-
     onFetchResult(data, from, count) {
         this.state.data.push(...data);
         this.setData(data);
@@ -353,9 +272,12 @@ class ConceptsSearch extends React.Component {
     }
 
     fetchRecursive(from, count) {
-        if(this.state.queryType == this.TYPE_SSYK) {
+        if(this.state.queryType == this.TYPE_SSYK_LEVEL_1 || 
+            this.state.queryType == this.TYPE_SSYK_LEVEL_2 ||
+            this.state.queryType == this.TYPE_SSYK_LEVEL_3 ||
+            this.state.queryType == this.TYPE_SSYK_LEVEL_4) {
             Rest.getConceptsSsykRange(this.state.queryType, from, count, (data) => {
-                this.onFetchSsykResult(data, from, count);
+                this.onFetchResult(data, from, count);
             }, (status) => {
                 App.showError(Util.getHttpMessage(status) + " : misslyckades hämta ssyk concept");
             });
@@ -443,16 +365,10 @@ class ConceptsSearch extends React.Component {
                     return item.preferredLabel.toLowerCase().indexOf(q) >= 0;
                 });
                 this.sortData(data);
-                if(this.state.queryType == this.TYPE_SSYK) {
-                    this.populateTreeSsyk(data);
-                } else {
-                    this.populateTree(data);
-                }
+                this.populateTree(data);                
             }
         } else {
-            if(this.state.queryType == this.TYPE_SSYK) {
-                this.populateTreeSsyk(this.state.data);
-            } else if(this.state.queryType == this.TYPE_SKILL) {
+            if(this.state.queryType == this.TYPE_SKILL) {
                 this.populateTreeSkill(null);
             } else {
                 this.populateTree(this.state.data);

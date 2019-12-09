@@ -65,7 +65,7 @@ class Content4 extends React.Component {
         options.push({value: this.TYPE_SKILL, text: Localization.get("db_skill")});
         options.push({value: this.TYPE_SNI_1, text: Localization.get("db_sni_1")});
         options.push({value: this.TYPE_SNI_2, text: Localization.get("db_sni_2")});
-        options.push({value: this.TYPE_SSYK, text: Localization.get("db_ssyk")});
+        options.push({value: this.TYPE_SSYK, text: Localization.get("db_ssyk-level-4")});
         options.push({value: this.TYPE_SUN_EDUCATION_FIELD_1, text: Localization.get("db_sun-education-field_1")});
         options.push({value: this.TYPE_SUN_EDUCATION_FIELD_2, text: Localization.get("db_sun-education-field_2")});
         options.push({value: this.TYPE_SUN_EDUCATION_FIELD_3, text: Localization.get("db_sun-education-field_3")});
