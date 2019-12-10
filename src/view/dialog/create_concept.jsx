@@ -256,6 +256,10 @@ class CreateConcept extends React.Component {
 			createOptionElement("skill"),
             createOptionElement("wage-type"),
             createOptionElement("worktime-extent"),
+            createOptionElement("ssyk-level-1"),
+            createOptionElement("ssyk-level-2"),
+            createOptionElement("ssyk-level-3"),
+            createOptionElement("ssyk-level-4"),
 		];
 		Util.sortByKey(roots, "text", true);
 		roots.splice(0, 0, {
