@@ -64,8 +64,13 @@ class Content3 extends React.Component {
                 timestep: 0.42
             }
         };
+        var types = {};
+        for(var i=0; i<Constants.DB_TYPES.length; ++i) {
+            types[Constants.DB_TYPES[i]] = true;
+        }
         this.state = {
             workmode: 0,
+            enabledTypes: types,
             data: {
                 nodes: [],
                 edges: []
@@ -75,11 +80,13 @@ class Content3 extends React.Component {
         this.boundSideItemSelected = this.onSideItemSelected.bind(this);
         this.boundGraphModeSelected = this.onGraphModeSelected.bind(this);
         this.boundElementSelected = this.onElementSelected.bind(this);
+        this.boundVisibleTypesChanged = this.onVisibleTypesChanged.bind(this);
     }
 
     componentDidMount() {
         EventDispatcher.add(this.boundSideItemSelected, Constants.EVENT_SIDEPANEL_ITEM_SELECTED);        
         EventDispatcher.add(this.boundGraphModeSelected, Constants.EVENT_GRAPH_MODE_SELECTED);        
+        EventDispatcher.add(this.boundVisibleTypesChanged, Constants.EVENT_VISIBLE_TYPES_SELECTED);
         this.edges = new Vis.DataSet(this.state.data.edges);
         this.nodes = new Vis.DataSet(this.state.data.nodes);
         var container = document.getElementById("vis_network_id");
@@ -89,6 +96,7 @@ class Content3 extends React.Component {
     componentWillUnmount() {
         EventDispatcher.remove(this.boundSideItemSelected);
         EventDispatcher.remove(this.boundGraphModeSelected);
+        EventDispatcher.remove(this.boundVisibleTypesChanged);
     }
 
     componentDidUpdate() {
@@ -161,22 +169,28 @@ class Content3 extends React.Component {
         }
     }
 
+    isEnabled(type) {
+        return this.state.enabledTypes[type] == true;
+    }
+
     getRelations(id, type, x, y) {
         Rest.getAllConceptRelations(id, type, (data) => {
             var nodes = [];
             var edges = [];
             for(var i=0; i<data.length; ++i) {
                 var p = data[i];
-                p.title = Localization.get("db_" + p.type) + "<br \>" + p.preferredLabel;
-                p.group = "notFetched";                    
-                p.x = x;
-                p.y = y;
-                if(!this.findNodeById(p.id)) {
-                    nodes.push(p);
-                    edges.push({
-                        from: id,
-                        to: p.id,
-                    });
+                if(this.isEnabled(p.type)) {
+                    p.title = Localization.get("db_" + p.type) + "<br \>" + p.preferredLabel;
+                    p.group = "notFetched";                    
+                    p.x = x;
+                    p.y = y;
+                    if(!this.findNodeById(p.id)) {
+                        nodes.push(p);
+                        edges.push({
+                            from: id,
+                            to: p.id,
+                        });
+                    }
                 }
             }   
             this.nodes.add(nodes);
@@ -220,6 +234,27 @@ class Content3 extends React.Component {
 
     findNodeById(id) {
         return this.state.data.nodes.find((n) => {return n.id === id});
+    }
+
+    onVisibleTypesChanged(types) {
+        var obj = {};
+        for(var i=0; i<types.length; ++i) {
+            obj[types[i]] = true;
+        }
+        if(this.startFrom) {
+            this.state.enabledTypes = obj;
+            this.onSideItemSelected(this.startFrom);
+        } else {
+            var d = {nodes: [], edges: []};
+            this.edges.clear();
+            this.edges.add(d.edges);
+            this.nodes.clear();
+            this.nodes.add(d.nodes);
+            this.setState({
+                enabledTypes: obj,
+                data: d
+            });
+        }
     }
 
     onGraphModeSelected(mode) {
