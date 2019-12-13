@@ -14,6 +14,7 @@ class Content5 extends React.Component {
         super();
         this.state = {
             editableTypes: Settings.data.editableTypes,
+            visibleTypes: Settings.data.visibleTypes,
         };
     }
    
@@ -26,6 +27,19 @@ class Content5 extends React.Component {
             types.splice(index, 1);
         }
         this.setState({editableTypes: types}, () => {
+            Settings.save();
+        });
+    }
+
+    onVisibleTypeChanged(type, e) {
+        var types = this.state.visibleTypes;
+        if(e.target.checked) {
+            types.push(type);
+        } else {
+            var index = types.indexOf(type);
+            types.splice(index, 1);
+        }
+        this.setState({visibleTypes: types}, () => {
             Settings.save();
         });
     }
@@ -44,18 +58,37 @@ class Content5 extends React.Component {
                 <div 
                     key={index}>
                     <Label 
-                        css="settings_editable_types_type"
+                        css="settings_types_type"
                         text={Localization.get("db_" + type)}/>
+                    <div className="settings_types_cb">
                     <input 
-                        type="checkbox"
+                        type="checkbox"                        
+                        onChange={this.onVisibleTypeChanged.bind(this, type)}
+                        checked={Settings.isVisible(type)}/>
+                    </div>
+                    <div className="settings_types_cb">
+                    <input 
+                        type="checkbox"                        
                         onChange={this.onEditableTypeChanged.bind(this, type)}
                         checked={Settings.isEditable(type)}/>
+                    </div>
                 </div>
             );
         });
         return (
-            <Group text={Localization.get("type_editable")}>
-                <List css="settings_editable_types">
+            <Group text={Localization.get("types")}>
+                <div className="settings_types_head">
+                    <Label 
+                        css="settings_types_type"
+                        text={Localization.get("type")}/>
+                    <Label 
+                        css="settings_types_cb"
+                        text={Localization.get("visible")}/>
+                    <Label 
+                        css="settings_types_cb"
+                        text={Localization.get("editable")}/>
+                </div>
+                <List css="settings_types">
                     {types}
                 </List>
             </Group>

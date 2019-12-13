@@ -17,6 +17,39 @@ class Settings {
                 "occupation-name",
                 "skill",
             ],
+            visibleTypes: [
+                "ssyk-level-1",
+                "ssyk-level-2",
+                "ssyk-level-3",
+                "ssyk-level-4",
+                "isco-level-4",
+                "continent",
+                "country",
+                "driving-licence",
+                "employment-duration",
+                "employment-type",
+                "keyword",
+                "language",
+                "language-level",
+                "municipality",
+                "occupation-collection",
+                "occupation-field",
+                "occupation-name",
+                "region",
+                "skill",
+                "skill-headline",
+                "sni-level-1",
+                "sni-level-2",
+                "wage-type",
+                "worktime-extent",
+                "sun-education-field-1",
+                "sun-education-field-2",
+                "sun-education-field-3",
+                "sun-education-field-4",
+                "sun-education-level-1",
+                "sun-education-level-2",
+                "sun-education-level-3",
+            ]
         };
     }
 
@@ -26,6 +59,10 @@ class Settings {
 
     isEditable(type) {
         return this.data.editableTypes.indexOf(type) != -1;
+    }
+
+    isVisible(type) {
+        return this.data.visibleTypes.indexOf(type) != -1;
     }
 
     load() {

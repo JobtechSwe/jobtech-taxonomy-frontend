@@ -790,22 +790,33 @@ body {
     height: 100%;
 }
 
-.settings_editable_types {
+.settings_types {
     display: flex;
     flex-direction: column;
     margin: 10px;
     padding: 5px;
+    min-height: 500px;
 }
 
-.settings_editable_types > div {
+.settings_types > div {
     display: flex;
     background: #fff;
 }
 
-.settings_editable_types > div:not(:last-child) {
+.settings_types > div:not(:last-child) {
     margin-bottom: 2px;
 }
 
-.settings_editable_types_type {
+.settings_types_head {
+    display: flex;
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+.settings_types_type {
     min-width: 200px;
+}
+
+.settings_types_cb {
+    min-width: 70px;
 }

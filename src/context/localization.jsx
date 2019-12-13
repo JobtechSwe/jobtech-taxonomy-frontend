@@ -112,7 +112,10 @@ class Localization {
                 error_add_connection_3: "Ogilltig koppling, rötter kan inte väljas som koppling",
                 horizontal_connections: "Horisontella kopplingar",
                 vertical_connections: "Vertikala kopplingar",
-                type_editable: "Editerbara typer",
+                type: "Typ",
+                types: "Typer",
+                editable: "Editerbar",
+                visible: "Synlig",
             },
             // english
             en: {

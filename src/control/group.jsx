@@ -75,6 +75,7 @@ class Group extends React.Component {
     renderChildren() {
         var s = {
             display: (this.state.expanded ? "flex" : "none"),
+            "flex-direction": "column",
         }
         return (
             <div style={s}>
