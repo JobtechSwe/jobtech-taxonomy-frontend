@@ -170,7 +170,8 @@ class Description extends React.Component {
         this.renderSpecialValue(elements, "iso-639-3-alpha-3-2007", Localization.get("name")); 
         this.renderSpecialValue(elements, "nuts-level-3-code-2013", "NUTS");  // eu region
         this.renderSpecialValue(elements, "sni-level-code-2007", "SNI"); 
-        // TODO: sun edeucation x2
+        this.renderSpecialValue(elements, "sun-education-level-code-2020", "SUN"); 
+        this.renderSpecialValue(elements, "sun-education-field-code-2020", "SUN"); 
         return (
             <div className="description_name_and_misc">
                 {elements}

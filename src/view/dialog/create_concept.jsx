@@ -233,33 +233,41 @@ class CreateConcept extends React.Component {
 
 	renderWizardStep0() {
 		var createOptionElement = (value) => {
+			var text = Localization.get("db_" + value);
+			if(value == "skill-headline") {
+				text = Localization.get("skill_headline");
+			}
 			return {
-				text: Localization.get("db_" + value),
+				text: text,
 				value: value,
 			};
 		}
 		var roots = [
-            createOptionElement("continent"),
-            createOptionElement("country"),
-            createOptionElement("driving-licence"),
-            createOptionElement("employment-duration"),
-            createOptionElement("employment-type"),
+            //createOptionElement("continent"),
+            //createOptionElement("country"),
+            //createOptionElement("driving-licence"),
+            //createOptionElement("employment-duration"),
+            //createOptionElement("employment-type"),
             createOptionElement("keyword"),
-            createOptionElement("language"),
-            createOptionElement("language-level"),
-            createOptionElement("municipality"),
+            //createOptionElement("language"),
+            //createOptionElement("language-level"),
+            //createOptionElement("municipality"),
             createOptionElement("occupation-collection"),
             createOptionElement("occupation-field"),
             createOptionElement("occupation-name"),
-            createOptionElement("region"),
+            //createOptionElement("region"),
 			createOptionElement("skill-headline"),
 			createOptionElement("skill"),
-            createOptionElement("wage-type"),
-            createOptionElement("worktime-extent"),
+            //createOptionElement("wage-type"),
+            //createOptionElement("worktime-extent"),
             createOptionElement("ssyk-level-1"),
             createOptionElement("ssyk-level-2"),
             createOptionElement("ssyk-level-3"),
             createOptionElement("ssyk-level-4"),
+            createOptionElement("sun-education-field-1"),
+            createOptionElement("sun-education-field-2"),
+            createOptionElement("sun-education-field-3"),
+            createOptionElement("sun-education-field-4"),
 		];
 		Util.sortByKey(roots, "text", true);
 		roots.splice(0, 0, {
