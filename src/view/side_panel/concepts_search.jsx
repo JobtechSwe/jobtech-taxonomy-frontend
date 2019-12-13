@@ -36,8 +36,8 @@ class ConceptsSearch extends React.Component {
         this.TYPE_SSYK_LEVEL_2 = "ssyk-level-2";
         this.TYPE_SSYK_LEVEL_3 = "ssyk-level-3";
         this.TYPE_SSYK_LEVEL_4 = "ssyk-level-4";
-        this.TYPE_SUN_EDUCATION_FIELD = "sun-ecucation-field-1 sun-ecucation-field-2 sun-ecucation-field-3 sun-ecucation-field-4";
-        this.TYPE_SUN_EDUCATION_LEVEL = "sun-ecucation-level-1 sun-ecucation-level-2 sun-ecucation-level-3";
+        this.TYPE_SUN_EDUCATION_FIELD = "sun-education-field-1 sun-education-field-2 sun-education-field-3 sun-education-field-4";
+        this.TYPE_SUN_EDUCATION_LEVEL = "sun-education-level-1 sun-education-level-2 sun-education-level-3";
         this.TYPE_WAGE_TYPE = "wage-type";
         this.TYPE_WORKTIME_EXTENT = "worktime-extent";
 
