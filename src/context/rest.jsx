@@ -1,5 +1,6 @@
 import React from 'react';
 import Constants from './constants.jsx';
+import CacheManager from './cache_manager.jsx';
 
 class Rest { 
 
@@ -148,6 +149,17 @@ class Rest {
     }
 
     getAllConceptRelations(id, relationType, onSuccess, onError) {
+        /*if(CacheManager.hasCachedRelation(id)) {
+            var item = CacheManager.getConceptRelations(id, relationType);
+            if(item) {
+                onSuccessCallback(item);
+                return;
+            }
+        }
+        var onSuccess = (data) => {
+            CacheManager.cacheRelations(id, relationType, data);
+            onSuccessCallback(data);
+        };*/
         this.get("/main/concepts?related-ids=" + id + "&relation=" + relationType, onSuccess, onError);
     }
 

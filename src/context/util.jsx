@@ -1,7 +1,7 @@
 import React from 'react';
 import Constants from './constants.jsx';
 import Rest from './rest.jsx';
-import rest from './rest.jsx';
+import CacheManager from './cache_manager.jsx';
 
 class Util {
     sortByKey(items, key, direction) {
@@ -131,7 +131,19 @@ class Util {
         }*/
     }
 
-    getConcept(id, type, onSuccess, onError) {
+    getConcept(id, type, onSuccessCallback, onError) {
+        if(CacheManager.hasCachedConcept(id)) {
+            var item = CacheManager.getConcept(id);
+            if(item) {
+                onSuccessCallback([item]);
+                return;
+            }
+        }
+        var onSuccess = (data) => {
+            CacheManager.cacheConcept(data[0]);
+            onSuccessCallback(data);
+        };
+        // fetch fresh object
         switch(type) {
             case Constants.CONCEPT_COUNTRY:
                 Rest.getConceptCountry(id, onSuccess, onError);
