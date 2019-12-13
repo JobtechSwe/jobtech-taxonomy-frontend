@@ -24,8 +24,7 @@ class CacheManager {
         if(handle == null) {
             return false;
         }
-        // NOTE: super hacky way of refreshing objects
-        //       this will be reworked
+        // NOTE: super hacky way of refreshing objects, this will be reworked
         return (new Date().getTime() - handle.time) < 1000 * 60 * 60;
     }
     

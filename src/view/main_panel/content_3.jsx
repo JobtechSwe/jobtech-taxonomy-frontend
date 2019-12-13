@@ -286,8 +286,9 @@ class Content3 extends React.Component {
         this.edges.add(d.edges);
         this.nodes.clear();
         this.nodes.add(d.nodes);
-        this.setState({data: d});
-        this.updateRelations(cpy, 0, 0);
+        this.setState({data: d}, () => {
+            this.updateRelations(cpy, 0, 0);
+        });
     }
 
     onElementSelected(event) {

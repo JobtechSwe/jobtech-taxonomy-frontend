@@ -2,7 +2,7 @@ import React from 'react';
 import Constants from './constants.jsx';
 import CacheManager from './cache_manager.jsx';
 
-class Rest { 
+class Rest {
 
     setupCallbacks(http, onSuccess, onError) {
         this.currentRequest = http;
@@ -148,7 +148,7 @@ class Rest {
         this.get("/main/concepts?related-ids=" + id + "&relation=" + relationType + "&type=" + type, onSuccess, onError);
     }
 
-    getAllConceptRelations(id, relationType, onSuccess, onError) {
+    getAllConceptRelations(id, relationType, onSuccessCallback, onError) {
         /*if(CacheManager.hasCachedRelation(id)) {
             var item = CacheManager.getConceptRelations(id, relationType);
             if(item) {
