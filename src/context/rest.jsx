@@ -148,8 +148,8 @@ class Rest {
         this.get("/main/concepts?related-ids=" + id + "&relation=" + relationType + "&type=" + type, onSuccess, onError);
     }
 
-    getAllConceptRelations(id, relationType, onSuccess, onError) {
-        /*if(CacheManager.hasCachedRelation(id)) {
+    getAllConceptRelations(id, relationType, onSuccessCallback, onError) {
+        if(CacheManager.hasCachedRelation(id)) {
             var item = CacheManager.getConceptRelations(id, relationType);
             if(item) {
                 onSuccessCallback(item);
@@ -159,7 +159,7 @@ class Rest {
         var onSuccess = (data) => {
             CacheManager.cacheRelations(id, relationType, data);
             onSuccessCallback(data);
-        };*/
+        };
         this.get("/main/concepts?related-ids=" + id + "&relation=" + relationType, onSuccess, onError);
     }
 
