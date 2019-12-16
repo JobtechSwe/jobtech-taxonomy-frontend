@@ -10,6 +10,8 @@ class CacheManager {
         this.cachedConcepts = [];
         // relation information for concepts
         this.cachedRelations = [];
+        // lists of types
+        this.cachedTypeLists = [];
         // load cache maps
         var cc = localStorage.getItem("concepts");
         if(cc) {
@@ -18,6 +20,10 @@ class CacheManager {
         var cr = localStorage.getItem("relations");
         if(cr) {
             this.cachedRelations = JSON.parse(cr);
+        }
+        var tl = localStorage.getItem("typeLists");
+        if(tl) {
+            this.cachedTypeLists = JSON.parse(tl);
         }
     }
 
@@ -69,6 +75,13 @@ class CacheManager {
         return this.isValid(handle);
     }
 
+    hasCachedTypeList(type) {
+        var handle = this.cachedTypeLists.find((x) => {
+            return x.type == type;
+        });
+        return this.isValid(handle);
+    }
+
     cacheConcept(concept) {
         var cached = this.cachedConcepts.find((x) => {
             return x.id == concept.id;
@@ -88,28 +101,45 @@ class CacheManager {
 
     cacheRelations(id, relationType, relations) {
         var cached = this.cachedRelations.find((x) => {
-            return x.id == id && x.type == relationType;
+            return x.id == id;
         });
-        var data = [];
+        var data = {};
         if(cached == null) {
             var element = {
                 id: id,
-                type: relationType,
                 time: new Date().getTime(),
             };
             this.cachedRelations.push(element);
             localStorage.setItem("relations", JSON.stringify(this.cachedRelations));
         } else {
             cached.time = new Date().getTime();
-            var previous = localStorage.getItem("relation_" + id);
+            var previous = this.getCompressedValue("relation_" + id);
             if(previous) {
-                data = JSON.parse(previous);
+                data = previous;
             }
         }
+        data[relationType] = [];
         for(var i=0; i<relations.length; ++i) {
-            data.push(relations[i]);
+            data[relationType].push(relations[i]);
         }
-        this.setCompressedValue("relation_" + id + "_" + relationType, JSON.stringify(data));
+        this.setCompressedValue("relation_" + id, JSON.stringify(data));
+    }
+
+    cacheTypeList(type, list) {
+        var cached = this.cachedTypeLists.find((x) => {
+            return x.type == type;
+        });
+        if(cached == null) {
+            var element = {
+                type: type,
+                time: new Date().getTime(),
+            };
+            this.cachedTypeLists.push(element);
+            localStorage.setItem("typeLists", JSON.stringify(this.cachedTypeLists));
+        } else {
+            cached.time = new Date().getTime();
+        }
+        this.setCompressedValue("typeList_" + type, JSON.stringify(list));
     }
 
     getConcept(id) {
@@ -117,7 +147,49 @@ class CacheManager {
     }
 
     getConceptRelations(id, relationType) {
-        return this.getCompressedValue("relation_" + id + "_" + relationType);
+        var item = this.getCompressedValue("relation_" + id);
+        if(item) {
+            return item[relationType];
+        }
+        return null;
+    }
+    
+    getTypeList(type) {
+        return this.getCompressedValue("typeList_" + type);
+    }
+
+    getCacheSize() {
+        var total = 0;
+        for(var x in localStorage) {
+            // only count our values 
+            if(localStorage.hasOwnProperty(x)) {
+                if(x.startsWith("typeList_") || 
+                   x.startsWith("concept_") || 
+                   x.startsWith("relation_") || 
+                   x.startsWith("concepts") || 
+                   x.startsWith("relations") || 
+                   x.startsWith("typeLists")) {
+                    total += (localStorage[x].length + x.length) * 2;
+                }
+            }
+        };
+        return total;
+    }
+
+    clear() {
+        for(var x in localStorage) { 
+            // only clear our values
+            if(localStorage.hasOwnProperty(x)) {
+                if(x.startsWith("typeList_") || 
+                   x.startsWith("concept_") || 
+                   x.startsWith("relation_") || 
+                   x.startsWith("concepts") || 
+                   x.startsWith("relations") || 
+                   x.startsWith("typeLists")) {
+                    localStorage.removeItem(x);
+                }
+            }
+        };
     }
 }
 

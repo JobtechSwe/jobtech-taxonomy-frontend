@@ -77,6 +77,8 @@ class Localization {
                 previous: "Föregående",
                 ignore: "Ignorera",
                 reset: "Återställ",
+                size: "Storlek",
+                clear: "Rensa",
                 settings: "Inställningar",
                 saving: "Sparar",
                 change_log: "Förändringslogg",

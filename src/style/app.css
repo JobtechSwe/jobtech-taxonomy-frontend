@@ -821,6 +821,13 @@ body {
     min-width: 70px;
 }
 
+.settings_cache_group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 10px 10px 10px;
+}
+
 .isco_color {
     background: #78b3ff;
 }

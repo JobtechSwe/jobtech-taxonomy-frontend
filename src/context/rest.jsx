@@ -80,7 +80,18 @@ class Rest {
         this.get("/main/concepts?id=" + id, onSuccess, onError);
     }
     
-    getConcepts(type, onSuccess, onError) {
+    getConcepts(type, onSuccessCallback, onError) {
+        if(CacheManager.hasCachedTypeList(type)) {
+            var item = CacheManager.getTypeList(type);
+            if(item) {
+                onSuccessCallback(item);
+                return;
+            }
+        }
+        var onSuccess = (data) => {
+            CacheManager.cacheTypeList(type, data);
+            onSuccessCallback(data);
+        };
         this.get("/main/concepts?type=" + type, onSuccess, onError);
     }
 

@@ -1,8 +1,10 @@
 import React from 'react';
 import Label from '../../control/label.jsx';
+import Button from '../../control/button.jsx';
 import Group from '../../control/group.jsx';
 import List from '../../control/list.jsx';
 import Constants from '../../context/constants.jsx';
+import CacheManager from '../../context/cache_manager.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Settings from '../../context/settings.jsx';
@@ -42,6 +44,11 @@ class Content5 extends React.Component {
         this.setState({visibleTypes: types}, () => {
             Settings.save();
         });
+    }
+
+    onClearCacheClicked() {
+        CacheManager.clear();
+        this.forceUpdate();
     }
 
     renderEditableTypes() {
@@ -93,7 +100,21 @@ class Content5 extends React.Component {
                 </List>
             </Group>
         );
-    }    
+    }
+
+    renderCache() {
+        var size = CacheManager.getCacheSize() / 1024;
+        return (
+            <Group text={"Cache"}>
+                <div className="settings_cache_group">
+                    <Label text={Localization.get("size") + ": " + size.toFixed(2) + " KB"}/>
+                    <Button 
+                        text={Localization.get("clear")}
+                        onClick={this.onClearCacheClicked.bind(this)} />
+                </div>
+            </Group>
+        );
+    }
 
     render() {
         return (
@@ -102,6 +123,7 @@ class Content5 extends React.Component {
                     css="main_content_title" 
                     text={Localization.get("settings")}/>
                 {this.renderEditableTypes()}
+                {this.renderCache()}
             </div>
         );
     }
