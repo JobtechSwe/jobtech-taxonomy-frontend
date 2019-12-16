@@ -75,6 +75,7 @@ class Content1 extends React.Component {
         if(item) {
             var isDeprecated = item.deprecated ? item.deprecated : false;
             var isEditable = Settings.isEditable(item.type);
+            var css = item.type == Constants.CONCEPT_ISCO_LEVEL_4 ? "isco_color" : null;
             // add content for item
             var infoContext = ControlUtil.createGroupContext();
             var connectionsContext = ControlUtil.createGroupContext();
@@ -84,6 +85,7 @@ class Content1 extends React.Component {
                     useLock={true && isEditable}
                     context={infoContext}
                     unlockable={!isDeprecated}
+                    css = {css}
                     key={key++}>
                     <Description 
                         item={item}
@@ -96,6 +98,7 @@ class Content1 extends React.Component {
                     useLock={true && isEditable}
                     context={connectionsContext}
                     unlockable={!isDeprecated}
+                    css = {css}
                     key={key++}>
                     <Connections 
                         item={item}
@@ -105,6 +108,7 @@ class Content1 extends React.Component {
             components.push(
                 <Group 
                     text={Localization.get("history")}
+                    css = {css}
                     key={key++}>
                     <ItemHistory item={item}/>
                 </Group>

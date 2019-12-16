@@ -820,3 +820,7 @@ body {
 .settings_types_cb {
     min-width: 70px;
 }
+
+.isco_color {
+    background: #78b3ff;
+}
