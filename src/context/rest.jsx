@@ -148,7 +148,7 @@ class Rest {
         this.get("/main/concepts?related-ids=" + id + "&relation=" + relationType + "&type=" + type, onSuccess, onError);
     }
 
-    getAllConceptRelations(id, relationType, onSuccessCallback, onError) {
+    getAllConceptRelations(id, relationType, onSuccess, onError) {
         /*if(CacheManager.hasCachedRelation(id)) {
             var item = CacheManager.getConceptRelations(id, relationType);
             if(item) {
