@@ -49,20 +49,20 @@ class Rest {
         http.send();
     }
 
-    post(func, key, onSuccess, onError) {
+    post(func, onSuccess, onError) {
         var http = new XMLHttpRequest();
         this.setupCallbacks(http, onSuccess, onError);
         http.open("POST", Constants.REST_IP + func, true);
-        http.setRequestHeader("api-key", key);
+        http.setRequestHeader("api-key", Constants.REST_API_KEY);
         http.setRequestHeader("Accept", "application/json");
         http.send();
     }
 
-    patch(func, key, onSuccess, onError) {
+    patch(func, onSuccess, onError) {
         var http = new XMLHttpRequest();
         this.setupCallbacks(http, onSuccess, onError);
         http.open("PATCH", Constants.REST_IP + func, true);
-        http.setRequestHeader("api-key", key);
+        http.setRequestHeader("api-key", Constants.REST_API_KEY);
         http.setRequestHeader("Accept", "application/json");
         http.send();
     }
@@ -78,6 +78,10 @@ class Rest {
 
     getConcept(id, onSuccess, onError) {
         this.get("/main/concepts?id=" + id, onSuccess, onError);
+    }
+
+    getConceptDayNotes(id, onSuccess, onError) {
+        this.get("/private/automatic-daynotes/concept?id=" + id, onSuccess, onError);
     }
     
     getConcepts(type, onSuccessCallback, onError) {
@@ -195,15 +199,15 @@ class Rest {
     }
 
     patchConcept(id, args, onSuccess, onError) {
-        this.patch("/private/accumulate-concept?id=" + id + args, Constants.REST_API_KEY_PRIV, onSuccess, onError);
+        this.patch("/private/accumulate-concept?id=" + id + args, onSuccess, onError);
     }
 
     postConcept(type, preferredLabel, definition, onSuccess, onError) {
-        this.post("/private/concept?type=" + type + "&definition=" + definition + "&preferred-label=" + preferredLabel, Constants.REST_API_KEY_PRIV, onSuccess, onError);
+        this.post("/private/concept?type=" + type + "&definition=" + definition + "&preferred-label=" + preferredLabel, onSuccess, onError);
     }
 
     postAddRelation(conceptId, relationId, relationType, definition, substitutability, onSuccess, onError) {
-        this.post("/private/relation?concept-1=" + conceptId + "&concept-2=" + relationId + "&relation=" + relationType + "&definition=" + definition + "&substitutability-percentage=" + substitutability, Constants.REST_API_KEY_PRIV, onSuccess, onError);
+        this.post("/private/relation?concept-1=" + conceptId + "&concept-2=" + relationId + "&relation=" + relationType + "&definition=" + definition + "&substitutability-percentage=" + substitutability, onSuccess, onError);
     }
 }
 
