@@ -64,7 +64,7 @@ class Localization {
                 "concept.external-standard/sni-level-code-2007": "SNI nivå 2007",
                 "concept.external-standard/iso-639-3-alpha-2-2007": "ISO-639-3 alpha 2",
                 "concept.external-standard/iso-639-3-alpha-3-2007": "ISO-639-3 alpha 3",
-                "concept.external-standard/sun-education-field-code-2020": "Utbildningsinriktningskod",
+                "concept.external-standard/sun-education-field-code-2020": "Utbildningsinriktning",
                 "concept.external-standard/sun-education-level-code-2020": "Utbildningsnivå",                
                 /* Actions */
                 CREATED: "Skapad",

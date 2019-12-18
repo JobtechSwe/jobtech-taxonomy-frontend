@@ -34,7 +34,7 @@ class ItemHistory extends React.Component {
             selected: null,
         }, () => {
             if(props.item) {
-                Rest.getConceptDayNotes(props.item.id, (data) => {                  
+                Rest.getConceptDayNotes(props.item.id, (data) => {
                     for(var i=0; i<data.length; ++i) {
                         var item = data[i];
                         item.date = new Date(item.timestamp);
