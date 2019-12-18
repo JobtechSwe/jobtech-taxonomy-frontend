@@ -123,6 +123,10 @@ class Rest {
         this.get("/specific/concepts/isco?type=" + type + "&offset=" + offset + "&limit=" + limit, onSuccess, onError);
     }
 
+    getConceptsIsco08(type, onSuccess, onError) {
+        this.get("/specific/concepts/isco?type=" + type, onSuccess, onError);
+    }
+
     getConceptIsco08(id, onSuccess, onError) {
         this.get("/specific/concepts/isco?id=" + id, onSuccess, onError);
     }

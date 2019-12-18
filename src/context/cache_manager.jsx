@@ -118,9 +118,17 @@ class CacheManager {
                 data = previous;
             }
         }
-        data[relationType] = [];
+        if(data[relationType] == null) {
+            data[relationType] = [];
+        }
+        // merge
         for(var i=0; i<relations.length; ++i) {
-            data[relationType].push(relations[i]);
+            var e = data[relationType].find((x) => {
+                return x.id == relations[i].id;
+            });
+            if(e == null) {
+                data[relationType].push(relations[i]);
+            }
         }
         this.setCompressedValue("relation_" + id, JSON.stringify(data));
     }
@@ -138,6 +146,10 @@ class CacheManager {
             localStorage.setItem("typeLists", JSON.stringify(this.cachedTypeLists));
         } else {
             cached.time = new Date().getTime();
+        }
+        // remove definition
+        for(var i=0; i<list.length; ++i) {
+            list[i].definition = undefined;
         }
         this.setCompressedValue("typeList_" + type, JSON.stringify(list));
     }
