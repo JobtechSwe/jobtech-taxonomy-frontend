@@ -66,7 +66,8 @@ class ItemHistory extends React.Component {
     }
 
     renderHistoryConcept(concept) {
-        var keys = Object.keys(this.state.selected.concept);
+        var keys = Object.keys(concept);
+        keys.sort((a, b) => Util.sortValue(true, Localization.get(a), Localization.get(b)));
         var items = keys.map((attName, index) => {            
             return (
                 <div 
@@ -95,6 +96,7 @@ class ItemHistory extends React.Component {
     }
 
     renderHistoryChanges(changes) {
+        changes.sort((a, b) => Util.sortValue(true, Localization.get(a.attribute), Localization.get(b.attribute)));
         var items = changes.map((item, index) => {
             return (
                 <div 
