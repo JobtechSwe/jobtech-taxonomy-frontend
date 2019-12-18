@@ -154,6 +154,23 @@ class CacheManager {
         return null;
     }
     
+    getConceptRelationsByType(id, relationType, type) {
+        var item = this.getCompressedValue("relation_" + id);
+        if(item) {
+            var list = item[relationType];
+            if(list) {
+                var result = [];
+                for(var i=0; i<list.length; ++i) {
+                    if(list[i].type == type) {
+                        result.push(list[i]);
+                    }
+                }
+                return result;
+            }
+        }
+        return null;
+    }
+    
     getTypeList(type) {
         return this.getCompressedValue("typeList_" + type);
     }

@@ -33,25 +33,27 @@ class Description extends React.Component {
         if(props.groupContext) {
             props.groupContext.onLockChanged = this.onGroupLockedChanged.bind(this);
         }
-        if(props.item["ssyk-code-2012"] && props.item["ssyk-code-2012"].length > 3) {
-            Rest.getConceptRelations(props.item.id, Constants.CONCEPT_ISCO_LEVEL_4, Constants.RELATION_RELATED, (data) => {
-                for(var i=0; i<data.length; ++i) {
-                    Util.getConcept(data[i].id, Constants.CONCEPT_ISCO_LEVEL_4, (data) => {
-                        var code = data[0]["isco-code-08"];
-                        this.state.iscoCodes.push(code);
-                        this.state.iscoCodes.sort();
-                        this.setState({iscoCodes: this.state.iscoCodes});
-                    }, (status) => {
-
-                    });
-                }
-            }, (status) => {
-
-            });
-        }
         this.setState({
             preferredLabel: Util.getObjectValue(props.item, "preferredLabel", ""),
             definition: Util.getObjectValue(props.item, "definition", ""),
+            iscoCodes: [],
+        }, () => {
+            if(props.item["ssyk-code-2012"] && props.item["ssyk-code-2012"].length > 3) {
+                Rest.getConceptRelations(props.item.id, Constants.CONCEPT_ISCO_LEVEL_4, Constants.RELATION_RELATED, (data) => {
+                    for(var i=0; i<data.length; ++i) {
+                        Util.getConcept(data[i].id, Constants.CONCEPT_ISCO_LEVEL_4, (data) => {
+                            var code = data[0]["isco-code-08"];
+                            this.state.iscoCodes.push(code);
+                            this.state.iscoCodes.sort();
+                            this.setState({iscoCodes: this.state.iscoCodes});
+                        }, (status) => {
+                            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta isco concept");
+                        });
+                    }
+                }, (status) => {
+                    App.showError(Util.getHttpMessage(status) + " : misslyckades hämta isco relationer");
+                });
+            }
         });
     }
 

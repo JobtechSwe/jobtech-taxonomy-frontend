@@ -159,7 +159,18 @@ class Rest {
         this.get("/specific/concepts/sun-education-level?id=" + id, onSuccess, onError);
     }
 
-    getConceptRelations(id, type, relationType, onSuccess, onError) {
+    getConceptRelations(id, type, relationType, onSuccessCallback, onError) {
+        if(CacheManager.hasCachedRelation(id)) {
+            var item = CacheManager.getConceptRelationsByType(id, relationType, type);
+            if(item) {
+                onSuccessCallback(item);
+                return;
+            }
+        }
+        var onSuccess = (data) => {
+            CacheManager.cacheRelations(id, relationType, data);
+            onSuccessCallback(data);
+        };
         this.get("/main/concepts?related-ids=" + id + "&relation=" + relationType + "&type=" + type, onSuccess, onError);
     }
 
