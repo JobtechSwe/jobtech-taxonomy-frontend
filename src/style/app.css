@@ -516,6 +516,7 @@ body {
     color: rgb(84, 84, 84);
     font: 400 13.3333px Arial;
     max-height: 45px;
+    overflow-x: hidden;
     overflow-y: auto;
 }
 

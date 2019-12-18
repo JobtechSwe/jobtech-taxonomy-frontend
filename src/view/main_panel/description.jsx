@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '../../control/button.jsx';
 import List from '../../control/list.jsx';
 import Label from '../../control/label.jsx';
+import Loader from '../../control/loader.jsx';
 import Constants from '../../context/constants.jsx';
 import Util from '../../context/util.jsx';
 import Rest from '../../context/rest.jsx';
@@ -167,19 +168,24 @@ class Description extends React.Component {
     }
 
     renderIscoCodes() {
-        var codes = this.state.iscoCodes.map((element, i) => {
+        if(this.props.item["ssyk-code-2012"] && this.props.item["ssyk-code-2012"].length > 3) {
+            var codes = this.state.iscoCodes.map((element, i) => {
+                return (
+                    <div key={i}>{element}</div>
+                );
+            });
+            if(codes.length == 0) {
+                codes = <Loader />;
+            }
             return (
-                <div key={i}>{element}</div>
-            );
-        });
-        return (
-            <div className="description_isco_container description_special_value font">
-                <Label text="ISCO"/>
-                <div className="description_isco_values">
-                    {codes}
+                <div className="description_isco_container description_special_value font">
+                    <Label text="ISCO"/>
+                    <div className="description_isco_values">
+                        {codes}
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
     }
 
     renderNameAndMisc() {
