@@ -17,6 +17,7 @@ class Description extends React.Component {
             isLocked: true,
             preferredLabel: Util.getObjectValue(props.item, "preferredLabel", ""),
             definition: Util.getObjectValue(props.item, "definition", ""),
+            iscoCodes: [],
         };
     }
 
@@ -31,6 +32,22 @@ class Description extends React.Component {
     init(props) {
         if(props.groupContext) {
             props.groupContext.onLockChanged = this.onGroupLockedChanged.bind(this);
+        }
+        if(props.item["ssyk-code-2012"] && props.item["ssyk-code-2012"].length > 3) {
+            Rest.getConceptRelations(props.item.id, Constants.CONCEPT_ISCO_LEVEL_4, Constants.RELATION_RELATED, (data) => {
+                for(var i=0; i<data.length; ++i) {
+                    Util.getConcept(data[i].id, Constants.CONCEPT_ISCO_LEVEL_4, (data) => {
+                        var code = data[0]["isco-code-08"];
+                        this.state.iscoCodes.push(code);
+                        this.state.iscoCodes.sort();
+                        this.setState({iscoCodes: this.state.iscoCodes});
+                    }, (status) => {
+
+                    });
+                }
+            }, (status) => {
+
+            });
         }
         this.setState({
             preferredLabel: Util.getObjectValue(props.item, "preferredLabel", ""),
@@ -147,6 +164,22 @@ class Description extends React.Component {
         } 
     }
 
+    renderIscoCodes() {
+        var codes = this.state.iscoCodes.map((element, i) => {
+            return (
+                <div key={i}>{element}</div>
+            );
+        });
+        return (
+            <div className="description_isco_container description_special_value font">
+                <Label text="ISCO"/>
+                <div className="description_isco_values">
+                    {codes}
+                </div>
+            </div>
+        );
+    }
+
     renderNameAndMisc() {
         var elements = [];
         elements.push(
@@ -175,6 +208,7 @@ class Description extends React.Component {
         return (
             <div className="description_name_and_misc">
                 {elements}
+                {this.renderIscoCodes()}
             </div>
         );
     }

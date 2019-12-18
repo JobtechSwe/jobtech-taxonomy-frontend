@@ -504,6 +504,21 @@ body {
     margin-left: 5px;
 }
 
+.description_isco_container {
+    display: flex;
+}
+
+.description_isco_values {
+    background: #ebebe4;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    padding: 4px 2px 2px 5px;
+    color: rgb(84, 84, 84);
+    font: 400 13.3333px Arial;
+    max-height: 45px;
+    overflow-y: auto;
+}
+
 .connections {    
     display: flex;
     flex-direction: column;
