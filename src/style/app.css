@@ -596,6 +596,51 @@ body {
     align-self: flex-end;
 }
 
+.item_history_dialog_item {
+    display: flex;
+    margin: 2px;
+    background: #fff;
+}
+
+.item_history_dialog_item > div:not(:first-child) {
+    padding-left: 2px;
+}
+
+.item_history_dialog_item > div:first-child {
+    min-width: 150px;
+}
+
+.item_history_dialog_item > div:nth-child(2) {
+    display: flex;
+    flex-grow: 1;
+}
+
+.item_history_dialog_item > div:nth-child(2) > div {
+    min-width: 50%;
+    margin-right: 2px;
+}
+
+.item_history_dialog_head {
+    display: flex;
+    font-weight: bold;
+    padding-left: 2px;    
+}
+
+.item_history_dialog_head > div:nth-child(1) {
+    min-width: 150px;
+    margin: 2px;
+}
+
+.item_history_dialog_head > div:nth-child(2) {
+    display: flex;
+    margin: 2px;
+    flex-grow: 1;
+}
+
+.item_history_dialog_head > div:nth-child(2) > div {
+    min-width: 50%;
+}
+
 .version_list {
     display: flex;
     flex-direction: column;

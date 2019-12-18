@@ -4,6 +4,9 @@ import Button from '../../control/button.jsx';
 import Constants from '../../context/constants.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Localization from '../../context/localization.jsx';
+import App from '../../context/app.jsx';
+import Rest from '../../context/rest.jsx';
+import Util from '../../context/util.jsx';
 
 class ItemHistory extends React.Component { 
 
@@ -17,25 +20,32 @@ class ItemHistory extends React.Component {
     }
 
     componentDidMount() {
-        this.createData();
+        this.init(this.props);
     }
 
     UNSAFE_componentWillReceiveProps(props) {
         EventDispatcher.fire(this.LIST_EVENT_ID);
-        this.createData();
+        this.init(props);
     }
 
-    createData() {
-        var testData = [];
-        for(var i=Math.random()*9+1; i>=0; --i) {
-            testData.push({
-                date: new Date("2019-10-10T10:58:25.339Z") - Math.random()*1000*60*60*24*30,
-                type: "Updated",
-                author: "John Doe",
-                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            });
-        }
-        this.setState({data: testData});
+    init(props) {
+        this.setState({
+            data: [],
+            selected: null,
+        }, () => {
+            if(props.item) {
+                Rest.getConceptDayNotes(props.item.id, (data) => {                  
+                    for(var i=0; i<data.length; ++i) {
+                        var item = data[i];
+                        item.date = new Date(item.timestamp);
+                        item.event = item["event-type"];
+                    }                
+                    this.setState({data: Util.sortByKey(data, "date", false)});
+                }, (status) => {
+                    App.showError(Util.getHttpMessage(status) + " : Hämta daganteckningar misslyckades");
+                });
+            }
+        });
     }
 
     onCloseDialogClicked() {
@@ -55,12 +65,75 @@ class ItemHistory extends React.Component {
         this.setState({selected: item});
     }
 
-    renderHistoryDialog() {
+    renderHistoryConcept(concept) {
+        var keys = Object.keys(this.state.selected.concept);
+        var items = keys.map((attName, index) => {            
+            return (
+                <div 
+                    key={index}
+                    className="item_history_dialog_item">
+                    <div>{Localization.get(attName)}</div>
+                    <div>
+                        <div>{concept[attName]}</div>
+                    </div>
+                </div>
+            );
+        });
+        return (
+            <div>
+                <div className="item_history_dialog_head">
+                    <div>Attribut</div>
+                    <div>
+                        <div>Värde</div>
+                    </div>
+                </div>
+                <List>
+                    {items}
+                </List>
+            </div>
+        );
+    }
+
+    renderHistoryChanges(changes) {
+        var items = changes.map((item, index) => {
+            return (
+                <div 
+                    key={index}
+                    className="item_history_dialog_item">
+                    <div>{Localization.get(item.attribute)}</div>
+                    <div>
+                        <div>{item["new-value"]}</div>
+                        <div>{item["old-value"]}</div>
+                    </div>
+                </div>
+            );
+        });
+        return (
+            <div>
+                <div className="item_history_dialog_head">
+                    <div>Attribut</div>
+                    <div>
+                        <div>Nytt värde</div>
+                        <div>Gammalt värde</div>
+                    </div>
+                </div>
+                <List>
+                    {items}
+                </List>
+            </div>
+        );
+    }
+
+    renderHistoryDialog() {        
+        var info = null;
+        if(this.state.selected.concept) {
+            info = this.renderHistoryConcept(this.state.selected.concept);        
+        } else if(this.state.selected.changes) {
+            info = this.renderHistoryChanges(this.state.selected.changes);
+        }
         return(
             <div className="item_history_dialog">                
-                <div>
-                    {this.state.selected.text}
-                </div>
+                {info}
                 <div>
                     <Button 
                         text={Localization.get("close")}
@@ -77,7 +150,7 @@ class ItemHistory extends React.Component {
                     {new Date(item.date).toLocaleString()}
                 </div>
                 <div>
-                    {item.type}
+                    {Localization.get(item.event)}
                 </div>
                 <div>
                     {item.author}
