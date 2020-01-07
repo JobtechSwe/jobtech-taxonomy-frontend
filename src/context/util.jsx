@@ -131,8 +131,8 @@ class Util {
         }*/
     }
 
-    getConcept(id, type, onSuccessCallback, onError) {
-        if(CacheManager.hasCachedConcept(id)) {
+    getConcept(id, type, onSuccess, onError) {
+        /*if(CacheManager.hasCachedConcept(id)) {
             var item = CacheManager.getConcept(id);
             if(item) {
                 onSuccessCallback([item]);
@@ -142,7 +142,7 @@ class Util {
         var onSuccess = (data) => {
             CacheManager.cacheConcept(data[0]);
             onSuccessCallback(data);
-        };
+        };*/
         // fetch fresh object
         switch(type) {
             case Constants.CONCEPT_COUNTRY:
