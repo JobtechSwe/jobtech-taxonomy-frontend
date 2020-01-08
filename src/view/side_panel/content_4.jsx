@@ -176,16 +176,16 @@ class Content4 extends React.Component {
                     />
                 </div>
                 <div className="sub_panel">
-                    <div>
-                        <Label text={Localization.get("from")}/>
+                    <div className="side_content_4_date_row">
+                        <Label text={Localization.get("from") + ":"}/>
                         <DatePicker 
                             selected={this.state.fromDate} 
                             onChange={this.setFromDate.bind(this)}
                             locale={Localization.get("locale")}
                             dateFormat="yyyy-MM-dd"/>
                     </div>
-                    <div>
-                        <Label text={Localization.get("to")}/>
+                    <div className="side_content_4_date_row">
+                        <Label text={Localization.get("to") + ":"}/>
                         <DatePicker 
                             selected={this.state.toDate} 
                             onChange={this.setToDate.bind(this)}

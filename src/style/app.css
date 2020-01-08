@@ -293,6 +293,15 @@ body {
     height: 100%;
 }
 
+.side_content_4_date_row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.side_content_4_date_row input {
+    border-radius: 5px;
+}
+
 .side_content_5 {
     display: flex;
     flex-direction: column;
