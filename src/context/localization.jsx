@@ -87,7 +87,7 @@ class Localization {
                 to: "Till",
                 add: "Lägg till",
                 remove: "Ta bort",
-                new_value: "Skapa nytt värde",
+                new_value: "Nytt värde",
                 save: "Spara",
                 abort: "Avbryt",
                 yes: "Ja",
