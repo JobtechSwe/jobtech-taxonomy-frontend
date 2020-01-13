@@ -278,7 +278,7 @@ class CreateConcept extends React.Component {
 			<div>
 				<Label 
 					css="new_concept_wizard_step_headline"
-					text="Välj vilken typ av värde som skapas"/>
+					text="Välj vilken typ av begrepp som skapas"/>
 				<select
 					className="rounded"
 					value={this.state.type}
@@ -306,7 +306,7 @@ class CreateConcept extends React.Component {
 			<div>
 				<Label 
 					css="new_concept_wizard_step_headline"
-					text="Välj vart det nya värdet ska hamna"/>
+					text="Välj vart det nya begreppet ska hamna"/>
 				<TreeView 
                     css="add_connection_tree"
                     context={this.queryTreeView}>
@@ -326,7 +326,7 @@ class CreateConcept extends React.Component {
 			<div>
 				<Label 
 					css="new_concept_wizard_step_headline"
-					text="Ange det nya värdets namn och beskrivning"/>
+					text="Ange det nya begreppets namn och beskrivning"/>
 				<Label text={Localization.get("name")}/>
 				<input 
 					type="text" 
@@ -353,7 +353,7 @@ class CreateConcept extends React.Component {
 			<div>
 				<Label 
 					css="new_concept_wizard_step_headline"
-					text="Ange relations typ och antekning för kopplingen till det nya värdet"/>
+					text="Ange relation och skapa anteckning till det nya begreppet"/>
 				<div className="add_connection_row">
                     <Label text={Localization.get("relation_type") + ":"}/>
                     {this.renderRelationTypeDropdown()}

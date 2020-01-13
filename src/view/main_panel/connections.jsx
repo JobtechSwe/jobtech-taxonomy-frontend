@@ -192,7 +192,7 @@ class Connections extends React.Component {
 
     onCreateValueClicked() {
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
-            title: Localization.get("new_value"),
+            title: Localization.get("new_value") + " " + Localization.getLower("to") + " " + this.props.item.preferredLabel,
             content: <CreateConcept 
                         callback={this.onConnectionCreated.bind(this)}
                         conceptId={this.props.item.id}/>
@@ -321,13 +321,13 @@ class Connections extends React.Component {
                         text={Localization.get("visit")} 
                         onClick={this.onVisitClicked.bind(this)}/>
                     <Button 
-                        isEnabled={!this.state.isLocked}
-                        text={Localization.get("add")}
-                        onClick={this.onAddConnectionClicked.bind(this)}/>
-                    <Button 
                         isEnabled={!this.state.isLocked && this.state.hasSelection}
                         text={Localization.get("remove")}
                         onClick={this.onRemoveConnectionClicked.bind(this)}/>
+                    <Button 
+                        isEnabled={!this.state.isLocked}
+                        text={Localization.get("add_connection")}
+                        onClick={this.onAddConnectionClicked.bind(this)}/>
                     <Button 
                         isEnabled={!this.state.isLocked}
                         text={Localization.get("new_value")}

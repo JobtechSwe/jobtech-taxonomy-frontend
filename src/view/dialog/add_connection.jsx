@@ -257,7 +257,7 @@ class AddConnection extends React.Component {
                     <div className="dialog_content_buttons">
                         <Button 
                             onClick={this.onAddClicked.bind(this)}
-                            text={Localization.get("add")}/>
+                            text={Localization.get("create")}/>
                         <Button 
                             onClick={() => {
                                 Rest.abort();
