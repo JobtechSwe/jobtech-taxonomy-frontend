@@ -29,6 +29,7 @@ class TreeViewItem extends React.Component {
         pointer.setShowButton = this.setShowButton.bind(this);
         pointer.onDeselected = this.onDeselected.bind(this);
         pointer.onSelected = this.onSelected.bind(this);
+        pointer.findChild = this.findChild.bind(this);
         // update state with current values
         this.setState({
             text: pointer.text,
@@ -99,6 +100,22 @@ class TreeViewItem extends React.Component {
             children: children,
             expanded: false,
         });
+    }
+    
+    findChild(predicate) {
+        for(var i=0; i<this.state.children.length; ++i) {
+            var child = this.state.children[i];
+            if(predicate(child)) {
+                return child;
+            }
+            if(child.findChild != null) {
+                var result = child.findChild(predicate);
+                if(result) {
+                    return result;
+                }
+            }
+        }
+        return null;
     }
 
     sortChildren(method) {
