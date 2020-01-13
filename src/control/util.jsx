@@ -47,10 +47,13 @@ class Util {
         context.roots.push(item);
     }
 
-    __treViewRemoveRoot(context, item) {
+    __treeViewRemoveRoot(context, item) {
         root.setSelected(false);
         var index = context.roots.indexOf(item);
         context.roots.splice(index, 1);
+    }
+
+    __treeViewInvalidate(context) {
     }
 
     createTreeView() {
@@ -77,7 +80,8 @@ class Util {
         context.setSelected = this.__treeViewSetSelected.bind(this, context);
         context.getSelected = this.__treeViewGetSelected.bind(this, context);
         context.addRoot = this.__treeViewAddRoot.bind(this, context);
-        context.removeRoot = this.__treViewRemoveRoot.bind(this, context);
+        context.removeRoot = this.__treeViewRemoveRoot.bind(this, context);
+        context.invalidate = this.__treeViewInvalidate.bind(this, context);
         return context;
     }
 

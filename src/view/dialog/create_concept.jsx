@@ -96,32 +96,32 @@ class CreateConcept extends React.Component {
 
 	onNextClicked() {
 		var nextStep = this.state.step + 1;
-		if(this.state.step == 0) {
-			if(this.state.type != "skill") {
-				nextStep++;
-			} else {
-				Rest.getConcepts("skill-headline", (data) => {
-					this.queryTreeView.roots = [];
-					this.queryTreeView.shouldUpdateState = false;
-					for(var i=0; i<data.length; ++i) {
-						var node = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
-						node.setText(data[i].preferredLabel);
-						this.queryTreeView.addRoot(node);
-					}
-					this.queryTreeView.shouldUpdateState = true;
-					Util.sortByKey(this.queryTreeView.roots, "text", true);
-					this.queryTreeView.invalidate();
-					this.setState({isLoading: false});
-				}, () => {
-
-				});
-			}
+		if(this.state.step == 0 && this.state.type != "skill") {
+			nextStep++;
 		}
 		this.setState({
 			step: nextStep,
 			isLoading: nextStep == this.WIZARD_STEP_DESTINATION,
 			isNextEnabled: nextStep == this.WIZARD_STEP_NOTE,
-		});
+		}, () => {
+            if(this.state.step == 1) {
+                Rest.getConcepts("skill-headline", (data) => {
+                    this.queryTreeView.roots = [];
+                    this.queryTreeView.shouldUpdateState = false;
+                    for(var i=0; i<data.length; ++i) {
+                        var node = ControlUtil.createTreeViewItem(this.queryTreeView, data[i]);
+                        node.setText(data[i].preferredLabel);
+                        this.queryTreeView.addRoot(node);
+                    }
+                    this.queryTreeView.shouldUpdateState = true;
+                    Util.sortByKey(this.queryTreeView.roots, "text", true);
+                    this.queryTreeView.invalidate();
+                    this.setState({isLoading: false});
+                }, () => {
+
+                });
+            }
+        });
 	}
 	
 	onBackClicked() {
