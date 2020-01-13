@@ -206,7 +206,7 @@ class Rest {
     }
 
     deleteConcept(id, onSuccess, onError) {
-        this.get("/private/delete-concept", id, onSuccess, onError);
+        this.delete("/private/delete-concept?id=" + id, onSuccess, onError);
     }
 
     getGraph(relationType, sourceType, targetType, onSuccess, onError) {
