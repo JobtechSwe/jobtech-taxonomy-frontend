@@ -266,6 +266,18 @@ class ConceptsSearch extends React.Component {
         this.queryTreeView.invalidate();
     }
 
+    onFetchComplete() {
+        if(this.preSelectId) {
+            var item = this.queryTreeView.findChild((item) => {
+                return item.data.id == this.preSelectId;
+            });
+            if(item) {
+                this.queryTreeView.setSelected(item, true);
+            }
+        }
+        this.preSelectId = null;
+    }
+
     onFetchResult(data, from, count) {
         this.state.data.push(...data);
         this.setData(data);
@@ -275,6 +287,7 @@ class ConceptsSearch extends React.Component {
         if(data.length == count) {
             this.fetchRecursive(from + count, count);
         } else {
+            this.onFetchComplete();
             this.setState({loadingData: false});
         }
     }
@@ -414,10 +427,15 @@ class ConceptsSearch extends React.Component {
     }
 
     onMainItemSelected(item) {
-        // TODO: check if item is in tree and select item
-        var selected = this.queryTreeView.getSelected();
-        if(selected) {
-            this.queryTreeView.setSelected(selected, false);
+        if(item && item.id) {
+            this.searchReference.value = "";
+            this.expandedItem = null;
+            this.preSelectId = item.id;
+            this.setState({
+                queryType: item.type,
+            }, () => {
+                this.search();
+            });
         }
     }
 

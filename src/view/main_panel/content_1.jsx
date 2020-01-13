@@ -24,7 +24,6 @@ class Content1 extends React.Component {
             components: [],
         };
         this.boundSideItemSelected = this.onSideItemSelected.bind(this);
-        this.boundMainItemSelected = this.onMainItemSelected.bind(this);
         this.boundShowSave = this.onShowSave.bind(this);
         this.boundHideSave = this.onHideSave.bind(this);
         this.boundHideSavePanel = this.onHideSavePanel.bind(this);
@@ -32,7 +31,6 @@ class Content1 extends React.Component {
 
     componentDidMount() {
         EventDispatcher.add(this.boundSideItemSelected, Constants.EVENT_SIDEPANEL_ITEM_SELECTED);
-        EventDispatcher.add(this.boundMainItemSelected, Constants.EVENT_MAINPANEL_ITEM_SELECTED);
         EventDispatcher.add(this.boundShowSave, Constants.EVENT_SHOW_SAVE_BUTTON);
         EventDispatcher.add(this.boundHideSave, Constants.EVENT_HIDE_SAVE_BUTTON);
         EventDispatcher.add(this.boundHideSavePanel, Constants.EVENT_HIDE_SAVE_PANEL);
@@ -120,11 +118,7 @@ class Content1 extends React.Component {
             components: components,
         });
     }
-
-    onMainItemSelected(item) {
-        this.onSideItemSelected(item);
-    }
-
+    
     renderTitle() {
         var item = this.state.item;
         if(item == null) {
