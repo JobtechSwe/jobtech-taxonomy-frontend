@@ -77,7 +77,8 @@ class Rest {
     }
 
     getConcept(id, onSuccess, onError) {
-        this.get("/main/concepts?id=" + id, onSuccess, onError);
+        //this.get("/main/concepts?id=" + id, onSuccess, onError);
+        this.get("/private/concepts?id=" + id, onSuccess, onError);
     }
 
     getConceptDayNotes(id, onSuccess, onError) {
@@ -96,7 +97,8 @@ class Rest {
             CacheManager.cacheTypeList(type, data);
             onSuccessCallback(data);
         };
-        this.get("/main/concepts?type=" + type, onSuccess, onError);
+        //this.get("/main/concepts?type=" + type, onSuccess, onError);
+        this.get("/private/concepts?type=" + type, onSuccess, onError);
     }
 
     getConceptsRange(type, offset, limit, onSuccess, onError) {
@@ -171,7 +173,7 @@ class Rest {
             CacheManager.cacheRelations(id, relationType, data);
             onSuccessCallback(data);
         };
-        this.get("/main/concepts?related-ids=" + id + "&relation=" + relationType + "&type=" + type, onSuccess, onError);
+        this.get("/private/concepts?related-ids=" + id + "&relation=" + relationType + "&type=" + type, onSuccess, onError);
     }
 
     getAllConceptRelations(id, relationType, onSuccessCallback, onError) {
@@ -186,7 +188,7 @@ class Rest {
             CacheManager.cacheRelations(id, relationType, data);
             onSuccessCallback(data);
         };
-        this.get("/main/concepts?related-ids=" + id + "&relation=" + relationType, onSuccess, onError);
+        this.get("/private/concepts?related-ids=" + id + "&relation=" + relationType, onSuccess, onError);
     }
 
     searchConcepts(query, onSuccess, onError) {

@@ -39,7 +39,6 @@ class Content1 extends React.Component {
 
     componentWillUnmount() {
         EventDispatcher.remove(this.boundSideItemSelected);
-        EventDispatcher.remove(this.boundMainItemSelected);
         EventDispatcher.remove(this.boundShowSave);
         EventDispatcher.remove(this.boundHideSave);
         EventDispatcher.remove(this.boundHideSavePanel);

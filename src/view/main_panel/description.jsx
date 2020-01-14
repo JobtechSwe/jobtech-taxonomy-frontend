@@ -120,7 +120,7 @@ class Description extends React.Component {
         Rest.deleteConcept(this.props.item.id, () => {
             this.props.item.deprecated = true;
             // reselect the item, so the gui is refreshed
-            EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.props.item);
+            EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, this.props.item);
             EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
         }, () => {
             App.showError(Util.getHttpMessage(status) + " : Avaktualisering misslyckades");
