@@ -136,15 +136,6 @@ class ConceptsSearch extends React.Component {
         return options;
     }
 
-    getItemFormat(data) {
-        return (
-            <div className="ssyk_item">
-                <div>{data.ssyk}</div>
-                <div>{data.preferredLabel}</div>
-            </div>
-        );
-    }
-
     buildTree(data) {
         this.queryTreeView.clear();
         var roots = [];
@@ -161,7 +152,7 @@ class ConceptsSearch extends React.Component {
             }
             var child = ControlUtil.createTreeViewItem(this.queryTreeView, element);
             child.setShowButton(false);
-            child.setText(data[i].ssyk ? this.getItemFormat(data[i]) : element.preferredLabel);
+            child.setText(element.preferredLabel);
             root.addChild(child);
         }
         for(var i=0; i<roots.length; ++i) {
@@ -259,7 +250,7 @@ class ConceptsSearch extends React.Component {
             var element = data[i];
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, element);
             item.setShowButton(false);
-            item.setText(element.ssyk ? this.getItemFormat(element) : element.preferredLabel);
+            item.setText(element.preferredLabel);
             this.queryTreeView.addRoot(item);
         }
         this.queryTreeView.shouldUpdateState = true;
@@ -278,20 +269,6 @@ class ConceptsSearch extends React.Component {
         this.preSelectId = null;
     }
 
-    onFetchResult(data, from, count) {
-        this.state.data.push(...data);
-        this.setData(data);
-        this.sortData(this.state.data);
-        this.queryTreeView.clear();
-        this.populateTree(this.state.data);
-        if(data.length == count) {
-            this.fetchRecursive(from + count, count);
-        } else {
-            this.onFetchComplete();
-            this.setState({loadingData: false});
-        }
-    }
-
     fetchSkills() {
         Rest.getGraph(Constants.RELATION_NARROWER, Constants.CONCEPT_SKILL_HEADLINE, Constants.CONCEPT_SKILL, (data) => {            
             this.state.data = data.graph;
@@ -303,51 +280,22 @@ class ConceptsSearch extends React.Component {
         });
     }
 
-    fetchRecursive(from, count) {
-        if(this.state.queryType == this.TYPE_SSYK_LEVEL_1 || 
-            this.state.queryType == this.TYPE_SSYK_LEVEL_2 ||
-            this.state.queryType == this.TYPE_SSYK_LEVEL_3 ||
-            this.state.queryType == this.TYPE_SSYK_LEVEL_4) {
-            Rest.getConceptsSsykRange(this.state.queryType, from, count, (data) => {
-                this.onFetchResult(data, from, count);
-            }, (status) => {
-                App.showError(Util.getHttpMessage(status) + " : misslyckades hämta ssyk concept");
-            });
-        } else if(this.state.queryType == this.TYPE_ISCO_LEVEL_4) {
-            Rest.getConceptsIsco08Range(this.state.queryType, from, count, (data) => {
-                this.onFetchResult(data, from, count);
-            }, (status) => {
-                App.showError(Util.getHttpMessage(status) + " : misslyckades hämta isco08 concept");
-            });
-        } else {
-            Rest.getConceptsRange(this.state.queryType, from, count, (data) => {
-                this.onFetchResult(data, from, count);
-            }, (status) => {
-                App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
-            });
-        }
-    }
-
-    setData(data) {
-        if(data.length <= 0) {
-            return;
-        }
-        for(var i=0; i<data.length; ++i) {
-            var item = data[i];
-            /*if(item["ssyk-code-2012"]) {
-                item.ssyk = item["ssyk-code-2012"];               
-            }*/           
-        }
+    fetch() {
+        Rest.getConcepts(this.state.queryType, (data) => {
+            this.state.data.push(...data);
+            this.sortData(this.state.data);
+            this.queryTreeView.clear();
+            this.populateTree(this.state.data);
+            this.onFetchComplete();
+            this.setState({loadingData: false});
+            //console.log("load time: " + (new Date().getTime() - this.loadStartTime) + " ms");
+        }, (status) => {
+            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
+        });
     }
 
     sortData(data) {
         data.sort((a, b) => {
-            if(a.ssyk) {
-                if(a.ssyk < b.ssyk) { 
-                    return -1; 
-                }
-                return a.ssyk > b.ssyk ? 1 : 0;
-            }
             if(a.preferredLabel < b.preferredLabel) { 
                 return -1; 
             }
@@ -364,7 +312,6 @@ class ConceptsSearch extends React.Component {
                 this.setState({loadingData: true});
                 Rest.searchConcepts(query, (data) => {
                     this.state.data = data;
-                    this.setData(data);
                     this.sortData(data);
                     this.buildTree(data);
                     this.setState({loadingData: false});
@@ -377,7 +324,8 @@ class ConceptsSearch extends React.Component {
             if(this.state.queryType == this.TYPE_SKILL) {
                 this.fetchSkills();
             } else {
-                this.fetchRecursive(0, 400);
+                //this.loadStartTime = new Date().getTime();
+                this.fetch();
             }
         }
     }
