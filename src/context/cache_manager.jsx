@@ -48,7 +48,12 @@ class CacheManager {
             v = v.split("_pl_").join("\"preferredLabel\"");
             return JSON.parse(v);
         } catch(e) {
-            return JSON.parse(item);
+            console.log("----------------------");
+            console.log("Quickfix: clear 'local storage' in browser");
+            console.log("CacheManager: ERROR");
+            console.log(e);
+            console.log("Stored item: ");
+            console.log(item);
         }
     }
 
