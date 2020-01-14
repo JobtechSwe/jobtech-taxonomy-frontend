@@ -151,9 +151,6 @@ class Util {
             case Constants.CONCEPT_DRIVING_LICENCE:
                 Rest.getConceptDrivingLicence(id, onSuccess, onError);
                 break;
-            case Constants.CONCEPT_EMPLOYMENT_DURATION:
-                Rest.getConceptEmploymentDuration(id, onSuccess, onError);
-                break;
             case Constants.CONCEPT_ISCO_LEVEL_4:                
                 Rest.getConceptIsco08(id, onSuccess, onError);
                 break;
