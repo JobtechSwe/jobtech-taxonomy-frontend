@@ -473,6 +473,63 @@ body {
     background: #c00;
 }
 
+.deprecated {    
+    width: 100%;
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    padding: 10px;
+    padding-top: 0px;
+}
+
+.deprecated > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.deprecated_info_row {
+    display: flex;
+    flex-direction: column;
+}
+
+.deprecated_info_row > div:first-child {
+    font-weight: bold;
+}
+
+.deprecated_reference {
+    display: flex;
+    justify-content: space-between;
+}
+
+.deprecated_reference > div:last-child {
+    display: flex;
+}
+
+.deprecated_reference_dialog {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 250px;
+}
+
+.deprecated_reference_list {
+    min-width: 450px;
+    max-height: 450px;
+}
+
+.deprecated_reference_list > div {
+    cursor: pointer;
+}
+
+.deprecated_reference_list > div:hover {
+    background: #fff;
+}
+
+.deprecated_reference_selected {
+    background: #386479 !important;
+    color: #fff;
+}
+
 .description {    
     width: 100%;
     display: flex;

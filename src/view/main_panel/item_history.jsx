@@ -35,11 +35,12 @@ class ItemHistory extends React.Component {
         }, () => {
             if(props.item) {
                 Rest.getConceptDayNotes(props.item.id, (data) => {
+                    data = data.filter(Boolean);
                     for(var i=0; i<data.length; ++i) {
                         var item = data[i];
                         item.date = new Date(item.timestamp);
                         item.event = item["event-type"];
-                    }                
+                    }
                     this.setState({data: Util.sortByKey(data, "date", false)});
                 }, (status) => {
                     App.showError(Util.getHttpMessage(status) + " : Hämta daganteckningar misslyckades");

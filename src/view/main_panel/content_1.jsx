@@ -10,6 +10,7 @@ import EventDispatcher from '../../context/event_dispatcher.jsx';
 import App from '../../context/app.jsx';
 import SavePanel from './save_panel.jsx';
 import Description from './description.jsx';
+import Deprecated from './deprecated.jsx';
 import Connections from './connections.jsx';
 import ItemHistory from './item_history.jsx';
 import Save from '../dialog/save.jsx';
@@ -74,15 +75,30 @@ class Content1 extends React.Component {
             var isEditable = Settings.isEditable(item.type);
             var css = item.type == Constants.CONCEPT_ISCO_LEVEL_4 ? "isco_color" : null;
             // add content for item
+            var deprecatedContext = ControlUtil.createGroupContext();
             var infoContext = ControlUtil.createGroupContext();
             var connectionsContext = ControlUtil.createGroupContext();
+            if(isDeprecated) {
+                components.push(
+                    <Group 
+                        text={Localization.get("deprecated")}
+                        useLock={true && isEditable}
+                        context={deprecatedContext}
+                        css={css}
+                        key={key++}>
+                        <Deprecated
+                            item={item}
+                            groupContext={deprecatedContext}/>
+                    </Group>
+                );
+            }
             components.push(
                 <Group 
                     text="Info"
                     useLock={true && isEditable}
                     context={infoContext}
                     unlockable={!isDeprecated}
-                    css = {css}
+                    css={css}
                     key={key++}>
                     <Description 
                         item={item}
@@ -95,7 +111,7 @@ class Content1 extends React.Component {
                     useLock={true && isEditable}
                     context={connectionsContext}
                     unlockable={!isDeprecated}
-                    css = {css}
+                    css={css}
                     key={key++}>
                     <Connections 
                         item={item}
@@ -105,7 +121,7 @@ class Content1 extends React.Component {
             components.push(
                 <Group 
                     text={Localization.get("history")}
-                    css = {css}
+                    css={css}
                     key={key++}>
                     <ItemHistory item={item}/>
                 </Group>

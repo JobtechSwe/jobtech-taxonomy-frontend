@@ -219,6 +219,10 @@ class Rest {
         this.post("/private/concept?type=" + type + "&definition=" + definition + "&preferred-label=" + preferredLabel, onSuccess, onError);
     }
 
+    postReplaceConcept(oldId, newId, onSuccess, onError) {
+        this.post("/private/replace-concept?old-concept-id=" + oldId + "&new-concept-id=" + newId, onSuccess, onError);
+    }
+
     postAddRelation(conceptId, relationId, relationType, definition, substitutability, onSuccess, onError) {
         this.post("/private/relation?concept-1=" + conceptId + "&concept-2=" + relationId + "&relation=" + relationType + "&definition=" + definition + "&substitutability-percentage=" + substitutability, onSuccess, onError);
     }

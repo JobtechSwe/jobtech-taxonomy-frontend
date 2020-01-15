@@ -97,10 +97,10 @@ class CacheManager {
                 time: new Date().getTime(),
             };
             this.cachedConcepts.push(element);
-            localStorage.setItem("concepts", JSON.stringify(this.cachedConcepts));
         } else {
             cached.time = new Date().getTime();
         }
+        localStorage.setItem("concepts", JSON.stringify(this.cachedConcepts));
         this.setCompressedValue("concept_" + concept.id, JSON.stringify(concept));
     }
 
@@ -115,7 +115,6 @@ class CacheManager {
                 time: new Date().getTime(),
             };
             this.cachedRelations.push(element);
-            localStorage.setItem("relations", JSON.stringify(this.cachedRelations));
         } else {
             cached.time = new Date().getTime();
             var previous = this.getCompressedValue("relation_" + id);
@@ -123,6 +122,7 @@ class CacheManager {
                 data = previous;
             }
         }
+        localStorage.setItem("relations", JSON.stringify(this.cachedRelations));
         if(data[relationType] == null) {
             data[relationType] = [];
         }
@@ -148,10 +148,10 @@ class CacheManager {
                 time: new Date().getTime(),
             };
             this.cachedTypeLists.push(element);
-            localStorage.setItem("typeLists", JSON.stringify(this.cachedTypeLists));
         } else {
             cached.time = new Date().getTime();
         }
+        localStorage.setItem("typeLists", JSON.stringify(this.cachedTypeLists));
         // remove definition
         for(var i=0; i<list.length; ++i) {
             list[i].definition = undefined;
