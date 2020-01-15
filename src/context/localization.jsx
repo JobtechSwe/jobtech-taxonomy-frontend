@@ -139,6 +139,7 @@ class Localization {
                 types: "Typer",
                 editable: "Editerbar",
                 visible: "Synlig",
+                show_deprecated: "Visa avaktualiserade",
             },
             // english
             en: {
