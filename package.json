@@ -15,29 +15,29 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.6.0",
-    "@babel/preset-env": "^7.6.0",
-    "@babel/preset-react": "^7.6.3",
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "@babel/preset-react": "^7.8.3",
     "babel-loader": "^8.0.6",
-    "css-loader": "^3.2.1",
-    "uglify-js": "^3.6.5",
+    "css-loader": "^3.4.2",
+    "uglify-js": "^3.7.5",
     "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.8",
-    "webpack-dev-server": "^3.8.0"
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
   },
   "dependencies": {
-    "d3": "^5.14.2",
+    "d3": "^5.15.0",
     "keycharm": "^0.2.0",
-    "moment": "^2.24.0",
     "lz-string": "^1.4.4",
-    "react": "^16.9.0",
+    "moment": "^2.24.0",
+    "react": "^16.12.0",
     "react-chord-diagram": "^1.5.0",
-    "react-datepicker": "^2.9.6",
-    "react-dom": "^16.9.0",
-    "victory": "^33.1.1",
-    "vis-data": "^6.2.1",
-    "vis-network": "^6.4.0",
-    "vis-util": "^1.1.8"
+    "react-datepicker": "^2.11.0",
+    "react-dom": "^16.12.0",
+    "victory": "^33.1.7",
+    "vis-data": "^6.3.3",
+    "vis-network": "^6.5.2",
+    "vis-util": "^1.1.10"
   }
 }
