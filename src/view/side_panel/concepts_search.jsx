@@ -395,6 +395,7 @@ class ConceptsSearch extends React.Component {
     onQueryItemSelected(item) {
         if(item.data && item.data.id) {
             Util.getConcept(item.data.id, item.data.type, (data) => {     
+                data[0].deprecated = item.data.deprecated;
                 EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, data[0]);
             }, (status) => {
                 App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");

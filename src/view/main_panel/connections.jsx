@@ -20,6 +20,7 @@ class Connections extends React.Component {
             isLocked: true,
             hasSelection: false,
         };
+        this.relations = [];
         this.relationTreeView = ControlUtil.createTreeView();
         this.relationTreeView.onItemSelected = this.onItemSelected.bind(this);
         this.selectedItem = null;
@@ -91,16 +92,29 @@ class Connections extends React.Component {
     
     onSave(changes) {
         // TODO: we need to apply changes localy is some nice way
-        var targetId = this.props.item.id;
+        var conceptId = this.props.item.id;
         for (var prop in changes) {
             var item = changes[prop].item;
             var data = item.data;
-            var id = data.id;
-            if(item.isRemoved) {
-                
+            var targetId = data.id;
+            if(changes[prop].isRemoved) {
+                // find relation type
+                var container = this.relations.find((e) => {
+                    var item = e.ids.find((el) => {
+                        return el == targetId;
+                    });
+                    return item ? e.type : null;
+                });
+                App.addSaveRequest();
+                Rest.deleteRelation(container.type, conceptId, targetId, (response) => {
+                    App.removeSaveRequest();
+                }, (status) => {
+                    App.showError(Util.getHttpMessage(status) + " : " + data.preferredLabel);
+                    App.removeSaveRequest();
+                });
             } else {
                 App.addSaveRequest();
-                Rest.postAddRelation(targetId, id, data.relationType, data.note, data.substitutability, (response) => {
+                Rest.postAddRelation(conceptId, targetId, data.relationType, data.note, data.substitutability, (response) => {
                     App.removeSaveRequest();
                 }, (status) => {
                     App.showError(Util.getHttpMessage(status) + " : " + data.preferredLabel);
@@ -246,6 +260,16 @@ class Connections extends React.Component {
     fetch(item, type) {
         this.waitingFor++;
         Rest.getAllConceptRelations(item.id, type, (data) => {
+            var container = this.relations.find((e) => {
+                return e.type == type;
+            });
+            if(container == null) {
+                container = {
+                    type: type,
+                    ids: [],
+                };
+                this.relations.push(container);
+            }
             for(var i=0; i<data.length; ++i) {
                 if(data[i].type == "skill") {
                     var child = ControlUtil.createTreeViewItem(this.relationTreeView, data[i]);
@@ -254,6 +278,7 @@ class Connections extends React.Component {
                 } else {
                     this.addRelationToTree(data[i]);  
                 }
+                container.ids.push(data[i].id);
             }
             for(var i=0; i<this.relationTreeView.roots.length; ++i) {
                 this.relationTreeView.roots[i].sortChildren();

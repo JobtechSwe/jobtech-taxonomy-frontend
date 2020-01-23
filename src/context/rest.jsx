@@ -227,6 +227,10 @@ class Rest {
     postAddRelation(conceptId, relationId, relationType, definition, substitutability, onSuccess, onError) {
         this.post("/private/relation?concept-1=" + conceptId + "&concept-2=" + relationId + "&relation=" + relationType + "&definition=" + definition + "&substitutability-percentage=" + substitutability, onSuccess, onError);
     }
+
+    deleteRelation(relationType, sourceId, targetId, onSuccess, onError) {
+        this.delete("/private/delete-relation?relation-type=" + relationType + "&concept-1=" + sourceId + "&concept-2=" + targetId, onSuccess, onError);
+    }
 }
 
 export default new Rest;
