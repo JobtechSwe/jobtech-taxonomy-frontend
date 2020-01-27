@@ -1,5 +1,7 @@
 import React from 'react';
+import Label from '../../control/label.jsx';
 import List from '../../control/list.jsx';
+import Loader from '../../control/loader.jsx';
 import Button from '../../control/button.jsx';
 import Constants from '../../context/constants.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
@@ -16,6 +18,8 @@ class ItemHistory extends React.Component {
         this.state = {
             data: [],
             selected: null,
+            loadingConceptChanges: false,
+            loadingRelationChanges: false,
         }
     }
 
@@ -32,6 +36,8 @@ class ItemHistory extends React.Component {
         this.setState({
             data: [],
             selected: null,
+            loadingConceptChanges: true,
+            loadingRelationChanges: true,
         }, () => {
             if(props.item) {
                 Rest.getConceptDayNotes(props.item.id, (data) => {
@@ -41,9 +47,27 @@ class ItemHistory extends React.Component {
                         item.date = new Date(item.timestamp);
                         item.event = item["event-type"];
                     }
-                    this.setState({data: Util.sortByKey(data, "date", false)});
+                    this.state.data.push(...data);
+                    this.setState({
+                        data: Util.sortByKey(this.state.data, "date", false),
+                        loadingConceptChanges: false,
+                    });
                 }, (status) => {
-                    App.showError(Util.getHttpMessage(status) + " : Hämta daganteckningar misslyckades");
+                    App.showError(Util.getHttpMessage(status) + " : Hämta daganteckningar (concept) misslyckades");
+                });
+                Rest.getRelationDayNotes(props.item.id, (data) => {
+                    for(var i=0; i<data.length; ++i) {
+                        var item = data[i];
+                        item.date = new Date(item.timestamp);
+                        item.event = item["event-type"];                        
+                    }
+                    this.state.data.push(...data);
+                    this.setState({
+                        data: Util.sortByKey(this.state.data, "date", false),
+                        loadingRelationChanges: false,
+                    });
+                }, (status) => {
+                    App.showError(Util.getHttpMessage(status) + " : Hämta daganteckningar (relationer) misslyckades");
                 });
             }
         });
@@ -55,6 +79,7 @@ class ItemHistory extends React.Component {
 
     onShowClicked() {
         if(this.state.selected) {
+            console.log(this.state.selected);
             EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
                 title:this.renderItem(this.state.selected),
                 content: this.renderHistoryDialog(),
@@ -127,12 +152,52 @@ class ItemHistory extends React.Component {
         );
     }
 
+    renderHistoryRelation(relation) {
+        var index = 0;
+        var items = [];
+        items.push(<div
+            key={index++}
+            className="item_history_dialog_item">
+            <div>{Localization.get("from")}</div>
+            <div>
+                <div>{relation.source["concept/id"]}</div>
+                <div>{relation.source["concept/preferredLabel"]}</div>
+            </div>
+        </div>);
+        items.push(<div
+            key={index++}
+            className="item_history_dialog_item">
+            <div>{Localization.get("to")}</div>
+            <div>
+                <div>{relation.target["concept/id"]}</div>
+                <div>{relation.target["concept/preferredLabel"]}</div>
+            </div>
+        </div>);
+        return (
+            <div>
+                <div className="item_history_dialog_head">
+                    <div>Attribut</div>
+                    <div>
+                        <div>Id</div>
+                        <div>Namn</div>
+                    </div>
+                </div>
+                <List>
+                    {items}
+                </List>
+                <Label text={Localization.get("relation_type") + ": " + relation["relation-type"]}/>
+            </div>
+        );
+    }
+
     renderHistoryDialog() {        
         var info = null;
         if(this.state.selected.concept) {
             info = this.renderHistoryConcept(this.state.selected.concept);        
         } else if(this.state.selected.changes) {
             info = this.renderHistoryChanges(this.state.selected.changes);
+        } else if(this.state.selected.relation) {
+            info = this.renderHistoryRelation(this.state.selected.relation);
         }
         return(
             <div className="item_history_dialog">                
@@ -147,19 +212,29 @@ class ItemHistory extends React.Component {
     }
 
     renderItem(item) {
+        var event = Localization.get(item.event);
+        if(item.relation) {
+            event = Localization.get("relation") + " - " + event;
+        }
         return(
             <div className="item_history_item">
                 <div>
                     {new Date(item.date).toLocaleString()}
                 </div>
                 <div>
-                    {Localization.get(item.event)}
+                    {event}
                 </div>
                 <div>
-                    {item.author}
+                    {item["user-id"]}
                 </div>
             </div>
         );
+    }
+
+    renderLoader() {
+        if(this.state.loadingConceptChanges || this.state.loadingRelationChanges) {
+            return(<Loader/>);
+        }        
     }
 
     render() {
@@ -169,7 +244,9 @@ class ItemHistory extends React.Component {
                     eventId={this.LIST_EVENT_ID}
                     data={this.state.data}
                     onItemSelected={this.onItemSelected.bind(this)}
-                    dataRender={this.renderItem.bind(this)}/>
+                    dataRender={this.renderItem.bind(this)}>
+                    {this.renderLoader()}
+                </List>
                 <div>
                     <Button 
                         isEnabled={this.state.selected != null}

@@ -82,8 +82,11 @@ class Rest {
     }
 
     getConceptDayNotes(id, onSuccess, onError) {
-        console.log(id);
         this.get("/private/concept/automatic-daynotes/?id=" + id, onSuccess, onError);
+    }
+
+    getRelationDayNotes(id, onSuccess, onError) {
+        this.get("/private/relation/automatic-daynotes/?id=" + id, onSuccess, onError);
     }
     
     getConcepts(type, onSuccessCallback, onError) {

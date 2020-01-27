@@ -648,6 +648,7 @@ body {
 
 .item_history_item > div:nth-child(2) {
     padding-right: 10px;
+    min-width: fit-content;
 }
 
 .item_history_item > div:nth-child(3) {
