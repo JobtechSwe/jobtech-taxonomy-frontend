@@ -167,7 +167,7 @@ class CreateConcept extends React.Component {
 	saveSkillOwnerRelation(concept) {
 		var ownerId = this.state.skillGroup;
 		var note = "Automatiskt genererad koppling för ny kompetens";
-		Rest.postAddRelation(ownerId, concept.id, "narrower", note, "0", (data) => {
+		Rest.postAddRelation(ownerId, concept.id, "broader", note, "0", (data) => {
 		
 		}, (status) => {
 			App.showError(Util.getHttpMessage(status) + " : misslyckades att skapa koppling mellan kompetense och dess grupp");

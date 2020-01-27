@@ -212,7 +212,7 @@ class Rest {
     }
 
     getGraph(relationType, sourceType, targetType, onSuccess, onError) {
-        this.get("/main/graph?edge-relation-type=" + relationType + "&source-concept-type=" + sourceType + "&target-concept-type=" + targetType, onSuccess, onError)
+        this.get("/private/graph?edge-relation-type=" + relationType + "&source-concept-type=" + sourceType + "&target-concept-type=" + targetType, onSuccess, onError)
     }
 
     patchConcept(id, args, onSuccess, onError) {

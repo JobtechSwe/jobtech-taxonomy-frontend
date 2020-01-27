@@ -371,7 +371,6 @@ class ConceptsSearch extends React.Component {
                 }
             } else {
                 if(!this.state.showDeprecated) {
-                    console.log("filtering out deprecated");
                     var data = this.state.data.filter((item) => {                    
                         return !item.deprecated;
                     });

@@ -29,8 +29,11 @@ class Util {
                 context.selected.onDeselected();
             }
             context.selected = item;
-            if(context.selected && context.selected.onSelected) {
-                context.selected.onSelected();
+            if(context.selected) {
+                if(context.selected.onSelected) {
+                    // notify item that it has been selected
+                    context.selected.onSelected();
+                }
                 if(context.onItemSelected) {
                     // notify listeners of the treeview of the change
                     context.onItemSelected(item);
