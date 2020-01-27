@@ -54,8 +54,8 @@ class Content5 extends React.Component {
     renderEditableTypes() {
         var list = JSON.parse(JSON.stringify(Constants.DB_TYPES));
         list.sort((a, b) => {
-            var p1 = Localization.get("db_" + a);
-            var p2 = Localization.get("db_" + b);
+            var p1 = Localization.get(a === Constants.CONCEPT_SKILL_HEADLINE ? "skill_headline" : "db_" + a);
+            var p2 = Localization.get(b === Constants.CONCEPT_SKILL_HEADLINE ? "skill_headline" : "db_" + b);
             if(p1 < p2) return -1;
             if(p1 > p2) return 1;
             return 0;
@@ -66,7 +66,7 @@ class Content5 extends React.Component {
                     key={index}>
                     <Label 
                         css="settings_types_type"
-                        text={Localization.get("db_" + type)}/>
+                        text={Localization.get(type === Constants.CONCEPT_SKILL_HEADLINE ? "skill_headline" : "db_" + type)}/>
                     <div className="settings_types_cb">
                     <input 
                         type="checkbox"                        

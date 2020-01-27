@@ -677,13 +677,14 @@ body {
     padding-left: 2px;
 }
 
-.item_history_dialog_item > div:first-child {
+.item_history_dialog_item > div:first-child {    
     min-width: 150px;
     width: 150px;
     overflow-wrap: break-word;
 }
 
 .item_history_dialog_item > div:nth-child(2) {
+    min-width: 400px;
     display: flex;
     flex-grow: 1;
 }
@@ -706,6 +707,7 @@ body {
 }
 
 .item_history_dialog_head > div:nth-child(2) {
+    min-width: 400px;
     display: flex;
     margin: 2px;
     flex-grow: 1;

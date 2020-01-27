@@ -44,8 +44,8 @@ class Content3 extends React.Component {
     renderShowTypeList() {
         var list = JSON.parse(JSON.stringify(Constants.DB_TYPES));
         list.sort((a, b) => {
-            var p1 = Localization.get("db_" + a);
-            var p2 = Localization.get("db_" + b);
+            var p1 = Localization.get(a === "skill-headline" ? "skill_headline" : "db_" + a);
+            var p2 = Localization.get(b === "skill-headline" ? "skill_headline" : "db_" + b);
             if(p1 < p2) return -1;
             if(p1 > p2) return 1;
             return 0;
@@ -56,7 +56,7 @@ class Content3 extends React.Component {
                     key={index}>
                     <Label 
                         css=""
-                        text={Localization.get("db_" + type)}/>
+                        text={Localization.get(type === "skill-headline" ? "skill_headline" : "db_" + type)}/>
                     <input 
                         type="checkbox"
                         onChange={this.onTypeChanged.bind(this, type)}
