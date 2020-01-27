@@ -6,17 +6,11 @@ import LZString from 'lz-string';
 class CacheManager { 
 
     constructor() {
-        // detailed information about concepts, relation ids not included
-        this.cachedConcepts = [];
         // relation information for concepts
         this.cachedRelations = [];
         // lists of types
         this.cachedTypeLists = [];
         // load cache maps
-        var cc = localStorage.getItem("concepts");
-        if(cc) {
-            this.cachedConcepts = JSON.parse(cc);
-        }
         var cr = localStorage.getItem("relations");
         if(cr) {
             this.cachedRelations = JSON.parse(cr);
@@ -66,13 +60,6 @@ class CacheManager {
         localStorage.setItem(key, LZString.compress(value));
     }
     
-    hasCachedConcept(id) {
-        var handle = this.cachedConcepts.find((x) => {
-            return x.id == id;
-        });
-        return this.isValid(handle);
-    }
-    
     hasCachedRelation(id) {
         var handle = this.cachedRelations.find((x) => {
             return x.id == id;
@@ -87,21 +74,26 @@ class CacheManager {
         return this.isValid(handle);
     }
 
-    cacheConcept(concept) {
-        var cached = this.cachedConcepts.find((x) => {
-            return x.id == concept.id;
+    invalidateCachedRelations(id) {
+        var cached = this.cachedRelations.find((x) => {
+            return x.id == id;
         });
-        if(cached == null) {
-            var element = {
-                id: concept.id,
-                time: new Date().getTime(),
-            };
-            this.cachedConcepts.push(element);
-        } else {
-            cached.time = new Date().getTime();
+        if(cached != null) {
+            var index = this.cachedRelations.indexOf(cached);
+            this.cachedRelations.splice(index, 1);
+            localStorage.setItem("relations", JSON.stringify(this.cachedRelations));
         }
-        localStorage.setItem("concepts", JSON.stringify(this.cachedConcepts));
-        this.setCompressedValue("concept_" + concept.id, JSON.stringify(concept));
+    }
+
+    invalidateCachedTypeList(type) {
+        var cached = this.cachedTypeLists.find((x) => {
+            return x.type == type;
+        });
+        if(cached != null) {
+            var index = this.cachedTypeLists.indexOf(cached);
+            this.cachedTypeLists.splice(index, 1);
+            localStorage.setItem("typeLists", JSON.stringify(this.cachedTypeLists));
+        }
     }
 
     cacheRelations(id, relationType, relations) {
@@ -157,10 +149,6 @@ class CacheManager {
             list[i].definition = undefined;
         }
         this.setCompressedValue("typeList_" + type, JSON.stringify(list));
-    }
-
-    getConcept(id) {
-        return this.getCompressedValue("concept_" + id);
     }
 
     getConceptRelations(id, relationType) {

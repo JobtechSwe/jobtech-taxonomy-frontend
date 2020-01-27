@@ -11,6 +11,7 @@ import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Util from '../../context/util.jsx';
 import AddConnection from './../dialog/add_connection.jsx';
 import CreateConcept from './../dialog/create_concept.jsx';
+import CacheManager from '../../context/cache_manager.jsx';
 
 class Connections extends React.Component { 
 
@@ -91,8 +92,8 @@ class Connections extends React.Component {
     }
     
     onSave(changes) {
-        // TODO: we need to apply changes localy is some nice way
         var conceptId = this.props.item.id;
+        CacheManager.invalidateCachedRelations(conceptId);
         for (var prop in changes) {
             var item = changes[prop].item;
             var data = item.data;
@@ -105,8 +106,15 @@ class Connections extends React.Component {
                     });
                     return item ? e.type : null;
                 });
+                var type = container.type;
+                if(type == Constants.RELATION_NARROWER) {
+                    var tmp = conceptId;
+                    conceptId = targetId;
+                    targetId = tmp;
+                    type = Constants.RELATION_BROADER;
+                }
                 App.addSaveRequest();
-                Rest.deleteRelation(container.type, conceptId, targetId, (response) => {
+                Rest.deleteRelation(type, conceptId, targetId, (response) => {
                     App.removeSaveRequest();
                 }, (status) => {
                     App.showError(Util.getHttpMessage(status) + " : " + data.preferredLabel);
@@ -159,6 +167,7 @@ class Connections extends React.Component {
     }
 
     onConnectionAdded(item, ignoreEditRequest) {
+        CacheManager.invalidateCachedTypeList(item.type);
         // TODO: need to handle skill (display parent chain as tree)
         // check for parent
         var parent = null;
