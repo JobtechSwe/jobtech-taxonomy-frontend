@@ -14,6 +14,7 @@ import Deprecated from './deprecated.jsx';
 import Connections from './connections.jsx';
 import ItemHistory from './item_history.jsx';
 import Save from '../dialog/save.jsx';
+import EditConcept from '../dialog/edit_concept.jsx';
 
 class Content1 extends React.Component { 
 
@@ -67,6 +68,14 @@ class Content1 extends React.Component {
         this.setState({isShowingSavePanel: false});
     }
 
+    onEditClicked() {
+        // TODO: add saved callback to refresh visuals
+        EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
+            title: Localization.get("edit") + " " + this.state.item.preferredLabel,
+            content: <EditConcept item={this.state.item}/>
+        });
+    }
+
     onSideItemSelected(item) {
         var components = [];
         var key = 0;
@@ -74,6 +83,17 @@ class Content1 extends React.Component {
             var isDeprecated = item.deprecated ? item.deprecated : false;
             var isEditable = Settings.isEditable(item.type);
             var css = item.type == Constants.CONCEPT_ISCO_LEVEL_4 ? "isco_color" : null;
+
+            components.push(
+                <div 
+                    className="main_content_1_buttons"
+                    key={key++}>
+                    <Button
+                        text={Localization.get("edit")}
+                        onClick={this.onEditClicked.bind(this)}/>
+                </div>
+            );
+
             // add content for item
             var deprecatedContext = ControlUtil.createGroupContext();
             var infoContext = ControlUtil.createGroupContext();
