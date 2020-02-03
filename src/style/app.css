@@ -722,6 +722,23 @@ body {
     min-width: 50%;
 }
 
+.edit_concept_dialog {
+    min-width: 600px;
+    min-height: 400px;
+}
+
+.edit_concept_dialog_type_selection {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit_concept_dialog_page {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    justify-content: space-between;
+}
+
 .version_list {
     display: flex;
     flex-direction: column;
