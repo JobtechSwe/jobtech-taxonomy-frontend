@@ -76,7 +76,7 @@ class Localization {
                 competense: "Kompetens",
                 connections: "Relationer",
                 connection: "Relation",
-                add_connection: "Ny relation",
+                add_connection: "Lägg till relation",
                 remove_connection: "Ta bort relation",
                 edit_type: "Välj typ av ändring",
                 name: "Namn",

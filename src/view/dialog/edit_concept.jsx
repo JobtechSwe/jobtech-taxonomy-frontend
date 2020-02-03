@@ -3,9 +3,11 @@ import Button from './../../control/button.jsx';
 import Label from './../../control/label.jsx';
 import App from './../../context/app.jsx';
 import EventDispatcher from './../../context/event_dispatcher.jsx';
+import Rest from './../../context/rest.jsx';
 import Localization from './../../context/localization.jsx';
 import Constants from './../../context/constants.jsx';
 import EditConceptName from './edit_concept_name.jsx';
+import EditConceptReason from './edit_concept_reason.jsx';
 
 class EditConcept extends React.Component { 
 
@@ -19,17 +21,19 @@ class EditConcept extends React.Component {
         this.EDIT_TYPE_DEPRICATE = "deprecate";
         this.EDIT_TYPE_ADD_RELATION = "add_connection";
         this.EDIT_TYPE_REMOVE_RELATION = "remove_connection";
-        // page index
-        this.PAGE_SELECTION = 0;
-        this.PAGE_EDIT = 1;
         this.state = {
             type: this.EDIT_TYPE_NONE,
-            page: this.PAGE_SELECTION,
-            isSaveEnabled: false,
+            isSaveEnabledEditState: false,
+            isSaveEnabledReasonState: false,
         };
-        // edit page context
+        // edit context
         this.editContext = {
-            setEnableSave: (enabled) => { this.setState({isSaveEnabled: enabled})},
+            setEnableSave: (enabled) => { this.setState({isSaveEnabledEditState: enabled})},
+            onSave: null,
+        };
+        // reason context
+        this.reasonContext = {
+            setEnableSave: (enabled) => { this.setState({isSaveEnabledReasonState: enabled})},
             onSave: null,
         };
     }
@@ -38,75 +42,16 @@ class EditConcept extends React.Component {
         this.setState({type: e.target.value});
     }
 
-    onNextClicked() {
-        this.setState({page: this.PAGE_EDIT});
-    }
-
-    onBackClicked() {
-        this.setState({page: this.PAGE_SELECTION});
-    }
-
     onCloseClicked() {
-
+        Rest.abort();
+        EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
     }
 
     onSaveClicked() {
         if(this.editContext.onSave) {
             // TODO: handle result true / false
-            this.editContext.onSave();
+            this.editContext.onSave(this.reasonContext.message);
         }
-    }
-
-    renderPageSelection() {
-        return (
-            <div className="edit_concept_dialog_page">
-                <div className="edit_concept_dialog_type_selection">
-                    <Label text={Localization.get("edit_type")}/>
-                    {this.renderTypeSelection()}
-                </div>
-                <div className="dialog_content_buttons">
-                    <Button
-                        text={Localization.get("close")}
-                        onClick={this.onCloseClicked.bind(this)}/>
-                    <Button
-                        isEnabled={this.state.type != this.EDIT_TYPE_NONE}
-                        text={Localization.get("next")}
-                        onClick={this.onNextClicked.bind(this)}/>
-                </div>
-            </div>
-        );
-    }
-    
-    renderPageEdit() {
-        var getEditPage = (type) => {
-            if(type == this.EDIT_TYPE_NAME) {
-                return (
-                    <EditConceptName 
-                        item={this.props.item}
-                        editContext={this.editContext}/>
-                );
-            }
-            return null;
-        };
-        return (
-            <div className="edit_concept_dialog_page">
-                <div>
-                    {getEditPage(this.state.type)}
-                </div>
-                <div className="dialog_content_buttons">
-                    <Button
-                        text={Localization.get("close")}
-                        onClick={this.onCloseClicked.bind(this)}/>
-                    <Button
-                        text={Localization.get("back")}
-                        onClick={this.onBackClicked.bind(this)}/>
-                    <Button
-                        isEnabled={this.state.isSaveEnabled}
-                        text={Localization.get("save")}
-                        onClick={this.onSaveClicked.bind(this)}/>
-                </div>
-            </div>
-        );
     }
 
     renderTypeSelection() {
@@ -129,11 +74,46 @@ class EditConcept extends React.Component {
         );
     }
 
+    renderReason() {
+        if(this.state.type != this.EDIT_TYPE_NONE) {
+            return ( 
+                <EditConceptReason editContext={this.reasonContext}/>
+            );
+        }
+    }
+
     render() {
-        var page = this.state.page == this.PAGE_SELECTION ? this.renderPageSelection() : this.renderPageEdit();
+        var getEditPage = (type) => {
+            if(type == this.EDIT_TYPE_NAME) {
+                return (
+                    <EditConceptName 
+                        item={this.props.item}
+                        editContext={this.editContext}/>
+                );
+            }
+            return null;
+        };
         return (
-            <div className="dialog_content edit_concept_dialog">
-                {page}
+            <div className="dialog_content edit_concept_dialog edit_concept_dialog_page">
+                <div>
+                    <div className="edit_concept_value_group">
+                        <Label 
+                            css="edit_concept_value_title"
+                            text={Localization.get("edit_type")}/>
+                        {this.renderTypeSelection()}
+                    </div>
+                    {getEditPage(this.state.type)}
+                    {this.renderReason()}
+                </div>
+                <div className="dialog_content_buttons">
+                    <Button
+                        text={Localization.get("close")}
+                        onClick={this.onCloseClicked.bind(this)}/>
+                    <Button
+                        isEnabled={this.state.isSaveEnabledEditState && this.state.isSaveEnabledReasonState}
+                        text={Localization.get("save")}
+                        onClick={this.onSaveClicked.bind(this)}/>
+                </div>
             </div>
         );
     }

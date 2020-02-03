@@ -6,30 +6,26 @@ import EventDispatcher from './../../context/event_dispatcher.jsx';
 import Localization from './../../context/localization.jsx';
 import Constants from './../../context/constants.jsx';
 
-class EditConceptName extends React.Component { 
+class EditConceptReason extends React.Component { 
 
     constructor(props) {
         super(props);
         this.state = {
-            value: this.props.item.preferredLabel,
+            value: "",
             isChanged: false,
         };
-        this.props.editContext.onSave = this.onSave.bind(this);
-    }
-
-    onSave(userMessage) {
-        
     }
 
     onValueChanged(e) {
-        var isChanged = e.target.value != this.props.item.preferredLabel;
+        var isChanged = e.target.value.length > 0;
         if(isChanged != this.state.isChanged) {
             this.props.editContext.setEnableSave(isChanged);
-        }
+		}
+		this.props.editContext.message = e.target.value;
         this.setState({
-            value: e.target.value,
-            isChanged: isChanged,
-        });
+			value: e.target.value,
+			isChanged: isChanged,
+		});
     }
 
     render() {
@@ -37,8 +33,9 @@ class EditConceptName extends React.Component {
             <div className="edit_concept_value_group">
                 <Label 
                     css="edit_concept_value_title"
-                    text="Ange nytt namn på begrepp"/>
-                <input
+                    text="Antekning"/>
+                <textarea 
+                    rows="10" 
                     className="rounded"
                     value={this.state.value}
                     onChange={this.onValueChanged.bind(this)}/>
@@ -47,4 +44,4 @@ class EditConceptName extends React.Component {
     }
 }
 
-export default EditConceptName;
+export default EditConceptReason;
