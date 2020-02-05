@@ -145,9 +145,9 @@ class CacheManager {
         }
         localStorage.setItem("typeLists", JSON.stringify(this.cachedTypeLists));
         // remove definition
-        for(var i=0; i<list.length; ++i) {
+        /*for(var i=0; i<list.length; ++i) {
             list[i].definition = undefined;
-        }
+        }*/
         this.setCompressedValue("typeList_" + type, JSON.stringify(list));
     }
 

@@ -393,9 +393,15 @@ class ConceptsSearch extends React.Component {
 
     onQueryItemSelected(item) {
         if(item.data && item.data.id) {
-            Util.getConcept(item.data.id, item.data.type, (data) => {     
-                data[0].deprecated = item.data.deprecated;
-                EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, data[0]);
+            Util.getConcept(item.data.id, item.data.type, (data) => {
+                // merge item
+                for(var member in data[0]) {
+                    if(item.data[member] == null) {
+                        item.data[member] = data[0][member];
+                    }
+                }
+                //data[0].deprecated = item.data.deprecated;
+                EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
             }, (status) => {
                 App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
             });
