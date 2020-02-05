@@ -7,6 +7,7 @@ import Rest from './../../context/rest.jsx';
 import Localization from './../../context/localization.jsx';
 import Constants from './../../context/constants.jsx';
 import EditConceptName from './edit_concept_name.jsx';
+import EditConceptDefinition from './edit_concept_definition.jsx';
 import EditConceptReason from './edit_concept_reason.jsx';
 
 class EditConcept extends React.Component { 
@@ -85,11 +86,9 @@ class EditConcept extends React.Component {
     render() {
         var getEditPage = (type) => {
             if(type == this.EDIT_TYPE_NAME) {
-                return (
-                    <EditConceptName 
-                        item={this.props.item}
-                        editContext={this.editContext}/>
-                );
+                return ( <EditConceptName item={this.props.item} editContext={this.editContext}/> );
+            } else if(type == this.EDIT_TYPE_DESCRIPTION) {
+                return ( <EditConceptDefinition item={this.props.item} editContext={this.editContext}/> );
             }
             return null;
         };

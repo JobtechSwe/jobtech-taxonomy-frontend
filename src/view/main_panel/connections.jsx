@@ -346,6 +346,20 @@ class Connections extends React.Component {
     }
 
     render() {
+        /*
+            <Button 
+                isEnabled={!this.state.isLocked && this.state.hasSelection}
+                text={Localization.get("remove")}
+                onClick={this.onRemoveConnectionClicked.bind(this)}/>
+            <Button 
+                isEnabled={!this.state.isLocked}
+                text={Localization.get("add_connection")}
+                onClick={this.onAddConnectionClicked.bind(this)}/>
+            <Button 
+                isEnabled={!this.state.isLocked}
+                text={Localization.get("new_value")}
+                onClick={this.onCreateValueClicked.bind(this)}/>
+        */
         return (
             <div className="connections">
                 <TreeView context={this.relationTreeView}/>
@@ -354,18 +368,6 @@ class Connections extends React.Component {
                         isEnabled={this.state.hasSelection}
                         text={Localization.get("visit")} 
                         onClick={this.onVisitClicked.bind(this)}/>
-                    <Button 
-                        isEnabled={!this.state.isLocked && this.state.hasSelection}
-                        text={Localization.get("remove")}
-                        onClick={this.onRemoveConnectionClicked.bind(this)}/>
-                    <Button 
-                        isEnabled={!this.state.isLocked}
-                        text={Localization.get("add_connection")}
-                        onClick={this.onAddConnectionClicked.bind(this)}/>
-                    <Button 
-                        isEnabled={!this.state.isLocked}
-                        text={Localization.get("new_value")}
-                        onClick={this.onCreateValueClicked.bind(this)}/>
                 </div>
             </div>
         );

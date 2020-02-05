@@ -102,7 +102,6 @@ class Content1 extends React.Component {
                 components.push(
                     <Group 
                         text={Localization.get("deprecated")}
-                        useLock={true && isEditable}
                         context={deprecatedContext}
                         css={css}
                         key={key++}>
@@ -115,9 +114,7 @@ class Content1 extends React.Component {
             components.push(
                 <Group 
                     text="Info"
-                    useLock={true && isEditable}
                     context={infoContext}
-                    unlockable={!isDeprecated}
                     css={css}
                     key={key++}>
                     <Description 
@@ -128,9 +125,7 @@ class Content1 extends React.Component {
             components.push(
                 <Group 
                     text={Localization.get("connections")}
-                    useLock={true && isEditable}
                     context={connectionsContext}
-                    unlockable={!isDeprecated}
                     css={css}
                     key={key++}>
                     <Connections 

@@ -222,6 +222,15 @@ class Description extends React.Component {
     }
 
     render() {
+        /*
+            <div>
+                <Button 
+                    css="deprecate_button"
+                    isEnabled={!this.state.isLocked}
+                    text={Localization.get("deprecate")}
+                    onClick={this.onDeprecateClicked.bind(this)}/>
+            </div>
+        */
         return (
             <div className="description">
                 {this.renderNameAndMisc()}
@@ -232,13 +241,6 @@ class Description extends React.Component {
                     disabled={this.state.isLocked ? "disabled" : ""}
                     value={this.state.definition}
                     onChange={this.onDefinitionChanged.bind(this)}/>
-                <div>
-                    <Button 
-                        css="deprecate_button"
-                        isEnabled={!this.state.isLocked}
-                        text={Localization.get("deprecate")}
-                        onClick={this.onDeprecateClicked.bind(this)}/>
-                </div>
             </div>
         );
     }
