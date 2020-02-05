@@ -50,8 +50,11 @@ class EditConcept extends React.Component {
 
     onSaveClicked() {
         if(this.editContext.onSave) {
-            // TODO: handle result true / false
-            this.editContext.onSave(this.reasonContext.message);
+            EventDispatcher.fire(Constants.EVENT_SHOW_SAVE_INDICATOR);
+            this.editContext.onSave(this.reasonContext.message, () => {
+                this.props.onItemUpdated();
+                EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
+            });
         }
     }
 

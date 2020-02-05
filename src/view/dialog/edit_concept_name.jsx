@@ -2,6 +2,7 @@ import React from 'react';
 import Button from './../../control/button.jsx';
 import Label from './../../control/label.jsx';
 import App from './../../context/app.jsx';
+import Rest from './../../context/rest.jsx';
 import EventDispatcher from './../../context/event_dispatcher.jsx';
 import Localization from './../../context/localization.jsx';
 import Constants from './../../context/constants.jsx';
@@ -17,8 +18,18 @@ class EditConceptName extends React.Component {
         this.props.editContext.onSave = this.onSave.bind(this);
     }
 
-    onSave(userMessage) {
-        
+    onSave(userMessage, callback) {
+        // TODO: handle userMessage
+        var item = this.props.item;
+        App.addSaveRequest();
+        Rest.patchConcept(item.id, "&preferred-label=" + this.state.value, () => {
+            this.props.item.preferredLabel = this.state.value;
+            App.removeSaveRequest();
+            callback();
+        }, (status) => {
+            App.showError(Util.getHttpMessage(status) + " : misslyckades genomföra namnförändring");
+            App.removeSaveRequest();
+        });
     }
 
     onValueChanged(e) {

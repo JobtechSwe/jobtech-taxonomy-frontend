@@ -68,11 +68,17 @@ class Content1 extends React.Component {
         this.setState({isShowingSavePanel: false});
     }
 
+    onItemSaved() {
+        this.onSideItemSelected(this.state.item);
+    }
+
     onEditClicked() {
         // TODO: add saved callback to refresh visuals
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
             title: Localization.get("edit") + " " + this.state.item.preferredLabel,
-            content: <EditConcept item={this.state.item}/>
+            content: <EditConcept 
+                        item={this.state.item}
+                        onItemUpdated={this.onItemSaved.bind(this)}/>
         });
     }
 
@@ -80,8 +86,6 @@ class Content1 extends React.Component {
         var components = [];
         var key = 0;
         if(item) {
-            var isDeprecated = item.deprecated ? item.deprecated : false;
-            var isEditable = Settings.isEditable(item.type);
             var css = item.type == Constants.CONCEPT_ISCO_LEVEL_4 ? "isco_color" : null;
 
             components.push(
@@ -95,22 +99,8 @@ class Content1 extends React.Component {
             );
 
             // add content for item
-            var deprecatedContext = ControlUtil.createGroupContext();
             var infoContext = ControlUtil.createGroupContext();
             var connectionsContext = ControlUtil.createGroupContext();
-            if(isDeprecated) {
-                components.push(
-                    <Group 
-                        text={Localization.get("deprecated")}
-                        context={deprecatedContext}
-                        css={css}
-                        key={key++}>
-                        <Deprecated
-                            item={item}
-                            groupContext={deprecatedContext}/>
-                    </Group>
-                );
-            }
             components.push(
                 <Group 
                     text="Info"
