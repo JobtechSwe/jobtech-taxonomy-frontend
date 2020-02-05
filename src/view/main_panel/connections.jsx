@@ -339,6 +339,7 @@ class Connections extends React.Component {
             root = ControlUtil.createTreeViewItem(this.relationTreeView, element);
             root.setText(Localization.get("db_" + element.type));
             this.relationTreeView.addRoot(root);
+            root.setExpanded(true);
         }
         var child = ControlUtil.createTreeViewItem(this.relationTreeView, element);
         child.setText(element.preferredLabel);
