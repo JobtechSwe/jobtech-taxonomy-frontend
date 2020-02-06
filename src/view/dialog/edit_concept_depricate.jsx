@@ -7,12 +7,13 @@ import EventDispatcher from './../../context/event_dispatcher.jsx';
 import Localization from './../../context/localization.jsx';
 import Constants from './../../context/constants.jsx';
 
-class EditConceptName extends React.Component { 
+class EditConceptDepricate extends React.Component { 
 
     constructor(props) {
-        super(props);
+		super(props);
         this.state = {
-            value: this.props.item.preferredLabel,
+			defaultValue: this.props.item.deprecated != null ? this.props.item.deprecated : false,
+            value: this.props.item.deprecated != null ? this.props.item.deprecated : false,
             isChanged: false,
         };
         this.props.editContext.onSave = this.onSave.bind(this);
@@ -22,35 +23,36 @@ class EditConceptName extends React.Component {
         // TODO: handle message and quality
         var item = this.props.item;
         App.addSaveRequest();
-        Rest.patchConcept(item.id, "&preferred-label=" + this.state.value, () => {
-            this.props.item.preferredLabel = this.state.value;
+        Rest.deleteConcept(item.id, () => {
+            item.deprecated = true;
             App.removeSaveRequest();
             callback();
-        }, (status) => {
-            App.showError(Util.getHttpMessage(status) + " : misslyckades uppdatera namn");
+        }, () => {
+            App.showError(Util.getHttpMessage(status) + " : Avaktualisering misslyckades");
             App.removeSaveRequest();
         });
     }
 
     onValueChanged(e) {
-        var isChanged = e.target.value != this.props.item.preferredLabel;
+		var isChanged = e.target.checked != this.state.defaultValue;
         if(isChanged != this.state.isChanged) {
             this.props.editContext.setEnableSave(isChanged);
         }
         this.setState({
-            value: e.target.value,
+            value: e.target.checked,
             isChanged: isChanged,
         });
     }
 
-    render() {
+	render() {
         return (
             <div className="edit_concept_value_group">
                 <Label 
                     css="edit_concept_value_title"
-                    text="Ange nytt namn på begrepp"/>
+                    text="Avaktualisera begrepp"/>
                 <input
-                    className="rounded"
+					type="checkbox"
+                    disabled={this.state.defaultValue ? "disabled" : ""}
                     value={this.state.value}
                     onChange={this.onValueChanged.bind(this)}/>
             </div>
@@ -58,4 +60,4 @@ class EditConceptName extends React.Component {
     }
 }
 
-export default EditConceptName;
+export default EditConceptDepricate;

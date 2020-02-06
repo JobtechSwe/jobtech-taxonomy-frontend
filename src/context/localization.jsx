@@ -91,6 +91,7 @@ class Localization {
                 add: "Lägg till",
                 remove: "Ta bort",
                 new_value: "Nytt begrepp",
+                quality_classification: "Kvalitetssäkring",
                 save: "Spara",
                 abort: "Avbryt",
                 yes: "Ja",

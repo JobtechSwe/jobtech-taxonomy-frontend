@@ -6,25 +6,23 @@ import EventDispatcher from './../../context/event_dispatcher.jsx';
 import Localization from './../../context/localization.jsx';
 import Constants from './../../context/constants.jsx';
 
-class EditConceptReason extends React.Component { 
+class EditConceptQuality extends React.Component { 
 
     constructor(props) {
         super(props);
         this.state = {
-            value: "",
+            value: "1",
             isChanged: false,
-        };
+		};
+		// NOTE: temporary
+		this.props.editContext.setEnableSave(true);
     }
 
     onValueChanged(e) {
-        var isChanged = e.target.value.length > 0;
-        if(isChanged != this.state.isChanged) {
-            this.props.editContext.setEnableSave(isChanged);
-		}
-		this.props.editContext.message = e.target.value;
+		this.props.editContext.quality = e.target.value;
         this.setState({
 			value: e.target.value,
-			isChanged: isChanged,
+			isChanged: true,
 		});
     }
 
@@ -33,15 +31,18 @@ class EditConceptReason extends React.Component {
             <div className="edit_concept_value_group">
                 <Label 
                     css="edit_concept_value_title"
-                    text={Localization.get("change_note")}/>
-                <textarea 
-                    rows="10" 
+                    text={Localization.get("quality_classification")}/>
+                <select 
                     className="rounded"
                     value={this.state.value}
-                    onChange={this.onValueChanged.bind(this)}/>
+                    onChange={this.onValueChanged.bind(this)}>
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
+				</select>
             </div>
         );
     }
 }
 
-export default EditConceptReason;
+export default EditConceptQuality;

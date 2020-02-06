@@ -18,8 +18,8 @@ class EditConceptDefinition extends React.Component {
         this.props.editContext.onSave = this.onSave.bind(this);
     }
 
-    onSave(userMessage, callback) {
-        // TODO: handle userMessage
+    onSave(message, quality, callback) {
+        // TODO: handle message and quality
         var item = this.props.item;
         App.addSaveRequest();
         Rest.patchConcept(item.id, "&definition=" + this.state.value, () => {
@@ -27,7 +27,7 @@ class EditConceptDefinition extends React.Component {
             App.removeSaveRequest();
             callback();
         }, (status) => {
-            App.showError(Util.getHttpMessage(status) + " : misslyckades genomföra definitionsförändring");
+            App.showError(Util.getHttpMessage(status) + " : misslyckades uppdatera definition");
             App.removeSaveRequest();
         });
     }

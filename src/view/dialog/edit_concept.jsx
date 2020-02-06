@@ -8,7 +8,9 @@ import Localization from './../../context/localization.jsx';
 import Constants from './../../context/constants.jsx';
 import EditConceptName from './edit_concept_name.jsx';
 import EditConceptDefinition from './edit_concept_definition.jsx';
+import EditConceptDepricate from './edit_concept_depricate.jsx';
 import EditConceptReason from './edit_concept_reason.jsx';
+import EditConceptQuality from './edit_concept_quality.jsx';
 
 class EditConcept extends React.Component { 
 
@@ -26,6 +28,7 @@ class EditConcept extends React.Component {
             type: this.EDIT_TYPE_NONE,
             isSaveEnabledEditState: false,
             isSaveEnabledReasonState: false,
+            isSaveEnabledQualityState: false,
         };
         // edit context
         this.editContext = {
@@ -35,6 +38,11 @@ class EditConcept extends React.Component {
         // reason context
         this.reasonContext = {
             setEnableSave: (enabled) => { this.setState({isSaveEnabledReasonState: enabled})},
+            onSave: null,
+        };
+        // quality context
+        this.qualityContext = {
+            setEnableSave: (enabled) => { this.setState({isSaveEnabledQualityState: enabled})},
             onSave: null,
         };
     }
@@ -51,11 +59,15 @@ class EditConcept extends React.Component {
     onSaveClicked() {
         if(this.editContext.onSave) {
             EventDispatcher.fire(Constants.EVENT_SHOW_SAVE_INDICATOR);
-            this.editContext.onSave(this.reasonContext.message, () => {
+            this.editContext.onSave(this.reasonContext.message, this.qualityContext.quality, () => {
                 this.props.onItemUpdated();
                 EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
             });
         }
+    }
+
+    isSaveEnabled() {
+        return this.state.isSaveEnabledEditState && this.state.isSaveEnabledReasonState;
     }
 
     renderTypeSelection() {
@@ -86,12 +98,22 @@ class EditConcept extends React.Component {
         }
     }
 
+    renderQuality() {
+        if(this.state.type != this.EDIT_TYPE_NONE) {
+            return ( 
+                <EditConceptQuality editContext={this.qualityContext}/>
+            );
+        }
+    }
+
     render() {
         var getEditPage = (type) => {
             if(type == this.EDIT_TYPE_NAME) {
                 return ( <EditConceptName item={this.props.item} editContext={this.editContext}/> );
             } else if(type == this.EDIT_TYPE_DESCRIPTION) {
                 return ( <EditConceptDefinition item={this.props.item} editContext={this.editContext}/> );
+            } else if(type == this.EDIT_TYPE_DEPRICATE) {
+                return ( <EditConceptDepricate item={this.props.item} editContext={this.editContext}/> );
             }
             return null;
         };
@@ -105,6 +127,7 @@ class EditConcept extends React.Component {
                         {this.renderTypeSelection()}
                     </div>
                     {getEditPage(this.state.type)}
+                    {this.renderQuality()}
                     {this.renderReason()}
                 </div>
                 <div className="dialog_content_buttons">
@@ -112,7 +135,7 @@ class EditConcept extends React.Component {
                         text={Localization.get("close")}
                         onClick={this.onCloseClicked.bind(this)}/>
                     <Button
-                        isEnabled={this.state.isSaveEnabledEditState && this.state.isSaveEnabledReasonState}
+                        isEnabled={this.isSaveEnabled()}
                         text={Localization.get("save")}
                         onClick={this.onSaveClicked.bind(this)}/>
                 </div>
