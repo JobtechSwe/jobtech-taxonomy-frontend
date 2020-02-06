@@ -145,6 +145,7 @@ class Util {
             attached: false,
             expanded: false,
             showingButton: true,
+            showingSelection: true,
             text: "item",
             parent: null,
             children: [],

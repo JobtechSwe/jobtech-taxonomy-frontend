@@ -11,6 +11,7 @@ import EditConceptDefinition from './edit_concept_definition.jsx';
 import EditConceptDepricate from './edit_concept_depricate.jsx';
 import EditConceptReason from './edit_concept_reason.jsx';
 import EditConceptQuality from './edit_concept_quality.jsx';
+import EditConceptRemoveRelation from './edit_concept_remove_relation.jsx';
 
 class EditConcept extends React.Component { 
 
@@ -114,6 +115,8 @@ class EditConcept extends React.Component {
                 return ( <EditConceptDefinition item={this.props.item} editContext={this.editContext}/> );
             } else if(type == this.EDIT_TYPE_DEPRICATE) {
                 return ( <EditConceptDepricate item={this.props.item} editContext={this.editContext}/> );
+            } else if(type == this.EDIT_TYPE_REMOVE_RELATION) {
+                return ( <EditConceptRemoveRelation item={this.props.item} editContext={this.editContext}/> );
             }
             return null;
         };

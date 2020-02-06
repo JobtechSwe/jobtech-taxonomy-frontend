@@ -114,6 +114,7 @@ class App {
         if(--this.pendingSaveRequests == 0) {
             EventDispatcher.fire(Constants.EVENT_HIDE_SAVE_INDICATOR);
         }
+        return this.pendingSaveRequests == 0;
     }
 
     hasUnsavedChanges() {

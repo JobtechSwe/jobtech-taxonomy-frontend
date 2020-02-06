@@ -752,6 +752,14 @@ body {
     margin-bottom: 5px;
 }
 
+.edit_concept_tree_view {
+    min-height: 150px;
+}
+
+.edit_concept_tree_view_checkbox_item {
+    display: flex;
+}
+
 .version_list {
     display: flex;
     flex-direction: column;

@@ -190,7 +190,8 @@ class TreeViewItem extends React.Component {
     }
 
     renderLabel() {
-        var css = "tree_view_item_label no_select " + (this.state.selected ? "tree_view_item_selected" : "");
+        var isSelected = this.state.selected && this.props.pointer.showingSelection;
+        var css = "tree_view_item_label no_select " + (isSelected ? "tree_view_item_selected" : "");
         return (
             <div 
                 className={css}

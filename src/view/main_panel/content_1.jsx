@@ -8,6 +8,7 @@ import Settings from '../../context/settings.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import App from '../../context/app.jsx';
+import CacheManager from '../../context/cache_manager';
 import SavePanel from './save_panel.jsx';
 import Description from './description.jsx';
 import Deprecated from './deprecated.jsx';
@@ -69,6 +70,8 @@ class Content1 extends React.Component {
     }
 
     onItemSaved() {
+        CacheManager.invalidateCachedRelations(this.state.item.id);
+        // TODO: update item in chachelist
         this.onSideItemSelected(this.state.item);
     }
 
