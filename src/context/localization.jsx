@@ -116,7 +116,7 @@ class Localization {
                 search: "Sök",
                 loading: "Laddar",
                 select: "Välj",
-                referred_to: "Hänvsias till",
+                referred_to: "Hänvisas till",
                 set_reference: "Hänvisa",
                 deprecated: "Avaktualiserad",
                 deprecate: "Avaktualisera",

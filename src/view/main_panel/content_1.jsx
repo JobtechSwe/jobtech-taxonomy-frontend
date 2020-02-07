@@ -89,6 +89,7 @@ class Content1 extends React.Component {
         var components = [];
         var key = 0;
         if(item) {
+            var deprecated = item.deprecated != null ? item.deprecated : false;
             var css = item.type == Constants.CONCEPT_ISCO_LEVEL_4 ? "isco_color" : null;
 
             components.push(
@@ -100,6 +101,19 @@ class Content1 extends React.Component {
                         onClick={this.onEditClicked.bind(this)}/>
                 </div>
             );
+
+            if(deprecated || item["replaced-by"] != null) {
+                components.push(
+                    <Group 
+                        text={Localization.get("referred_to")}
+                        css={css}
+                        key={key++}>
+                        <Deprecated 
+                            item={item}
+                            groupContext={infoContext}/>
+                    </Group>
+                );
+            }
 
             // add content for item
             var infoContext = ControlUtil.createGroupContext();

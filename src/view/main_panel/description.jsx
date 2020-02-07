@@ -154,7 +154,7 @@ class Description extends React.Component {
         if(this.props.item[key]) {
             elements.push(
                 <div 
-                    className="description_special_value" 
+                    className={"description_special_value" + (key == "id" ? " description_db_id" : "")} 
                     key={key}>
                     <Label text={text}/>
                     <input 
@@ -201,6 +201,7 @@ class Description extends React.Component {
                     onChange={this.onLabelChanged.bind(this)}/>
             </div>
         );
+        this.renderSpecialValue(elements, "id", "ID");
         this.renderSpecialValue(elements, "ssyk-code-2012", "SSYK");
         this.renderSpecialValue(elements, "isco-code-08", "ISCO");
         this.renderSpecialValue(elements, "iso-3166-1-alpha-2-2013", "Kod"); // land

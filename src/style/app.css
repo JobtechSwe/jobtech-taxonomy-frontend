@@ -486,14 +486,9 @@ body {
     width: 100%;
     display: flex;
     box-sizing: border-box;
-    flex-direction: column;
     padding: 10px;
     padding-top: 0px;
-}
-
-.deprecated > div {
-    display: flex;
-    flex-direction: column;
+    align-items: center;
 }
 
 .deprecated_info_row {
@@ -577,6 +572,10 @@ body {
 .description_special_value {
     max-width: 80px;
     margin-left: 5px;
+}
+
+.description_db_id {
+    max-width: 120px;
 }
 
 .description_isco_container {
