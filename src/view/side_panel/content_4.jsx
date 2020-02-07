@@ -114,6 +114,10 @@ class Content4 extends React.Component {
             });
         }
     }
+
+    onShowReferredClicked() {
+        EventDispatcher.fire(Constants.EVENT_SIDEPANEL_REFERRED_SELECTED);
+    }
     
     getSelectedPeriod() {
         return {
@@ -195,6 +199,12 @@ class Content4 extends React.Component {
                     <Button 
                         text={Localization.get("changes")}
                         onClick={this.onChangeLogClicked.bind(this)}
+                    />
+                </div>
+                <div className="sub_panel">
+                    <Button 
+                        text={Localization.get("referred")} 
+                        onClick={this.onShowReferredClicked.bind(this)}
                     />
                 </div>
             </div>

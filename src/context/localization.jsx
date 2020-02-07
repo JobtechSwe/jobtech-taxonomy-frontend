@@ -110,6 +110,8 @@ class Localization {
                 event: "Händelse",
                 message: "Meddelande",
                 visit: "Gå till",
+                visit_concept: "Gå till begrepp",
+                visit_replaced_by: "Gå till hänvisat begrepp",
                 title_filter: "Filter",
                 skill_headline: "Kompetens grupp",
                 filter: "Filtrera",
@@ -118,6 +120,7 @@ class Localization {
                 select: "Välj",
                 referred_to: "Hänvisas till",
                 set_reference: "Hänvisa",
+                referred: "Hänvisningar",
                 deprecated: "Avaktualiserad",
                 deprecate: "Avaktualisera",
                 dialog_deprecate: "Är du säker på att du vill avaktualisera",
@@ -148,6 +151,8 @@ class Localization {
                 edit: "Redigera",
                 visible: "Synlig",
                 show_deprecated: "Visa avaktualiserade",
+                concept: "Begrepp",
+                replaced_by_concept: "Hänvisat begrepp",
             },
             // english
             en: {

@@ -823,7 +823,6 @@ body {
     cursor: pointer;
 }
 
-
 .version_list_group {
 }
 
@@ -1009,4 +1008,102 @@ body {
 
 .isco_color {
     background: #78b3ff;
+}
+
+.referred_concepts {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 400px;
+    padding: 10px;
+    padding-top: 0px;
+    box-sizing: border-box;
+}
+
+.referred_concepts_item {
+    display:flex;
+    flex-direction: row;
+}
+
+.referred_concepts_item > div:nth-child(1) {
+    padding-right: 10px;
+    width: 150px;
+    overflow-wrap: break-word;
+}
+
+.referred_concepts_item > div:nth-child(2) {
+    padding-right: 10px;
+    width: 250px;
+    overflow-wrap: break-word;
+}
+
+.referred_concepts_item > div:nth-child(3) {
+    padding-right: 10px;
+    width: 150px;
+    overflow-wrap: break-word;
+}
+
+.referred_concepts_item > div:nth-child(4) {
+    padding-right: 10px;
+    overflow-wrap: break-word;
+    min-width: 250px;
+}
+
+.referred_concepts_top_header {
+    display:flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    font-weight: bold;
+    padding-left: 7px;
+}
+
+.referred_concepts_top_header > div:nth-child(1) {
+    padding-right: 10px;
+    width: 410px;
+}
+
+.referred_concepts_top_header > div:nth-child(2) {
+    padding-right: 10px;
+    width: 250px;
+}
+
+.referred_concepts_header {
+    display:flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    font-weight: bold;
+    padding-left: 7px;
+}
+
+.referred_concepts_header > div:hover {
+    color: #fff;
+}
+
+.referred_concepts_header > div:nth-child(1) {
+    padding-right: 10px;
+    width: 150px;
+    cursor: pointer;
+}
+
+.referred_concepts_header > div:nth-child(2) {
+    padding-right: 10px;
+    width: 250px;
+    cursor: pointer;
+}
+
+.referred_concepts_header > div:nth-child(3) {
+    padding-right: 10px;
+    width: 150px;
+    cursor: pointer;
+} 
+
+.referred_concepts_header > div:nth-child(4) {
+    padding-right: 10px;
+    min-width: 250px;
+    cursor: pointer;
+}
+
+.referred_button {
+    display: flex;
 }

@@ -3,6 +3,7 @@ import Rest from '../../context/rest.jsx';
 import Util from '../../context/util.jsx';
 import App from '../../context/app.jsx';
 import Constants from '../../context/constants.jsx';
+import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Localization from '../../context/localization.jsx';
 import Button from '../../control/button.jsx';
 import Label from '../../control/label.jsx';
@@ -210,7 +211,7 @@ class MissingConnections extends React.Component {
             EventDispatcher.fire(Constants.ID_NAVBAR, Constants.WORK_MODE_1);
             setTimeout(() => {
                 EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, this.selected1);
-            }, 500);            
+            }, 500);
         }
     }
 
@@ -219,7 +220,7 @@ class MissingConnections extends React.Component {
             EventDispatcher.fire(Constants.ID_NAVBAR, Constants.WORK_MODE_1);
             setTimeout(() => {
                 EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, this.selected2);
-            }, 500);            
+            }, 500);
         }
     }
 

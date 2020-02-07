@@ -1,5 +1,4 @@
 import React from 'react';
-import { VictoryBar, VictoryPie, VictoryTooltip } from 'victory';
 import Label from '../../control/label.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
@@ -7,17 +6,15 @@ import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Statistics from './statistics.jsx';
 import MissingConnections from './missing_connections.jsx';
 import ChangeLog from './change_log.jsx';
+import Referred from './referred.jsx';
 
 class Content4 extends React.Component { 
 
     constructor() {
-        super();
-        this.MODE_CONNECTIONS = "connections";
-        this.MODE_STATISTICS = "statistics";
+        super();        
         this.ssyks = [];
         //Storleken på värdeförråd mot varandra (hämta några olika)
         this.state = {
-            mode: this.MODE_STATISTICS,
             components: [],                 
         };       
         this.selected1 = null;
@@ -25,18 +22,21 @@ class Content4 extends React.Component {
         this.boundOnConnectionsSelected = this.onConnectionsSelected.bind(this);
         this.boundOnStatisticsSelected = this.onStatisticsSelected.bind(this);
         this.boundSideTimePeriodSelected = this.onSideTimePeriodSelected.bind(this);
+        this.boundReferredSelected = this.onReferredSelected.bind(this);
     }
 
     componentDidMount() {
         EventDispatcher.add(this.boundOnStatisticsSelected, Constants.EVENT_SIDEPANEL_STATISTICS_SELECTED);
         EventDispatcher.add(this.boundOnConnectionsSelected, Constants.EVENT_SIDEPANEL_CONNECTIONS_SELECTED);
         EventDispatcher.add(this.boundSideTimePeriodSelected, Constants.EVENT_SIDEPANEL_TIME_PERIOD_SELECTED);
+        EventDispatcher.add(this.boundReferredSelected, Constants.EVENT_SIDEPANEL_REFERRED_SELECTED);
     }
 
     componentWillUnmount() {
         EventDispatcher.remove(this.boundOnConnectionsSelected);
         EventDispatcher.remove(this.boundOnStatisticsSelected);
         EventDispatcher.remove(this.boundSideTimePeriodSelected);
+        EventDispatcher.remove(this.boundReferredSelected);
     }
 
     onConnectionsSelected(data) {     
@@ -57,7 +57,6 @@ class Content4 extends React.Component {
             />
         );   
         this.setState({
-            mode: this.MODE_CONNECTIONS, 
             components: components,
         });
     }
@@ -74,7 +73,6 @@ class Content4 extends React.Component {
         );
         components.push(<Statistics key={key++}/>);
         this.setState({
-            mode: this.MODE_STATISTICS, 
             components: components            
         });
     }
@@ -96,7 +94,22 @@ class Content4 extends React.Component {
             />
         );
         this.setState({
-            mode: this.MODE_STATISTICS, 
+            components: components            
+        });
+    }
+
+    onReferredSelected() {
+        var components = [];
+        var key = 0;
+        components.push(
+            <Label
+                css="main_content_title" 
+                text={Localization.get("referred")} 
+                key={key++}
+            />
+        );
+        components.push(<Referred key={key++}/>);
+        this.setState({
             components: components            
         });
     }

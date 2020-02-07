@@ -195,6 +195,10 @@ class Rest {
         this.get("/private/concepts?related-ids=" + id + "&relation=" + relationType, onSuccess, onError);
     }
 
+    getDepricatedConcepts(onSuccess, onError) {
+        this.get("/private/concepts?deprecated=true", onSuccess, onError);
+    }
+
     searchConcepts(query, onSuccess, onError) {
         this.get("/suggesters/autocomplete?query-string=" + encodeURIComponent(query), onSuccess, onError);
     }
