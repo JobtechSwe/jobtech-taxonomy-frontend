@@ -96,29 +96,35 @@ class EditConceptRemoveRelation extends React.Component {
         });
     }
 
-    fetchSkill(item) {
+    findSkillHeadline(root, id) {
+        if(root) {
+            return root.children.find((e) => {
+                return e.data.id == id;
+            });
+        }
+        return null;
+    }
+
+    fetchSkillHeadline(item) {
+        var root = this.findRootFor("skill-headline");
+        if(!root) {
+            root = ControlUtil.createTreeViewItem(this.relationTreeView, {type: "skill-headline"});
+            root.setText(Localization.get("db_skill-headline"));
+            root.setExpanded(true);
+            this.relationTreeView.addRoot(root);
+        }
         this.waitingFor++;
         Rest.getAllConceptRelations(item.data.id, Constants.RELATION_BROADER, (data) => {
             for(var i=0; i<data.length; ++i) {
-                if(data[i].type == "skill" || data[i].type == "skill-headline") {
-                    var child = ControlUtil.createTreeViewItem(this.relationTreeView, data[i]);
-					child.showingSelection = false;
-					// TODO: setup item correctly
-					child.setText(data[i].preferredLabel);
-                    child.addChild(item);
-                    if(data[i].relations.broader == 0) {
-                        var root = this.findRootFor(data[i].type);
-                        if(!root) {
-                            root = ControlUtil.createTreeViewItem(this.relationTreeView, data[i]);
-							root.showingSelection = false;
-                            root.setText(Localization.get("db_" + data[i].type));
-                            this.relationTreeView.addRoot(root);
-                        }
-                        root.addChild(child);
-                    } else {
-                        this.fetchSkill(child);
-                    }
+                var headline = this.findSkillHeadline(root, data[i].id);
+                if(headline == null) {
+                    headline = ControlUtil.createTreeViewItem(this.relationTreeView, data[i]);
+                    headline.setText(data[i].preferredLabel);
+                    headline.setExpanded(true);
+                    headline.showingSelection = false;
+                    root.addChild(headline);
                 }
+                headline.addChild(item);
             }
             if(--this.waitingFor <= 0) {
                 Util.sortByKey(this.relationTreeView.roots, "text", true);
@@ -130,18 +136,19 @@ class EditConceptRemoveRelation extends React.Component {
             }
             App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta concept av typ '" + type + "'");
         }); 
-	}
+    }
 	
     fetch(item, type) {
         this.waitingFor++;
         Rest.getAllConceptRelations(item.id, type, (data) => {
             for(var i=0; i<data.length; ++i) {
+                data[i].relationType = type;
                 if(data[i].type == "skill") {
                     var child = ControlUtil.createTreeViewItem(this.relationTreeView, data[i]);
-                    child.setText(data[i].preferredLabel);
-                    this.fetchSkill(child);
+                    child.showingSelection = false;
+                    child.setText(this.renderElement(data[i]));
+                    this.fetchSkillHeadline(child);
                 } else {
-					data[i].relationType = type;
                     this.addRelationToTree(data[i]);  
                 }
             }
