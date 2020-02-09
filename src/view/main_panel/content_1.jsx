@@ -102,7 +102,7 @@ class Content1 extends React.Component {
                 </div>
             );
 
-            if(deprecated || item["replaced-by"] != null) {
+            if(deprecated) {
                 components.push(
                     <Group 
                         text={Localization.get("referred_to")}

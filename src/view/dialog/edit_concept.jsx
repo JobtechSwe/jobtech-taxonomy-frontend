@@ -72,6 +72,7 @@ class EditConcept extends React.Component {
     }
 
     renderTypeSelection() {
+        var isDeprecated = this.props.item.deprecated != null ? this.props.item.deprecated : false;
         var renderOption = (value) => {
             return ( <option value={value}>{Localization.get(value)}</option> );
         };
@@ -83,10 +84,9 @@ class EditConcept extends React.Component {
                 <option value={this.EDIT_TYPE_NONE}>--</option>
                 {renderOption(this.EDIT_TYPE_NAME)}
                 {renderOption(this.EDIT_TYPE_DESCRIPTION)}
-                {renderOption(this.EDIT_TYPE_REFERENCED_TO)}
-                {renderOption(this.EDIT_TYPE_DEPRICATE)}
                 {renderOption(this.EDIT_TYPE_ADD_RELATION)}
                 {renderOption(this.EDIT_TYPE_REMOVE_RELATION)}
+                {renderOption(isDeprecated ? this.EDIT_TYPE_REFERENCED_TO : this.EDIT_TYPE_DEPRICATE)}
             </select>
         );
     }
