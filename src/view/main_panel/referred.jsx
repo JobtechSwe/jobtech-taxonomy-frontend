@@ -36,7 +36,7 @@ class Referred extends React.Component {
                 loadingData: false,
             });
         }, (status) => {
-            console.log(status);
+            App.showError(Util.getHttpMessage(status) + " : " + "Misslyckades med att hämta konsept");
             this.setState({
                 loadingData: false,
             });
