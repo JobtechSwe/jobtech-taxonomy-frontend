@@ -151,6 +151,18 @@ class CacheManager {
         this.setCompressedValue("typeList_" + type, JSON.stringify(list));
     }
 
+    updateTypeListItem(item) {
+        var list = this.getCompressedValue("typeList_" + item.type);
+        var obj = list.find((x) => {
+            return x.id == item.id;
+        });
+        if(obj) {
+            var index = list.indexOf(obj);
+            list.splice(index, 1, item);
+            this.setCompressedValue("typeList_" + item.type, JSON.stringify(list));
+        }
+    }
+
     getConceptRelations(id, relationType) {
         var item = this.getCompressedValue("relation_" + id);
         if(item) {

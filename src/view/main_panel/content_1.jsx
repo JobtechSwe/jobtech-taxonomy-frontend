@@ -71,7 +71,8 @@ class Content1 extends React.Component {
 
     onItemSaved() {
         CacheManager.invalidateCachedRelations(this.state.item.id);
-        // TODO: update item in chachelist
+        CacheManager.updateTypeListItem(this.state.item);
+        
         this.onSideItemSelected(this.state.item);
     }
 
