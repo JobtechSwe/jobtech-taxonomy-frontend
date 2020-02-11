@@ -57,6 +57,7 @@ class ConceptsSearch extends React.Component {
             showDeprecated: false,
         };
 
+        this.autoselectFirst = true;
         this.options = this.populateOptions();
         this.queryTreeView = ControlUtil.createTreeView();
         this.queryTreeView.onItemSelected = this.onQueryItemSelected.bind(this);
@@ -267,8 +268,13 @@ class ConceptsSearch extends React.Component {
             if(item) {
                 this.queryTreeView.setSelected(item, true);
             }
+        } else if(this.autoselectFirst) {
+            if(this.queryTreeView.roots.length > 0) {
+                this.queryTreeView.setSelected(this.queryTreeView.roots[0], true);
+            }
         }
         this.preSelectId = null;
+        this.autoselectFirst = false;
     }
 
     fetchSkills() {
@@ -533,7 +539,7 @@ class ConceptsSearch extends React.Component {
                     {this.renderLoader()}
                 </TreeView>
             </div>
-    );
+        );
     }
 }
 
