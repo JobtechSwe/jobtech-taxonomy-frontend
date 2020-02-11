@@ -200,7 +200,7 @@ class ItemHistory extends React.Component {
             info = this.renderHistoryRelation(this.state.selected.relation);
         }
         return(
-            <div className="item_history_dialog">                
+            <div className="dialog_content item_history_dialog">                
                 {info}
                 <div>
                     <Button 

@@ -329,8 +329,7 @@ class Content3 extends React.Component {
                     text={title}
                     css="main_content_title"/>
                 <div className="main_content_title_name">
-                <Label 
-                    text={name}/>
+                    <Label text={name}/>
                 </div>
             </div>
         );
