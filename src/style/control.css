@@ -410,6 +410,7 @@ select.rounded:focus {
     background: #fff;
     border-radius: 5px;
     padding: 5px;
+    overflow-y: auto;
 }
 
 .overlay_effect {
@@ -428,4 +429,7 @@ select.rounded:focus {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    max-height: 95%;
+    max-width: 95%;
+    overflow: hidden;
 }

@@ -35,7 +35,7 @@ class EditConceptReason extends React.Component {
                     css="edit_concept_value_title"
                     text={Localization.get("change_note")}/>
                 <textarea 
-                    rows="10" 
+                    rows="6" 
                     className="rounded"
                     value={this.state.value}
                     onChange={this.onValueChanged.bind(this)}/>

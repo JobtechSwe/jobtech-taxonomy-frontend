@@ -532,7 +532,7 @@ body {
 }
 
 .deprecated_reference_selected {
-    background: #386479 !important;
+    background: rgb(47, 120, 255) !important;
     color: #fff;
 }
 
@@ -734,6 +734,11 @@ body {
     justify-content: space-between;
 }
 
+.edit_concept_group_collection {
+    display: flex;
+    flex-direction: column;
+}
+
 .edit_concept_value_group {
     display: flex;
     flex-direction: column;
@@ -904,7 +909,7 @@ body {
 }
 
 .add_connection_tree {
-    min-height: 300px;
+    min-height: 250px;
 }
 
 .add_connection_error {
