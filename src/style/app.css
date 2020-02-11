@@ -518,7 +518,9 @@ body {
 
 .deprecated_reference_list {
     min-width: 450px;
-    max-height: 450px;
+    min-height: 150px;
+    max-height: 250px;
+    flex: unset;
 }
 
 .deprecated_reference_list > div {
