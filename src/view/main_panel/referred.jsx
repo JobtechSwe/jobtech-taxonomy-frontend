@@ -85,17 +85,21 @@ class Referred extends React.Component {
         if(this.state.selected != null) {
             EventDispatcher.fire(Constants.ID_NAVBAR, Constants.WORK_MODE_1);
             setTimeout(() => {
-                EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, this.state.selected);
+                EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.state.selected);
             }, 500);
         }
     }
 
     onVisitReplacedByClicked() {
         if(this.state.selected != null) {
-            EventDispatcher.fire(Constants.ID_NAVBAR, Constants.WORK_MODE_1);
-            setTimeout(() => {
-                EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, this.state.selected["replaced-by"][0]);
-            }, 500);
+            Rest.getConcept(this.state.selected["replaced-by"][0].id, (data) => {                
+                EventDispatcher.fire(Constants.ID_NAVBAR, Constants.WORK_MODE_1);
+                setTimeout(() => {
+                    EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, data[0]);
+                }, 500);
+            }, (status) => {
+                App.showError(Util.getHttpMessage(status) + " : " + "Misslyckades med att hämta konsept");
+            })
         }
     }
 
@@ -151,12 +155,6 @@ class Referred extends React.Component {
     }
 
     render() {
-        /* TODO:
-        <Button 
-        isEnabled={this.state.selected != null}
-        onClick={this.onVisitReplacedByClicked.bind(this)}
-        text={Localization.get("visit_replaced_by")}/>*/
-
         return (
             <Group
                 text={Localization.get("referred")}>
@@ -175,6 +173,10 @@ class Referred extends React.Component {
                             isEnabled={this.state.selected != null}
                             onClick={this.onVisitClicked.bind(this)}
                             text={Localization.get("visit_concept")}/>
+                        <Button 
+                            isEnabled={this.state.selected != null}
+                            onClick={this.onVisitReplacedByClicked.bind(this)}
+                            text={Localization.get("visit_replaced_by")}/>
                     </div>
                 </div>
             </Group>

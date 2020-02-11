@@ -410,6 +410,9 @@ class ConceptsSearch extends React.Component {
 
     onMainItemSelected(item) {
         if(item && item.id) {
+            if(item.deprecated) {
+                this.state.showDeprecated = true;
+            }
             this.searchReference.value = "";
             this.expandedItem = null;
             this.preSelectId = item.id;
