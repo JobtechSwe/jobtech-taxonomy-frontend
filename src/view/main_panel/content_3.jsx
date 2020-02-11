@@ -1,5 +1,6 @@
 import React from 'react';
 import Vis from 'vis-network';
+import Label from '../../control/label.jsx';
 import Constants from '../../context/constants.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
@@ -313,6 +314,28 @@ class Content3 extends React.Component {
         }
     }
 
+    renderTitle() {
+        var name = this.startFrom ? this.startFrom.preferredLabel : "";
+        var title = null;
+        if(this.startFrom) {
+            title = Localization.get("db_"+this.startFrom.type);
+        } else {
+            title = this.state.workmode == 0 ? Localization.get("vertical_connections") : Localization.get("horizontal_connections");
+        }
+        
+        return(
+            <div className="main_content_title_container">
+                <Label 
+                    text={title}
+                    css="main_content_title"/>
+                <div className="main_content_title_name">
+                <Label 
+                    text={name}/>
+                </div>
+            </div>
+        );
+    }
+
     render() {
         if(this.Network) {
             this.Network.off("select", this.boundElementSelected);
@@ -320,6 +343,7 @@ class Content3 extends React.Component {
         }
         return (
             <div className="main_content_3">
+                {this.renderTitle()}
                 <div 
                     id="vis_network_id"
                     className="vis_network_main"/>

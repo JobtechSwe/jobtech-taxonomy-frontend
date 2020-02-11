@@ -883,6 +883,10 @@ body {
     height: 100%;
 }
 
+.vis_network_main div:focus {
+    outline: unset;
+}
+
 .vis-tooltip {
     position: absolute;
     background: rgb(247, 231, 164);    
