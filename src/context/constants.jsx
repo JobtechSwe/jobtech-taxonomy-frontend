@@ -118,7 +118,6 @@ class Constants {
 
         // settings
         this.REST_IP = "http://jobtech-taxonomy-api-for-frontend-route-jobtech-taxonomy-api.test.services.jtech.se/v1/taxonomy";
-        //this.REST_IP = "http://jobtech-taxonomy-sidecar-taxonomy-frontend.test.services.jtech.se/v1/taxonomy";
         this.REST_API_KEY = "";
         // resources
         this.ICON_TMP_1 = "./resource/icon_tmp_1.png";
