@@ -749,6 +749,10 @@ body {
   resize: none;
 }
 
+.edit_concept_row {
+    display: flex;
+}
+
 .edit_concept_value_title {
     background: #bbc4c7;
     color: #000;

@@ -16,6 +16,7 @@ import Connections from './connections.jsx';
 import ItemHistory from './item_history.jsx';
 import Save from '../dialog/save.jsx';
 import EditConcept from '../dialog/edit_concept.jsx';
+import NewConcept from '../dialog/new_concept.jsx';
 
 class Content1 extends React.Component { 
 
@@ -76,8 +77,15 @@ class Content1 extends React.Component {
         this.onSideItemSelected(this.state.item);
     }
 
+    onNewConceptClicked() {
+        EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
+            title: Localization.get("new_value"),
+            content: <NewConcept 
+                        item={this.state.item}/>
+        });
+    }
+
     onEditClicked() {
-        // TODO: add saved callback to refresh visuals
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
             title: Localization.get("edit") + " " + this.state.item.preferredLabel,
             content: <EditConcept 
@@ -93,6 +101,11 @@ class Content1 extends React.Component {
             var deprecated = item.deprecated != null ? item.deprecated : false;
             var css = item.type == Constants.CONCEPT_ISCO_LEVEL_4 ? "isco_color" : null;
 
+            /*
+                    <Button
+                        text={Localization.get("new_value")}
+                        onClick={this.onNewConceptClicked.bind(this)}/>
+            */
             components.push(
                 <div 
                     className="main_content_1_buttons"

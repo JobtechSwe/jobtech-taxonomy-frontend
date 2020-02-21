@@ -8,27 +8,17 @@ import Localization from './../../context/localization.jsx';
 import Constants from './../../context/constants.jsx';
 import EditConceptName from './edit_concept_name.jsx';
 import EditConceptDefinition from './edit_concept_definition.jsx';
-import EditConceptDeprecate from './edit_concept_deprecate.jsx';
 import EditConceptReason from './edit_concept_reason.jsx';
 import EditConceptQuality from './edit_concept_quality.jsx';
 import EditConceptAddRelation from './edit_concept_add_relation.jsx';
 import EditConceptRemoveRelation from './edit_concept_remove_relation.jsx';
 import EditConceptSetReference from './edit_concept_set_reference.jsx';
 
-class EditConcept extends React.Component { 
+class NewConcept extends React.Component { 
 
     constructor(props) {
         super(props);
-        // edit types
-        this.EDIT_TYPE_NONE = "--";
-        this.EDIT_TYPE_NAME = "name";
-        this.EDIT_TYPE_DESCRIPTION = "description";
-        this.EDIT_TYPE_REFERENCED_TO = "set_reference";
-        this.EDIT_TYPE_DEPRICATE = "deprecate";
-        this.EDIT_TYPE_ADD_RELATION = "add_connection";
-        this.EDIT_TYPE_REMOVE_RELATION = "remove_connection";
         this.state = {
-            type: this.EDIT_TYPE_NONE,
             isSaveEnabledEditState: false,
             isSaveEnabledReasonState: false,
             isSaveEnabledQualityState: false,
@@ -73,26 +63,6 @@ class EditConcept extends React.Component {
         return this.state.isSaveEnabledEditState && this.state.isSaveEnabledReasonState;
     }
 
-    renderTypeSelection() {
-        var isDeprecated = this.props.item.deprecated != null ? this.props.item.deprecated : false;
-        var renderOption = (value) => {
-            return ( <option value={value}>{Localization.get(value)}</option> );
-        };
-        return (
-            <select
-                className="rounded"
-                value={this.state.type}
-                onChange={this.onTypeSelected.bind(this)}>
-                <option value={this.EDIT_TYPE_NONE}>--</option>
-                {renderOption(this.EDIT_TYPE_NAME)}
-                {renderOption(this.EDIT_TYPE_DESCRIPTION)}
-                {renderOption(this.EDIT_TYPE_ADD_RELATION)}
-                {renderOption(this.EDIT_TYPE_REMOVE_RELATION)}
-                {renderOption(isDeprecated ? this.EDIT_TYPE_REFERENCED_TO : this.EDIT_TYPE_DEPRICATE)}
-            </select>
-        );
-    }
-
     renderReason() {
         if(this.state.type != this.EDIT_TYPE_NONE) {
             return ( 
@@ -110,32 +80,9 @@ class EditConcept extends React.Component {
     }
 
     render() {
-        var getEditPage = (type) => {
-            if(type == this.EDIT_TYPE_NAME) {
-                return ( <EditConceptName item={this.props.item} editContext={this.editContext}/> );
-            } else if(type == this.EDIT_TYPE_DESCRIPTION) {
-                return ( <EditConceptDefinition item={this.props.item} editContext={this.editContext}/> );
-            } else if(type == this.EDIT_TYPE_DEPRICATE) {
-                return ( <EditConceptDeprecate item={this.props.item} editContext={this.editContext}/> );
-            } else if(type == this.EDIT_TYPE_ADD_RELATION) {
-                return ( <EditConceptAddRelation item={this.props.item} editContext={this.editContext}/> );
-            } else if(type == this.EDIT_TYPE_REMOVE_RELATION) {
-                return ( <EditConceptRemoveRelation item={this.props.item} editContext={this.editContext}/> );
-            } else if(type == this.EDIT_TYPE_REFERENCED_TO) {
-                return ( <EditConceptSetReference item={this.props.item} editContext={this.editContext}/> );
-            }
-            return null;
-        };
         return (
             <div className="dialog_content edit_concept_dialog edit_concept_dialog_page">
                 <div>
-                    <div className="edit_concept_value_group">
-                        <Label 
-                            css="edit_concept_value_title"
-                            text={Localization.get("edit_type")}/>
-                        {this.renderTypeSelection()}
-                    </div>
-                    {getEditPage(this.state.type)}
                     {this.renderQuality()}
                     {this.renderReason()}
                 </div>
@@ -153,4 +100,4 @@ class EditConcept extends React.Component {
     }
 }
 
-export default EditConcept;
+export default NewConcept;

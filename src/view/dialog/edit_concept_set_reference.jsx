@@ -24,7 +24,9 @@ class EditConceptSetReference extends React.Component {
     componentDidMount() {
         Rest.getConcepts(this.props.item.type, (data) => {
             data = data.filter((item) => {
-                return item != null && item.id != this.props.item.id;
+                return item != null && 
+                       !item.deprecated &&
+                       item.id != this.props.item.id;
             });
             data.sort((a, b) => {
                 if(a.preferredLabel < b.preferredLabel) { 

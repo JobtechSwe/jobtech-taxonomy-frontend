@@ -36,10 +36,6 @@ class Index extends React.Component {
         EventDispatcher.add(this.boundShowOverlayWindow, Constants.EVENT_SHOW_OVERLAY);
         EventDispatcher.add(this.boundHideOverlayWindow, Constants.EVENT_HIDE_OVERLAY);
         EventDispatcher.add(this.boundAddError, Constants.EVENT_SHOW_ERROR);
-        /*EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
-            title: "Hello",
-            content: <div>Content div right here</div>
-        });*/
     }
 
     onAddError(message) {
@@ -148,10 +144,10 @@ class Index extends React.Component {
                     <MainPanel/>
                 </div>
                 {this.renderErrors()}
-                {this.renderSaveIndicator()}
                 <div id="overlay_window">
                     {this.renderOverlay()}
                 </div>
+                {this.renderSaveIndicator()}
             </div>
         );
     }
