@@ -343,10 +343,9 @@ class ConceptsSearch extends React.Component {
             var q = query.toLowerCase();
             if(this.state.queryType == this.TYPE_SKILL) {
                 var data = this.state.data.nodes.filter((item) => {
-                    if(!this.state.showDeprecated) {
-                        if(item.deprecated) {
-                            return false;
-                        }
+                    var isDeprecated = item.deprecated ? item.deprecated : false;
+                    if(this.state.showDeprecated != isDeprecated) {
+                        return false;
                     }
                     return item.preferredLabel.toLowerCase().indexOf(q) >= 0;
                 });
@@ -354,10 +353,9 @@ class ConceptsSearch extends React.Component {
                 this.populateTreeSkill(data);
             } else {
                 var data = this.state.data.filter((item) => {
-                    if(!this.state.showDeprecated) {
-                        if(item.deprecated) {
-                            return false;
-                        }
+                    var isDeprecated = item.deprecated ? item.deprecated : false;
+                    if(this.state.showDeprecated != isDeprecated) {
+                        return false;
                     }
                     return item.preferredLabel.toLowerCase().indexOf(q) >= 0;
                 });
@@ -365,7 +363,8 @@ class ConceptsSearch extends React.Component {
                 this.populateTree(data);                
             }
         } else {            
-            if(this.state.queryType == this.TYPE_SKILL) {                
+            if(this.state.queryType == this.TYPE_SKILL) { 
+                // TODO: this also needs to be reworked               
                 if(!this.state.showDeprecated) {
                     var data = this.state.data.nodes.filter((item) => {
                         return !item.deprecated;
@@ -376,15 +375,12 @@ class ConceptsSearch extends React.Component {
                     this.populateTreeSkill(null);
                 }
             } else {
-                if(!this.state.showDeprecated) {
-                    var data = this.state.data.filter((item) => {                    
-                        return !item.deprecated;
-                    });
-                    this.sortData(data);
-                    this.populateTree(data);
-                } else {
-                    this.populateTree(this.state.data);
-                }
+                var data = this.state.data.filter((item) => { 
+                    var isDeprecated = item.deprecated ? item.deprecated : false;                   
+                    return this.state.showDeprecated == isDeprecated;
+                });
+                this.sortData(data);
+                this.populateTree(data);
             }
         }
     }
@@ -511,9 +507,9 @@ class ConceptsSearch extends React.Component {
         return(
             <div className="sub_panel_show_deprecated">
                 <input 
-                        type="checkbox"                        
-                        onChange={this.onShowDeprecatedChanged.bind(this)}
-                        checked={this.state.showDeprecated}/>
+                    type="checkbox"                        
+                    onChange={this.onShowDeprecatedChanged.bind(this)}
+                    checked={this.state.showDeprecated}/>
                 <Label text={Localization.get("show_deprecated")}/>
             </div>
         );
