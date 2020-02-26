@@ -153,6 +153,10 @@ class Localization {
                 show_deprecated: "Visa avaktualiserade",
                 concept: "Begrepp",
                 replaced_by_concept: "Hänvisat begrepp",
+                select_date: "Datumintervall",
+                select_actions: "Typ av åtgärd",
+                select_relations: "Sök relationer",
+                select_types: "Välj ett eller flera värdeförråd",
             },
             // english
             en: {

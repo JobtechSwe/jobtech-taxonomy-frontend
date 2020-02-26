@@ -20,6 +20,7 @@ class Constants {
         this.RELATION_BROADER = "broader";
         this.RELATION_RELATED = "related";
         this.RELATION_AFFINITY = "----";
+        this.RELATION_SUBSTITUTABILITY = "substitutability";
         // concept types
         this.CONCEPT_COUNTRY = "country";
         this.CONCEPT_DRIVING_LICENCE = "driving-licence";

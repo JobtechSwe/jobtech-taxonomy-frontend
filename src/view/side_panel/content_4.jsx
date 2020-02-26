@@ -5,6 +5,7 @@ import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Button from '../../control/button.jsx';
 import Label from '../../control/label.jsx';
+import SearchChanges from '../dialog/search_changes.jsx';
 
 class Content4 extends React.Component { 
 
@@ -99,7 +100,11 @@ class Content4 extends React.Component {
     }
 
     onChangeLogClicked() {
-        EventDispatcher.fire(Constants.EVENT_SIDEPANEL_TIME_PERIOD_SELECTED, this.getSelectedPeriod()); 
+        EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
+            title: Localization.get("search"),
+            content: <SearchChanges/>,
+        });
+        //EventDispatcher.fire(Constants.EVENT_SIDEPANEL_TIME_PERIOD_SELECTED, this.getSelectedPeriod()); 
     }
 
 
@@ -119,23 +124,6 @@ class Content4 extends React.Component {
         EventDispatcher.fire(Constants.EVENT_SIDEPANEL_REFERRED_SELECTED);
     }
     
-    getSelectedPeriod() {
-        return {
-            from: this.state.fromDate,
-            to: this.state.toDate,
-        };
-    }
-
-    setFromDate(date) {
-        console.log(date);
-        this.setState({fromDate: date});
-    }
-
-    setToDate(date) {
-        console.log(date);
-        this.setState({toDate: date});
-    }
-
     renderOptions() {
         var options = this.options.map((o, i) => {
             return this.renderOption(o.value, o.text, i);
@@ -179,25 +167,9 @@ class Content4 extends React.Component {
                         onClick={this.onConnectionsClicked.bind(this)}
                     />
                 </div>
-                <div className="sub_panel">
-                    <div className="side_content_4_date_row">
-                        <Label text={Localization.get("from") + ":"}/>
-                        <DatePicker 
-                            selected={this.state.fromDate} 
-                            onChange={this.setFromDate.bind(this)}
-                            locale={Localization.get("locale")}
-                            dateFormat="yyyy-MM-dd"/>
-                    </div>
-                    <div className="side_content_4_date_row">
-                        <Label text={Localization.get("to") + ":"}/>
-                        <DatePicker 
-                            selected={this.state.toDate} 
-                            onChange={this.setToDate.bind(this)}
-                            locale={Localization.get("locale")}
-                            dateFormat="yyyy-MM-dd"/>
-                    </div>
+                <div className="sub_panel">                    
                     <Button 
-                        text={Localization.get("changes")}
+                        text={Localization.get("search")}
                         onClick={this.onChangeLogClicked.bind(this)}
                     />
                 </div>
