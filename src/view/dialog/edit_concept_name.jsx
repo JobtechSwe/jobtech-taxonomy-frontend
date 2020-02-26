@@ -14,6 +14,7 @@ class EditConceptName extends React.Component {
         this.state = {
             value: this.props.item.preferredLabel,
             isChanged: false,
+            isNameInvalid: false,
         };
         this.props.editContext.onSave = this.onSave.bind(this);
     }
@@ -33,14 +34,35 @@ class EditConceptName extends React.Component {
     }
 
     onValueChanged(e) {
-        var isChanged = e.target.value != this.props.item.preferredLabel;
-        if(isChanged != this.state.isChanged) {
-            this.props.editContext.setEnableSave(isChanged);
-        }
+        var name = e.target.value.trim();
+        var isChanged = name != this.props.item.preferredLabel;
         this.setState({
-            value: e.target.value,
+            value: name,
             isChanged: isChanged,
         });
+        if(name.length > 0) {
+            if(isChanged) {
+                Rest.abort();
+                Rest.getConceptByTypeAndName(this.props.item.type, name, (data) => {
+                    this.setState({isNameInvalid: data.length != 0});
+                    this.props.editContext.setEnableSave(data.length == 0);
+                }, () => {
+        
+                }); 
+            } else {
+                this.props.editContext.setEnableSave(false);
+            }
+        }
+    }
+
+    renderErrorText() {
+        if(this.state.isNameInvalid) {
+            return (
+                <div className="edit_concept_error_text font">
+                    Namnet är upptaget, vänligen välj ett annat namn
+                </div>
+            );
+        }
     }
 
     render() {
@@ -53,6 +75,7 @@ class EditConceptName extends React.Component {
                     className="rounded"
                     value={this.state.value}
                     onChange={this.onValueChanged.bind(this)}/>
+                {this.renderErrorText()}
             </div>
         );
     }

@@ -14,6 +14,7 @@ import EditConceptQuality from './edit_concept_quality.jsx';
 import EditConceptAddRelation from './edit_concept_add_relation.jsx';
 import EditConceptRemoveRelation from './edit_concept_remove_relation.jsx';
 import EditConceptSetReference from './edit_concept_set_reference.jsx';
+import EditConceptNewValue from './edit_concept_new_value.jsx';
 
 class EditConcept extends React.Component { 
 
@@ -27,6 +28,7 @@ class EditConcept extends React.Component {
         this.EDIT_TYPE_DEPRICATE = "deprecate";
         this.EDIT_TYPE_ADD_RELATION = "add_connection";
         this.EDIT_TYPE_REMOVE_RELATION = "remove_connection";
+        this.EDIT_TYPE_NEW_VALUE = "new_value";
         this.state = {
             type: this.EDIT_TYPE_NONE,
             isSaveEnabledEditState: false,
@@ -89,6 +91,7 @@ class EditConcept extends React.Component {
                 {renderOption(this.EDIT_TYPE_ADD_RELATION)}
                 {renderOption(this.EDIT_TYPE_REMOVE_RELATION)}
                 {renderOption(isDeprecated ? this.EDIT_TYPE_REFERENCED_TO : this.EDIT_TYPE_DEPRICATE)}
+                {renderOption(this.EDIT_TYPE_NEW_VALUE)}
             </select>
         );
     }
@@ -123,12 +126,14 @@ class EditConcept extends React.Component {
                 return ( <EditConceptRemoveRelation item={this.props.item} editContext={this.editContext}/> );
             } else if(type == this.EDIT_TYPE_REFERENCED_TO) {
                 return ( <EditConceptSetReference item={this.props.item} editContext={this.editContext}/> );
+            } else if(type == this.EDIT_TYPE_NEW_VALUE) {
+                return ( <EditConceptNewValue item={this.props.item} editContext={this.editContext}/> );
             }
             return null;
         };
         return (
             <div className="dialog_content edit_concept_dialog edit_concept_dialog_page">
-                <div>
+                <div className="edit_concept_group_container">
                     <div className="edit_concept_value_group">
                         <Label 
                             css="edit_concept_value_title"

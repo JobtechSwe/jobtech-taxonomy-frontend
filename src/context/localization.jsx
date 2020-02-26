@@ -27,7 +27,7 @@ class Localization {
                 "db_occupation-name": "Yrkesbenämning",
                 db_region: "EU-Region",
                 db_skill: "Kompetens",
-                "db_skill-headline": "Kompetens",
+                "db_skill-headline": "Kompetensgrupp",
                 "db_sni": "SNI",
                 "db_sni-level-1": "SNI nivå 1",
                 "db_sni-level-2": "SNI nivå 2",

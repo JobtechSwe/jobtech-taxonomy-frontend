@@ -77,8 +77,11 @@ class Rest {
     }
 
     getConcept(id, onSuccess, onError) {
-        //this.get("/main/concepts?id=" + id, onSuccess, onError);
         this.get("/private/concepts?id=" + id, onSuccess, onError);
+    }
+
+    getConceptByTypeAndName(type, name, onSuccess, onError) {
+        this.get("/private/concepts?type=" + type + "&preferred-label=" + encodeURIComponent(name), onSuccess, onError);
     }
 
     getConceptDayNotes(id, onSuccess, onError) {
@@ -232,7 +235,11 @@ class Rest {
     }
 
     postAddRelation(conceptId, relationId, relationType, definition, substitutability, onSuccess, onError) {
-        this.post("/private/relation?concept-1=" + conceptId + "&concept-2=" + relationId + "&relation-type=" + relationType + "&definition=" + definition + "&substitutability-percentage=" + substitutability, onSuccess, onError);
+        var query = "concept-1=" + conceptId + "&concept-2=" + relationId + "&relation-type=" + relationType + "&definition=" + definition;
+        if(substitutability) {
+            query += "&substitutability-percentage=" + substitutability;
+        }
+        this.post("/private/relation?" + query, onSuccess, onError);
     }
 
     deleteRelation(relationType, sourceId, targetId, onSuccess, onError) {
