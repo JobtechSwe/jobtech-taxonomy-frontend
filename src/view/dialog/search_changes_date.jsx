@@ -10,13 +10,13 @@ class SearchChangesDate extends React.Component {
     constructor(props) {
         super(props);
         this.actions = [
-            "ACTION_CREATED",
-            "ACTION_CHANGED_NAME",
-            "ACTION_DIVERTED",
-            "ACTION_MOVED",
-            "ACTION_DEPRECATED",
-            "ACTION_QUALITY_LEVEL",
-            "ACTION_MANUAL_NOTE",
+            "CREATED",
+            "UPDATED",
+            "DIVERTED",
+            "MOVED",
+            "DEPRECATED",
+            "QUALITY_LEVEL",
+            "MANUAL_NOTE",
         ];
         this.relations = [
             Constants.RELATION_NARROWER,
@@ -31,6 +31,7 @@ class SearchChangesDate extends React.Component {
             relations: this.props.relations,
             fromDate: fromDate,
             toDate: new Date(),
+            searchMode: "",
         };
     }
 
@@ -83,43 +84,96 @@ class SearchChangesDate extends React.Component {
         this.props.onSetToDate(date);
     }
 
+    onSearchTypeSelected(e) {
+        this.setState({searchMode: e.target.value});
+    }
+
+    renderActions() {
+        if("actions" === this.state.searchMode) {
+            var actions = this.actions.map((action, index) => {
+                return (
+                    <div 
+                        className="search_changes_row"
+                        key={index}>
+                        <Label 
+                            css="search_changes_label"
+                            text={Localization.get(action)}/>
+                        <div className="search_changes_cb">
+                        <input 
+                            type="checkbox"                        
+                            onChange={this.onActionSelectedChanged.bind(this, action)}
+                            checked={this.isActionSelected(action)}/>
+                        </div>
+                    </div>
+                );
+            });
+            return (
+                <div>
+                    <Label 
+                        css="search_changes_title"
+                        text={Localization.get("select_actions")}/>
+                    {actions}
+                </div>
+            );
+        }
+    }
+
+    renderRelations() {
+        if("relations" === this.state.searchMode) {
+            var relations = this.relations.map((relation, index) => {
+                return (
+                    <div 
+                        className="search_changes_row"
+                        key={index}>
+                        <Label 
+                            css="search_changes_label"
+                            text={relation}/>
+                        <div className="search_changes_cb">
+                        <input 
+                            type="checkbox"                        
+                            onChange={this.onRelationSelectedChanged.bind(this, relation)}
+                            checked={this.isRelationSelected(relation)}/>
+                        </div>
+                    </div>
+                );
+            });
+            return(
+                <div>
+                    <Label 
+                        css="search_changes_title"
+                        text={Localization.get("select_relations")}/>
+                    {relations}
+                </div>
+            );
+        }
+    }
+
+    renderNextButton() {
+        if("actions" === this.state.searchMode) {
+            return(
+                <Button 
+                    isEnabled={this.state.actions.length > 0}                        
+                    onClick={this.props.onNextClicked}
+                    text={Localization.get("next")}/>
+            );
+        }
+    }
+
+    renderSearchButton() {
+        if("relations" === this.state.searchMode) {
+            return(
+                <Button 
+                    isEnabled={this.state.relations.length > 0}
+                    onClick={this.props.onSearchClicked}
+                    text={Localization.get("search")}/>
+            );
+        }
+    }
+
     render() {
-        var actions = this.actions.map((action, index) => {
-            return (
-                <div className="search_changes_row"
-                    key={index}>
-                    <Label 
-                        css="search_changes_label"
-                        text={Localization.get(action)}/>
-                    <div className="search_changes_cb">
-                    <input 
-                        type="checkbox"                        
-                        onChange={this.onActionSelectedChanged.bind(this, action)}
-                        checked={this.isActionSelected(action)}/>
-                    </div>
-                </div>
-            );
-        });
-        var relations = this.relations.map((relation, index) => {
-            return (
-                <div className="search_changes_row"
-                    key={index}>
-                    <Label 
-                        css="search_changes_label"
-                        text={Localization.get(relation)}/>
-                    <div className="search_changes_cb">
-                    <input 
-                        type="checkbox"                        
-                        onChange={this.onRelationSelectedChanged.bind(this, relation)}
-                        checked={this.isRelationSelected(relation)}/>
-                    </div>
-                </div>
-            );
-        });
-        var enableNext = this.state.actions.length > 0 || this.state.relations.length > 0;
         return(
             <div className="search_changes">
-                <div>
+                <div>                    
                     <Label
                         css="search_changes_title"
                         text={Localization.get("select_date")}/>
@@ -141,27 +195,28 @@ class SearchChangesDate extends React.Component {
                                 dateFormat="yyyy-MM-dd"/>
                         </div>
                     </div>
-                </div>
+                </div>                
                 <div>
-                    <Label 
+                    <Label
                         css="search_changes_title"
-                        text={Localization.get("select_actions")}/>
-                    {actions}
+                        text={Localization.get("select_search")}/>
+                    <select 
+                        className="rounded search_changes_select"
+                        value={this.state.type}
+                        onChange={this.onSearchTypeSelected.bind(this)}>
+                        <option>--</option>
+                        <option value="actions">{Localization.get("actions")}</option>
+                        <option value="relations">{Localization.get("relations")}</option>
+                    </select>
                 </div>
-                <div>
-                    <Label 
-                        css="search_changes_title"
-                        text={Localization.get("select_relations")}/>
-                    {relations}
-                </div>
-                <div className="dialog_content_buttons">
+                {this.renderActions()}
+                {this.renderRelations()}
+                <div className="dialog_content_buttons search_content_buttons">
                     <Button 
                         onClick={this.props.onCloseClicked}
                         text={Localization.get("close")}/>
-                    <Button 
-                        isEnabled={enableNext}                        
-                        onClick={this.props.onNextClicked}
-                        text={Localization.get("next")}/>
+                    {this.renderNextButton()}
+                    {this.renderSearchButton()}
                 </div>
             </div>
         );

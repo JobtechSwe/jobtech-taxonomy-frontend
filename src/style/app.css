@@ -1141,7 +1141,6 @@ body {
     min-height: 400px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
 .search_changes > div {
@@ -1154,6 +1153,7 @@ body {
 
 .search_changes_label {
     min-width: 250px;
+    text-transform: capitalize;
 }
 
 .search_changes_cb {
@@ -1170,8 +1170,18 @@ body {
 
 .search_changes_date {
     display: flex;
+    flex-direction: column;
 }
 
 .search_changes_date > div {
     padding-right: 5px;
+}
+
+.search_changes_select {
+    width: 100%;
+}
+
+.search_content_buttons {
+    align-items: flex-end;
+    flex-grow: 1;
 }

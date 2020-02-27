@@ -7,30 +7,13 @@ import SearchChangesType from './search_changes_type.jsx';
 class SearchChanges extends React.Component { 
 
     constructor(props) {
-        super(props);
-        this.actions = [
-            "ACTION_CREATED",
-            "ACTION_CHANGED_NAME",
-            "ACTION_DIVERTED",
-            "ACTION_MOVED",
-            "ACTION_DEPRECATED",
-            "ACTION_QUALITY_LEVEL",
-            "ACTION_MANUAL_NOTE",
-        ];
-        this.relations = [
-            Constants.RELATION_NARROWER,
-            Constants.RELATION_BROADER,
-            Constants.RELATION_RELATED,
-            Constants.RELATION_SUBSTITUTABILITY,
-        ]
-        var fromDate = new Date();
-        fromDate.setDate(fromDate.getDate()-30);
+        super(props);        
         this.state = {
             step: 0,            
             actions: [],
             relations: [],
             types: [],
-            fromDate: fromDate,
+            fromDate: new Date(),
             toDate: new Date(),
         };
     }
@@ -110,6 +93,7 @@ class SearchChanges extends React.Component {
         var getPage = (step) => {
             if(step == 0) {
                 return ( <SearchChangesDate 
+                    onSearchClicked={this.onSearchClicked.bind(this)}
                     onNextClicked={this.onNextClicked.bind(this)}
                     onCloseClicked={this.onCloseClicked.bind(this)}
                     onSetFromDate={this.onSetFromDate.bind(this)}

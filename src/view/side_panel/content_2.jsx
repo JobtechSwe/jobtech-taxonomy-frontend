@@ -25,7 +25,7 @@ class Content2 extends React.Component {
             for(var i=0; i<data.length; ++i) {
                 data[i].date = new Date(data[i].timestamp);
             }
-            //TODO: data.unshift({version: -1});
+            data.unshift({version: -1});
             this.setState({
                 versions: data,
                 loadingData: false,
@@ -52,7 +52,7 @@ class Content2 extends React.Component {
         return(
             <div className="side_content_2_result_item">
                 <div>{item.version == -1 ? "" : item.version}</div>
-                <div>{item.version == -1 ? Localization.get("unpublished") : item.date.toLocaleString()}</div>    
+                <div>{item.version == -1 ? Localization.get("not_published") : item.date.toLocaleString()}</div>    
             </div>
         );
     }

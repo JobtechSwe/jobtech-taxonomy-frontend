@@ -28,10 +28,14 @@ class Content2 extends React.Component {
     onSideItemSelected(item) {
         var components = [];
         var key = 0;
+        var versionTitle = "";
+        if(item) {
+            versionTitle = " - " + (item.version == -1 ? Localization.get("not_published") : item.version);
+        }
         components.push(
             <Label 
                 css="main_content_title" 
-                text={Localization.get("version") + (item ? " - " + item.version : "")} 
+                text={Localization.get("version") + versionTitle} 
                 key={key++}/>
         );
         if(item) {
