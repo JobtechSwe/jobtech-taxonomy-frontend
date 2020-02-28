@@ -160,6 +160,7 @@ class Localization {
                 select_actions: "Välj typ av åtgärd",
                 select_relations: "Välj relationer",
                 select_types: "Välj ett eller flera värdeförråd",
+                not_published: "Ej publiserat",
             },
             // english
             en: {
