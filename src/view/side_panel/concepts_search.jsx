@@ -260,13 +260,16 @@ class ConceptsSearch extends React.Component {
         this.queryTreeView.invalidate();
     }
 
-    onFetchComplete() {
+    onFetchComplete(isFetchingSkill) {
         if(this.preSelectId) {
             var item = this.queryTreeView.findChild((item) => {
                 return item.data.id == this.preSelectId;
             });
             if(item) {
                 this.queryTreeView.setSelected(item, true);
+                if(isFetchingSkill && item.parent) {
+                    item.parent.setExpanded(true);
+                }
             }
         } else if(this.autoselectFirst) {
             if(this.queryTreeView.roots.length > 0) {
@@ -282,6 +285,7 @@ class ConceptsSearch extends React.Component {
             this.state.data = data.graph;
             this.sortData(this.state.data.nodes);
             this.populateTreeSkill(null);
+            this.onFetchComplete(true);
             this.setState({loadingData: false});
         }, (status) => {
             App.showError(Util.getHttpMessage(status) + " : misslyckades hämta graph");
@@ -293,7 +297,7 @@ class ConceptsSearch extends React.Component {
             this.state.data.push(...data);
             this.sortData(this.state.data);
             this.filterAndPopulate(this.searchReference.value);
-            this.onFetchComplete();
+            this.onFetchComplete(false);
             this.setState({loadingData: false});
             //console.log("load time: " + (new Date().getTime() - this.loadStartTime) + " ms");
         }, (status) => {
