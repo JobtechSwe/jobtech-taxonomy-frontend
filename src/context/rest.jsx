@@ -214,6 +214,10 @@ class Rest {
         this.get("/main/changes?after-version=" + fromVersion + "&to-version-inclusive=" + toVersion, onSuccess, onError);
     }
 
+    getUnpublishedChanges(fromVersion, onSuccess, onError) {
+        this.get("/private/changes?after-version=" + fromVersion, onSuccess, onError);
+    }
+
     deleteConcept(id, onSuccess, onError) {
         this.delete("/private/delete-concept?id=" + id, onSuccess, onError);
     }

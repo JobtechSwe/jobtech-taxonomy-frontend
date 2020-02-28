@@ -66,19 +66,33 @@ class VersionList extends React.Component {
         this.setState({
             data: [], 
             loadingData: true,
-        });        
-        if(item) {
-            Rest.abort();
-            Rest.getChanges(item.version - 1, item.version, (data) => {
-                this.setState({
-                    data: this.sortData(data), 
-                    loadingData: false,
-                });
-            }, (status) => {
-                App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta förändringar");
-                this.setState({loadingData: false});
-            });
-        }
+        }, () => {
+            if(item) {
+                Rest.abort();
+                if(item.version == -1) {
+                    Rest.getUnpublishedChanges(item.latestVersion, (data) => {
+                        console.log(data);
+                        this.setState({
+                            data: this.sortData(data), 
+                            loadingData: false,
+                        });
+                    }, (status) => {
+                        App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta förändringar");
+                        this.setState({loadingData: false});
+                    });
+                } else {
+                    Rest.getChanges(item.version - 1, item.version, (data) => {
+                        this.setState({
+                            data: this.sortData(data), 
+                            loadingData: false,
+                        });
+                    }, (status) => {
+                        App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta förändringar");
+                        this.setState({loadingData: false});
+                    });
+                }
+            }
+        });
     }
 
     onFilterChange(value) {        

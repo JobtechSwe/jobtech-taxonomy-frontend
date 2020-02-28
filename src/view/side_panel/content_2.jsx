@@ -21,10 +21,17 @@ class Content2 extends React.Component {
     componentDidMount() {
         Rest.abort();
         Rest.getVersions((data)=>{
+            var latestVersion = 0;
             for(var i=0; i<data.length; ++i) {
                 data[i].date = new Date(data[i].timestamp);
+                if(latestVersion < data[i].version) {
+                    latestVersion = data[i].version;
+                }
             }
-            data.unshift({version: -1});
+            data.unshift({
+                version: -1,
+                latestVersion: latestVersion,
+            });
             this.setState({
                 versions: data,
                 loadingData: false,
