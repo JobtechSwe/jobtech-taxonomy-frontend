@@ -21,7 +21,6 @@ class Content2 extends React.Component {
     componentDidMount() {
         Rest.abort();
         Rest.getVersions((data)=>{
-            console.log(data);
             for(var i=0; i<data.length; ++i) {
                 data[i].date = new Date(data[i].timestamp);
             }
@@ -36,7 +35,6 @@ class Content2 extends React.Component {
     }
 
     onVersionSelected(item) {
-        console.log(item);
         EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item);
     }
 

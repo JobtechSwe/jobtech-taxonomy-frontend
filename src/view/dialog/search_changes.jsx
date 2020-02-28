@@ -92,20 +92,24 @@ class SearchChanges extends React.Component {
     render() {
         var getPage = (step) => {
             if(step == 0) {
-                return ( <SearchChangesDate 
-                    onSearchClicked={this.onSearchClicked.bind(this)}
-                    onNextClicked={this.onNextClicked.bind(this)}
-                    onCloseClicked={this.onCloseClicked.bind(this)}
-                    onSetFromDate={this.onSetFromDate.bind(this)}
-                    onSetToDate={this.onSetToDate.bind(this)}
-                    actions={this.state.actions}
-                    relations={this.state.relations}/> );
+                return ( 
+                    <SearchChangesDate 
+                        onSearchClicked={this.onSearchClicked.bind(this)}
+                        onNextClicked={this.onNextClicked.bind(this)}
+                        onCloseClicked={this.onCloseClicked.bind(this)}
+                        onSetFromDate={this.onSetFromDate.bind(this)}
+                        onSetToDate={this.onSetToDate.bind(this)}
+                        actions={this.state.actions}
+                        relations={this.state.relations}/> 
+                );
             } else if(step == 1) {
-                return ( <SearchChangesType 
-                    onSearchClicked={this.onSearchClicked.bind(this)}
-                    onBackClicked={this.onBackClicked.bind(this)}
-                    onCloseClicked={this.onCloseClicked.bind(this)}
-                    types={this.state.types}/> );
+                return ( 
+                    <SearchChangesType 
+                        onSearchClicked={this.onSearchClicked.bind(this)}
+                        onBackClicked={this.onBackClicked.bind(this)}
+                        onCloseClicked={this.onCloseClicked.bind(this)}
+                        types={this.state.types}/> 
+                );
             }
         };
        

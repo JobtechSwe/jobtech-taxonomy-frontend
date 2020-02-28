@@ -70,7 +70,6 @@ class VersionList extends React.Component {
         if(item) {
             Rest.abort();
             Rest.getChanges(item.version - 1, item.version, (data) => {
-                console.log(data);
                 this.setState({
                     data: this.sortData(data), 
                     loadingData: false,
@@ -136,8 +135,7 @@ class VersionList extends React.Component {
         );
     }
 
-    render() {
-        console.log(this.state.loadingData);
+    render() {        
         return (
             <div className="version_list">
                 <Label text={Localization.get("title_filter")}/>

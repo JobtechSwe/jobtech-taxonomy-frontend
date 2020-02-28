@@ -79,7 +79,6 @@ class ItemHistory extends React.Component {
 
     onShowClicked() {
         if(this.state.selected) {
-            console.log(this.state.selected);
             EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
                 title:this.renderItem(this.state.selected),
                 content: this.renderHistoryDialog(),
