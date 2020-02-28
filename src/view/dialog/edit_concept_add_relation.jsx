@@ -32,6 +32,9 @@ class EditConceptAddRelation extends React.Component {
         this.rootIndex = 0;
         this.roots = [
             "ssyk-level-1",
+            "ssyk-level-2",
+            "ssyk-level-3",
+            "ssyk-level-4",
             "isco-level-4",
             "continent",
             "country",
@@ -91,19 +94,23 @@ class EditConceptAddRelation extends React.Component {
         this.setState({substitutability: e.target.value});
     }
 
-    createNode(element) {
+    createNode(element, showChildren) {
         var node = ControlUtil.createTreeViewItem(this.queryTreeView, element);
         node.data.loaded = false;
         node.setText(element.preferredLabel);
-        node.setForceShowButton(element.relations.narrower > 0);
-        node.onExpandClicked = (item, show) => {
-            if(!item.data.loaded) {
-                var loader = ControlUtil.createTreeViewItem(this.queryTreeView);
-                loader.setText(<Loader/>);
-                item.addChild(loader);
-                this.fetchItem(item, item.data.id);
-            }
-        };
+        if(showChildren) {
+            node.setForceShowButton(false);
+        } else {
+            node.setForceShowButton(element.relations.narrower > 0);
+            node.onExpandClicked = (item, show) => {
+                if(!item.data.loaded) {
+                    var loader = ControlUtil.createTreeViewItem(this.queryTreeView);
+                    loader.setText(<Loader/>);
+                    item.addChild(loader);
+                    this.fetchItem(item, item.data.id);
+                }
+            };
+        }
         return node;
     }
     
@@ -116,7 +123,7 @@ class EditConceptAddRelation extends React.Component {
             // add initial children
             for(var i=0; i<data.length; ++i) {
                 if(data[i].deprecated == null || !data[i].deprecated) {
-                    root.addChild(this.createNode(data[i]));
+                    root.addChild(this.createNode(data[i], this.roots[index].startsWith("ssyk")));
                 }
             }
             root.sortChildren();
@@ -138,7 +145,7 @@ class EditConceptAddRelation extends React.Component {
             item.data.loaded = true;
             for(var i=0; i<data.length; ++i) {
                 if(data[i].deprecated == null || !data[i].deprecated) {
-                    item.addChild(this.createNode(data[i]));
+                    item.addChild(this.createNode(data[i], false));
                 }
             }
             item.removeChild(item.children[0]);
