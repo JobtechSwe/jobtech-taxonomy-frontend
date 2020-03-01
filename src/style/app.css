@@ -1168,13 +1168,24 @@ body {
     margin-bottom: 5px;
 }
 
-.search_changes_date {
+.search_changes_column {
     display: flex;
     flex-direction: column;
 }
 
-.search_changes_date > div {
+.search_changes_date {
     padding-right: 5px;
+    padding-bottom: 5px;
+    display: flex;
+}
+
+.search_changes:last-child {
+    padding-bottom: 0px;
+}
+
+.search_changes_date > div {
+    display: flex;
+    flex: 1 1 0;
 }
 
 .search_changes_select {

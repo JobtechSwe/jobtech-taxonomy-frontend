@@ -177,8 +177,8 @@ class SearchChangesDate extends React.Component {
                     <Label
                         css="search_changes_title"
                         text={Localization.get("select_date")}/>
-                    <div className="search_changes_date">
-                        <div>
+                    <div className="search_changes_column">
+                        <div className="search_changes_date">
                             <Label text={Localization.get("from") + ":"}/>
                             <DatePicker 
                                 selected={this.state.fromDate} 
@@ -186,7 +186,7 @@ class SearchChangesDate extends React.Component {
                                 locale={Localization.get("locale")}
                                 dateFormat="yyyy-MM-dd"/>
                         </div>
-                        <div>
+                        <div className="search_changes_date">
                             <Label text={Localization.get("to") + ":"}/>
                             <DatePicker 
                                 selected={this.state.toDate} 
