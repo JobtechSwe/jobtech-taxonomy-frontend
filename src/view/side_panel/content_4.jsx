@@ -64,16 +64,16 @@ class Content4 extends React.Component {
         options.push({value: this.TYPE_OCCUPATION_NAME, text: Localization.get("db_occupation-name")});
         options.push({value: this.TYPE_REGION, text: Localization.get("db_region")});
         options.push({value: this.TYPE_SKILL, text: Localization.get("db_skill")});
-        options.push({value: this.TYPE_SNI_1, text: Localization.get("db_sni_1")});
-        options.push({value: this.TYPE_SNI_2, text: Localization.get("db_sni_2")});
+        options.push({value: this.TYPE_SNI_1, text: Localization.get("db_sni-level-1")});
+        options.push({value: this.TYPE_SNI_2, text: Localization.get("db_sni-level-2")});
         options.push({value: this.TYPE_SSYK, text: Localization.get("db_ssyk-level-4")});
-        options.push({value: this.TYPE_SUN_EDUCATION_FIELD_1, text: Localization.get("db_sun-education-field_1")});
-        options.push({value: this.TYPE_SUN_EDUCATION_FIELD_2, text: Localization.get("db_sun-education-field_2")});
-        options.push({value: this.TYPE_SUN_EDUCATION_FIELD_3, text: Localization.get("db_sun-education-field_3")});
-        options.push({value: this.TYPE_SUN_EDUCATION_FIELD_4, text: Localization.get("db_sun-education-field_4")});
-        options.push({value: this.TYPE_SUN_EDUCATION_LEVEL_1, text: Localization.get("db_sun-education-level_1")});
-        options.push({value: this.TYPE_SUN_EDUCATION_LEVEL_2, text: Localization.get("db_sun-education-level_2")});
-        options.push({value: this.TYPE_SUN_EDUCATION_LEVEL_3, text: Localization.get("db_sun-education-level_3")});
+        options.push({value: this.TYPE_SUN_EDUCATION_FIELD_1, text: Localization.get("db_sun-education-field-1")});
+        options.push({value: this.TYPE_SUN_EDUCATION_FIELD_2, text: Localization.get("db_sun-education-field-2")});
+        options.push({value: this.TYPE_SUN_EDUCATION_FIELD_3, text: Localization.get("db_sun-education-field-3")});
+        options.push({value: this.TYPE_SUN_EDUCATION_FIELD_4, text: Localization.get("db_sun-education-field-4")});
+        options.push({value: this.TYPE_SUN_EDUCATION_LEVEL_1, text: Localization.get("db_sun-education-level-1")});
+        options.push({value: this.TYPE_SUN_EDUCATION_LEVEL_2, text: Localization.get("db_sun-education-level-2")});
+        options.push({value: this.TYPE_SUN_EDUCATION_LEVEL_3, text: Localization.get("db_sun-education-level-3")});
         options.push({value: this.TYPE_WAGE_TYPE, text: Localization.get("db_wage-type")});
         options.push({value: this.TYPE_WORKTIME_EXTENT, text: Localization.get("db_worktime-extent")});
         options.sort((a, b) => {

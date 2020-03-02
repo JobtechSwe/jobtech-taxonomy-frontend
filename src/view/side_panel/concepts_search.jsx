@@ -33,6 +33,7 @@ class ConceptsSearch extends React.Component {
         this.TYPE_OCCUPATION_NAME = "occupation-name";
         this.TYPE_REGION = "region";
         this.TYPE_SKILL = "skill";
+        this.TYPE_SKILL_HEADLINE = "skill-headline";
         this.TYPE_SNI_1 = "sni-level-1";
         this.TYPE_SNI_2 = "sni-level-2";
         this.TYPE_SSYK_LEVEL_1 = "ssyk-level-1";
@@ -167,7 +168,7 @@ class ConceptsSearch extends React.Component {
         this.queryTreeView.shouldUpdateState = false;
         if(data == null) {
             for(var i=0; i<this.state.data.nodes.length; ++i) {
-                var element = this.state.data.nodes[i];                                
+                var element = this.state.data.nodes[i];
                 if(element.type === Constants.CONCEPT_SKILL_HEADLINE) {
                     var root = this.queryTreeView.roots.find((d) => {
                         return d.data.id === element.id;
@@ -332,7 +333,7 @@ class ConceptsSearch extends React.Component {
             }
         } else {
             this.setState({loadingData: true});
-            if(this.state.queryType == this.TYPE_SKILL) {
+            if(this.state.queryType == this.TYPE_SKILL || this.state.queryType == this.TYPE_SKILL_HEADLINE) {
                 this.fetchSkills();
             } else {
                 //this.loadStartTime = new Date().getTime();
@@ -346,7 +347,7 @@ class ConceptsSearch extends React.Component {
         if(query.length > 0) {
             var q = query.toLowerCase();
             if(this.state.queryType == this.TYPE_SKILL) {
-                var data = this.state.data.nodes.filter((item) => {
+                var data = this.state.data.nodes.filter((item, i) => {
                     var isDeprecated = item.deprecated ? item.deprecated : false;
                     if(this.state.showDeprecated != isDeprecated) {
                         return false;

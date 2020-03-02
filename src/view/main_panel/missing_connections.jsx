@@ -84,19 +84,11 @@ class MissingConnections extends React.Component {
         });
     }
 
-    getEdgeCount(id, edges) {
-        var filtered = edges.filter(e => e.source === id || e.target === id);
-        if(filtered) {
-            return filtered.length;
-        }
-        return 0;
-    }
-
     getConnectionCounts(nodes, edges) {
         var counts = [];
         for(var i=0; i<nodes.length; ++i) {
             var node = nodes[i];
-            var count = this.getEdgeCount(node.id, edges);
+            var count = edges.length;
             var obj = counts.find((p) => {return p.x == count});
             if(obj) {
                 obj.y++;

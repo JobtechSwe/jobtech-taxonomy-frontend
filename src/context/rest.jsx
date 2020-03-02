@@ -223,7 +223,28 @@ class Rest {
     }
 
     getGraph(relationType, sourceType, targetType, onSuccess, onError) {
-        this.get("/private/graph?edge-relation-type=" + relationType + "&source-concept-type=" + sourceType + "&target-concept-type=" + targetType, onSuccess, onError)
+        var removeDuplicateNodes = (data) => {
+            return data.filter((item, i) => {
+                var p = data.find((e) => {
+                    return e.id == item.id;
+                });
+                return data.indexOf(p) == i;
+            });
+        }
+        var removeDuplicateEdges = (data) => {
+            return data.filter((item, i) => {
+                var p = data.find((e) => {
+                    return e.target == item.target && e.source == item.source;
+                });
+                return data.indexOf(p) == i;
+            });
+        };
+        var onSuccessCallback = (data) => {
+            data.graph.nodes = removeDuplicateNodes(data.graph.nodes);
+            data.graph.edges = removeDuplicateEdges(data.graph.edges);
+            onSuccess(data);
+        };
+        this.get("/private/graph?edge-relation-type=" + relationType + "&source-concept-type=" + sourceType + "&target-concept-type=" + targetType, onSuccessCallback, onError)
     }
 
     patchConcept(id, args, onSuccess, onError) {

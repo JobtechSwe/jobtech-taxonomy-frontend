@@ -96,7 +96,6 @@ textarea.rounded:focus {
 
 select.rounded {
     border-radius: 5px;
-    padding: 4px 5px;
 }
 
 select.rounded:focus {

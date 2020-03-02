@@ -260,6 +260,7 @@ class Connections extends React.Component {
                     root.addChild(headline);
                 }
                 headline.addChild(item);
+                Util.sortByKey(headline.children, "text", true);
             }
             if(--this.waitingFor <= 0) {
                 Util.sortByKey(this.relationTreeView.roots, "text", true);

@@ -121,6 +121,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 300px;
+    min-width: 310px;
 }
 
 .side_nav_bar {
@@ -645,22 +646,23 @@ body {
 .item_history_item {
     display: flex;
     flex-direction: row;
+    white-space: pre;
 }
 
 .item_history_item > div:nth-child(1) {
     padding-right: 10px;
-    white-space: pre;
+    flex: 0 0 0;
 }
 
 .item_history_item > div:nth-child(2) {
     padding-right: 10px;
-    min-width: fit-content;
+    flex: 1 0 0;
 }
 
 .item_history_item > div:nth-child(3) {
-    width: 100%;
     text-align: right;
     padding-right: 10px;
+    flex: 0 0 0;
 }
 
 .item_history_dialog {
@@ -1056,7 +1058,7 @@ body {
 
 .referred_concepts_item > div:nth-child(1) {
     padding-right: 10px;
-    width: 150px;
+    width: 170px;
     overflow-wrap: break-word;
 }
 
@@ -1068,7 +1070,7 @@ body {
 
 .referred_concepts_item > div:nth-child(3) {
     padding-right: 10px;
-    width: 150px;
+    width: 170px;
     overflow-wrap: break-word;
 }
 
@@ -1088,7 +1090,7 @@ body {
 
 .referred_concepts_top_header > div:nth-child(1) {
     padding-right: 10px;
-    width: 410px;
+    width: 430px;
 }
 
 .referred_concepts_top_header > div:nth-child(2) {
@@ -1104,32 +1106,29 @@ body {
     padding-left: 7px;
 }
 
+.referred_concepts_header > div {
+    padding-right: 10px;
+    cursor: pointer;
+}
+
 .referred_concepts_header > div:hover {
     color: #fff;
 }
 
 .referred_concepts_header > div:nth-child(1) {
-    padding-right: 10px;
-    width: 150px;
-    cursor: pointer;
+    width: 170px;
 }
 
 .referred_concepts_header > div:nth-child(2) {
-    padding-right: 10px;
     width: 250px;
-    cursor: pointer;
 }
 
 .referred_concepts_header > div:nth-child(3) {
-    padding-right: 10px;
-    width: 150px;
-    cursor: pointer;
+    width: 170px;
 } 
 
 .referred_concepts_header > div:nth-child(4) {
-    padding-right: 10px;
     min-width: 250px;
-    cursor: pointer;
 }
 
 .referred_button {
