@@ -6,6 +6,7 @@ import ControlUtil from './../../control/util.jsx';
 import ContextUtil from './../../context/util.jsx';
 import App from './../../context/app.jsx';
 import EventDispatcher from './../../context/event_dispatcher.jsx';
+import CacheManager from './../../context/cache_manager';
 import Localization from './../../context/localization.jsx';
 import Constants from './../../context/constants.jsx';
 import Rest from './../../context/rest.jsx';
@@ -46,18 +47,24 @@ class EditConceptNewValue extends React.Component {
 
     onSave(message, quality, callback) {
         // TODO: handle message and quality
-        var item = this.props.item;
         var state = this.state;
         App.addSaveRequest();
-        Rest.postConcept(state.type, state.name, state.definition, (data) => {
-            App.removeSaveRequest();
-            this.concept = data.concept;
+        Rest.postConcept(state.type, state.name.trim(), state.definition, (data) => {
+
+            CacheManager.invalidateCachedTypeList(data.concept.type);
+
             if(state.parent) {
                 // add relation between new concept and its selected parent
                 this.onSaveRelation(callback, data.concept, state.parent, "broader", "note", null);
-            } 
-            // add relation between new concept and source concept
-            this.onSaveRelation(callback, data.concept, item, state.relationType, "note", state.substitutability);
+            }
+            if(this.props.item) {
+                // add relation between new concept and source concept
+                this.onSaveRelation(callback, data.concept, this.props.item, state.relationType, "note", state.substitutability);
+            }
+            if(App.removeSaveRequest()) {
+                // TODO: update props item, increment relations counter
+                callback();
+            }
         }, (status) => {
             App.showError(Util.getHttpMessage(status) + " : misslyckades skapa nytt begrepp");
             App.removeSaveRequest();
@@ -106,7 +113,7 @@ class EditConceptNewValue extends React.Component {
 
     onNameChanged(e) {
         var name = e.target.value.trim();
-        this.setState({name: name});
+        this.setState({name: e.target.value});
         if(name.length > 0) {
             Rest.abort();
             Rest.getConceptByTypeAndName(this.state.type, name, (data) => {
@@ -251,21 +258,23 @@ class EditConceptNewValue extends React.Component {
     }
 
     renderRelationTypeList() {
-        return (
-            <div className="edit_concept_value_group">
-                <Label 
-                    css="edit_concept_value_title"
-                    text="Ange relationstyp till begreppet"/>
-                <select 
-                    className="rounded"
-                    value={this.state.relationType}
-                    onChange={this.onRelationTypeSelected.bind(this)}>
-                    <option value="broader">Broader</option>
-                    <option value="related">Related</option>
-                    <option value="substitutability">Substitutability</option>
-                </select>
-            </div>
-        );
+        if(this.props.item) {
+            return (
+                <div className="edit_concept_value_group">
+                    <Label 
+                        css="edit_concept_value_title"
+                        text="Ange relationstyp till begreppet"/>
+                    <select 
+                        className="rounded"
+                        value={this.state.relationType}
+                        onChange={this.onRelationTypeSelected.bind(this)}>
+                        <option value="broader">Broader</option>
+                        <option value="related">Related</option>
+                        <option value="substitutability">Substitutability</option>
+                    </select>
+                </div>
+            );
+        }
     }
     
     renderSubsitutability() {

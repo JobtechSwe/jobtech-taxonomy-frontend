@@ -23,8 +23,8 @@ class EditConceptName extends React.Component {
         // TODO: handle message and quality
         var item = this.props.item;
         App.addSaveRequest();
-        Rest.patchConcept(item.id, "&preferred-label=" + this.state.value, () => {
-            this.props.item.preferredLabel = this.state.value;
+        Rest.patchConcept(item.id, "&preferred-label=" + this.state.value.trim(), () => {
+            this.props.item.preferredLabel = this.state.value.trim();
             App.removeSaveRequest();
             callback();
         }, (status) => {
@@ -37,7 +37,7 @@ class EditConceptName extends React.Component {
         var name = e.target.value.trim();
         var isChanged = name != this.props.item.preferredLabel;
         this.setState({
-            value: name,
+            value: e.target.value,
             isChanged: isChanged,
         });
         if(name.length > 0) {

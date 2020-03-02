@@ -6,13 +6,9 @@ import EventDispatcher from './../../context/event_dispatcher.jsx';
 import Rest from './../../context/rest.jsx';
 import Localization from './../../context/localization.jsx';
 import Constants from './../../context/constants.jsx';
-import EditConceptName from './edit_concept_name.jsx';
-import EditConceptDefinition from './edit_concept_definition.jsx';
 import EditConceptReason from './edit_concept_reason.jsx';
 import EditConceptQuality from './edit_concept_quality.jsx';
-import EditConceptAddRelation from './edit_concept_add_relation.jsx';
-import EditConceptRemoveRelation from './edit_concept_remove_relation.jsx';
-import EditConceptSetReference from './edit_concept_set_reference.jsx';
+import EditConceptNewValue from './edit_concept_new_value.jsx';
 
 class NewConcept extends React.Component { 
 
@@ -53,7 +49,6 @@ class NewConcept extends React.Component {
         if(this.editContext.onSave) {
             EventDispatcher.fire(Constants.EVENT_SHOW_SAVE_INDICATOR);
             this.editContext.onSave(this.reasonContext.message, this.qualityContext.quality, () => {
-                this.props.onItemUpdated();
                 EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
             });
         }
@@ -63,28 +58,13 @@ class NewConcept extends React.Component {
         return this.state.isSaveEnabledEditState && this.state.isSaveEnabledReasonState;
     }
 
-    renderReason() {
-        if(this.state.type != this.EDIT_TYPE_NONE) {
-            return ( 
-                <EditConceptReason editContext={this.reasonContext}/>
-            );
-        }
-    }
-
-    renderQuality() {
-        if(this.state.type != this.EDIT_TYPE_NONE) {
-            return ( 
-                <EditConceptQuality editContext={this.qualityContext}/>
-            );
-        }
-    }
-
     render() {
         return (
             <div className="dialog_content edit_concept_dialog edit_concept_dialog_page">
                 <div>
-                    {this.renderQuality()}
-                    {this.renderReason()}
+                    <EditConceptNewValue editContext={this.editContext}/>
+                    <EditConceptQuality editContext={this.qualityContext}/>
+                    <EditConceptReason editContext={this.reasonContext}/>
                 </div>
                 <div className="dialog_content_buttons">
                     <Button
