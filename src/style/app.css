@@ -852,6 +852,9 @@ body {
 .version_list_group {
 }
 
+.version_list_buttons {
+    display: flex;
+}
 .ssyk_item {
     display: flex;
 }
@@ -1176,10 +1179,6 @@ body {
     padding-right: 5px;
     padding-bottom: 5px;
     display: flex;
-}
-
-.search_changes:last-child {
-    padding-bottom: 0px;
 }
 
 .search_changes_date > div {

@@ -1,7 +1,9 @@
 import React from 'react';
+import Button from '../../control/button.jsx';
 import Label from '../../control/label.jsx';
 import List from '../../control/list.jsx';
 import Loader from '../../control/loader.jsx';
+import Constants from '../../context/constants.jsx';
 import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
@@ -17,9 +19,11 @@ class VersionList extends React.Component {
         this.SORT_CONCEPT_TYPE = 1;
         this.SORT_CONCEPT_LABEL = 2;
         this.state = {
+            item: null,
             data: [],
             filter: "",
             loadingData: false,
+            selected: null,
         }
         this.sortBy= this.SORT_EVENT_TYPE;
         this.sortDesc= false;
@@ -30,8 +34,10 @@ class VersionList extends React.Component {
     }
 
     UNSAFE_componentWillReceiveProps(props) {
-        EventDispatcher.fire(this.VERSION_LIST_EVENT_ID);
-        this.getChanges(props.item);
+        if(this.state.item == null || this.state.item.version != props.item.version) {
+            EventDispatcher.fire(this.VERSION_LIST_EVENT_ID);
+            this.getChanges(props.item);
+        }
     }
 
     sortData(data) {
@@ -62,11 +68,13 @@ class VersionList extends React.Component {
         });
     }
 
-    getChanges(item) {
+    getChanges(item) {        
         this.setState({
             data: [], 
             loadingData: true,
+            item: item,
         }, () => {
+            EventDispatcher.fire(Constants.EVENT_VERSION_ITEM_SELECTED, null);
             if(item) {
                 Rest.abort();
                 if(item.version == -1) {
@@ -95,6 +103,12 @@ class VersionList extends React.Component {
         });
     }
 
+    onItemSelected(item) {       
+        this.setState({selected: item}, () => {
+            EventDispatcher.fire(Constants.EVENT_VERSION_ITEM_SELECTED, item);
+        });
+    }
+
     onFilterChange(value) {        
         this.setState({filter: value});
     }
@@ -107,6 +121,15 @@ class VersionList extends React.Component {
             this.sortDesc = false;
         }
         this.setState({ data: this.sortData(this.state.data) });
+    }
+
+    onVisitClicked() {
+        if(this.state.selected != null) {
+            EventDispatcher.fire(Constants.ID_NAVBAR, Constants.WORK_MODE_1);
+            setTimeout(() => {
+                EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.state.selected["changed-concept"]);
+            }, 500);
+        }
     }
 
     renderLoader() {
@@ -127,7 +150,7 @@ class VersionList extends React.Component {
                     {Localization.get("value_storage")}
                 </div>
                 <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_LABEL)}>
-                    {Localization.get("message")}
+                    {Localization.get("name")}
                 </div>
             </div>
         );
@@ -162,9 +185,16 @@ class VersionList extends React.Component {
                 <List 
                     eventId={this.VERSION_LIST_EVENT_ID}
                     data={this.filterData()} 
+                    onItemSelected={this.onItemSelected.bind(this)}
                     dataRender={this.renderItem.bind(this)}>
                     {this.renderLoader()}
-                </List>                                   
+                </List>
+                 <div className="version_list_buttons">
+                        <Button 
+                            isEnabled={this.state.selected != null}
+                            onClick={this.onVisitClicked.bind(this)}
+                            text={Localization.get("visit")}/>
+                    </div>
             </div>
         );
     }
