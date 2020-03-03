@@ -832,6 +832,10 @@ body {
     color: #fff;
 }
 
+.version_list_header > div:hover > i {
+    border-color: #fff;
+}
+
 .version_list_header > div:nth-child(1) {
     padding-right: 10px;
     width: 100px;
@@ -1116,6 +1120,10 @@ body {
 
 .referred_concepts_header > div:hover {
     color: #fff;
+}
+
+.referred_concepts_header > div:hover > i{
+    border-color: #fff;
 }
 
 .referred_concepts_header > div:nth-child(1) {

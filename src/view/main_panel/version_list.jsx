@@ -3,6 +3,7 @@ import Button from '../../control/button.jsx';
 import Label from '../../control/label.jsx';
 import List from '../../control/list.jsx';
 import Loader from '../../control/loader.jsx';
+import SortArrow from '../../control/sort_arrow.jsx';
 import Constants from '../../context/constants.jsx';
 import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
@@ -141,16 +142,26 @@ class VersionList extends React.Component {
     }
 
     renderHeader() {
+        var renderArrow = (type) => {
+            if(type == this.sortBy) {
+                return (
+                    <SortArrow css={this.sortDesc ? "down" : "up"}/>
+                );
+            }
+        };
         return(
             <div className="version_list_header no_select font">               
                 <div onClick={this.onSortClicked.bind(this, this.SORT_EVENT_TYPE)}>
                     {Localization.get("event")}
+                    {renderArrow(this.SORT_EVENT_TYPE)}
                 </div>
                 <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_TYPE)}>
                     {Localization.get("value_storage")}
+                    {renderArrow(this.SORT_CONCEPT_TYPE)}
                 </div>
                 <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_LABEL)}>
                     {Localization.get("name")}
+                    {renderArrow(this.SORT_CONCEPT_LABEL)}
                 </div>
             </div>
         );

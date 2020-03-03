@@ -3,6 +3,7 @@ import Button from '../../control/button.jsx';
 import Group from '../../control/group.jsx';
 import List from '../../control/list.jsx';
 import Loader from '../../control/loader.jsx';
+import SortArrow from '../../control/sort_arrow.jsx';
 import Constants from '../../context/constants.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Rest from '../../context/rest.jsx';
@@ -23,7 +24,7 @@ class Referred extends React.Component {
             selected: null,
         }
         this.sortBy= this.SORT_EVENT_LABEL;
-        this.sortDesc= false;
+        this.sortDesc= true;
     }
 
     componentDidMount() {
@@ -128,19 +129,30 @@ class Referred extends React.Component {
     }
 
     renderHeader() {
+        var renderArrow = (type) => {
+            if(type == this.sortBy) {
+                return (
+                    <SortArrow css={this.sortDesc ? "down" : "up"}/>
+                );
+            }
+        };
         return (
             <div className="referred_concepts_header no_select font">               
                 <div onClick={this.onSortClicked.bind(this, this.SORT_EVENT_TYPE)}>
                     {Localization.get("type")}
+                    {renderArrow(this.SORT_EVENT_TYPE)}
                 </div>
                 <div onClick={this.onSortClicked.bind(this, this.SORT_EVENT_LABEL)}>
                     {Localization.get("name")}
+                    {renderArrow(this.SORT_EVENT_LABEL)}
                 </div>
                 <div onClick={this.onSortClicked.bind(this, this.SORT_EVENT_REPLACED_BY_TYPE)}>
                     {Localization.get("type")}
+                    {renderArrow(this.SORT_EVENT_REPLACED_BY_TYPE)}
                 </div>
                 <div onClick={this.onSortClicked.bind(this, this.SORT_EVENT_REPLACED_BY_LABEL)}>
                     {Localization.get("name")}
+                    {renderArrow(this.SORT_EVENT_REPLACED_BY_LABEL)}
                 </div>
             </div>            
         );
