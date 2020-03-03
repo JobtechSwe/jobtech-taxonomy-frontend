@@ -171,6 +171,7 @@ class Util {
             onSelected: null,
             onExpandClicked: null,
         };
+        pointer.uniqueId = this.TREEVIEW_ITEM_ID;
         pointer.rebind = this.__treeViewItemRebind.bind(this, pointer);
         pointer.rebind();
         // store type used for mounting the pointer

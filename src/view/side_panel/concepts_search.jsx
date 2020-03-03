@@ -56,6 +56,7 @@ class ConceptsSearch extends React.Component {
             selectableType: true,
             loadingData: false,
             showDeprecated: false,
+            scrollTarget: null,
         };
 
         this.autoselectFirst = true;
@@ -75,6 +76,18 @@ class ConceptsSearch extends React.Component {
             this.state.selectableType = true;
         }
         this.search();
+    }
+
+    componentDidUpdate() {
+        if(this.state.scrollTarget) {
+            var element = document.getElementById("" + this.state.scrollTarget.uniqueId);
+            element.scrollIntoView({
+                behavior: "auto", 
+                block: "center", 
+                inline: "start"
+            });
+            this.state.scrollTarget = null;
+        }
     }
 
     UNSAFE_componentWillReceiveProps(props) {
@@ -271,6 +284,7 @@ class ConceptsSearch extends React.Component {
                 if(isFetchingSkill && item.parent) {
                     item.parent.setExpanded(true);
                 }
+                this.setState({scrollTarget: item});
             }
         } else if(this.autoselectFirst) {
             if(this.queryTreeView.roots.length > 0) {
@@ -333,7 +347,7 @@ class ConceptsSearch extends React.Component {
             }
         } else {
             this.setState({loadingData: true});
-            if(this.state.queryType == this.TYPE_SKILL || this.state.queryType == this.TYPE_SKILL_HEADLINE) {
+            if(this.state.queryType == this.TYPE_SKILL) {
                 this.fetchSkills();
             } else {
                 //this.loadStartTime = new Date().getTime();
@@ -407,7 +421,6 @@ class ConceptsSearch extends React.Component {
                         item.data[member] = data[0][member];
                     }
                 }
-                //data[0].deprecated = item.data.deprecated;
                 EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
             }, (status) => {
                 App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
@@ -423,11 +436,17 @@ class ConceptsSearch extends React.Component {
             this.searchReference.value = "";
             this.expandedItem = null;
             this.preSelectId = item.id;
-            this.setState({
-                queryType: item.type,
-            }, () => {
-                this.search();
-            });
+            var type = item.type == this.TYPE_SKILL_HEADLINE ? this.TYPE_SKILL : item.type;
+            if(type == this.state.queryType) {
+                this.onFetchComplete(type == this.TYPE_SKILL);
+            } else {
+                this.setState({
+                    scrollTarget: null,
+                    queryType: type,
+                }, () => {
+                    this.search();
+                });
+            }
         }
     }
 

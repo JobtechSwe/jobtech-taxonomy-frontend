@@ -219,7 +219,9 @@ class TreeViewItem extends React.Component {
     render() {
         return (
             <div className="tree_view_item">
-                <div className="tree_view_content">
+                <div
+                    id={this.props.pointer.uniqueId}  
+                    className="tree_view_content">
                     {this.renderOuterGuideline()}
                     {this.renderExpanded()}
                     {this.renderLabel()}
