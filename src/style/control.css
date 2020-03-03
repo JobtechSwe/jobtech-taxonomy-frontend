@@ -442,21 +442,21 @@ i {
 }
   
 i.right {
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
+    transform: translateX(-25%) rotate(-45deg);
+    -webkit-transform: translateX(-25%) rotate(-45deg);
 }
   
 i.left {
-    transform: rotate(135deg);
-    -webkit-transform: rotate(135deg);
+    transform: translateX(25%) rotate(135deg);
+    -webkit-transform: translateX(25%) rotate(135deg);
 }
   
 i.up {
-    transform: rotate(-135deg);
-    -webkit-transform: rotate(-135deg);
+    transform: translateY(25%) rotate(-135deg);
+    -webkit-transform: translateY(25%) rotate(-135deg);
 }
   
 i.down {
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
+    transform: translateY(-25%) rotate(45deg);
+    -webkit-transform: translateY(-25%) rotate(45deg);
 }
