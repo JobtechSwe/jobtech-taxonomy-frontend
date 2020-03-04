@@ -1,4 +1,5 @@
 import React from 'react';
+import XLSX from 'xlsx';
 import Button from '../../control/button.jsx';
 import Label from '../../control/label.jsx';
 import List from '../../control/list.jsx';
@@ -133,6 +134,20 @@ class VersionList extends React.Component {
         }
     }
 
+    onSaveClicked() {
+        var data = this.filterData().map((item) => {
+            var ret = {};
+            ret[Localization.get("event")] = Localization.get(item["event-type"]);
+            ret[Localization.get("value_storage")] = Localization.get("db_" + item["changed-concept"].type);
+            ret[Localization.get("name")] = item["changed-concept"].preferredLabel;
+            return ret;            
+        }); 
+        var worksheet = XLSX.utils.json_to_sheet(data);
+        var new_workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(new_workbook, worksheet, "Version - " + this.state.item.version);
+        XLSX.writeFile(new_workbook, "Version.xlsx");
+    }
+
     renderLoader() {
         if(this.state.loadingData) {
             return (
@@ -182,6 +197,10 @@ class VersionList extends React.Component {
             </div>
         );
     }
+
+    /*<Button                             
+    onClick={this.onSaveClicked.bind(this)}
+    text={Localization.get("Save as XLSX")}/>*/
 
     render() {        
         return (

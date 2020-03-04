@@ -190,7 +190,7 @@ class Referred extends React.Component {
                             onClick={this.onVisitReplacedByClicked.bind(this)}
                             text={Localization.get("visit_replaced_by")}/>
                     </div>
-                </div>
+                </div>               
             </Group>
         );
     }
