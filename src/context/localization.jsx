@@ -76,6 +76,8 @@ class Localization {
                 competense: "Kompetens",
                 connections: "Relationer",
                 connection: "Relation",
+                undefined: "Ej definierad",
+                quality_control: "Kvalitetssäkring",
                 add_connection: "Lägg till relation",
                 remove_connection: "Ta bort relation",
                 edit_type: "Välj typ av ändring",

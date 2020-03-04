@@ -24,6 +24,7 @@ class EditConcept extends React.Component {
         this.EDIT_TYPE_NONE = "--";
         this.EDIT_TYPE_NAME = "name";
         this.EDIT_TYPE_DESCRIPTION = "description";
+        this.EDIT_TYPE_QUALITY = "quality_control";
         this.EDIT_TYPE_REFERENCED_TO = "set_reference";
         this.EDIT_TYPE_DEPRICATE = "deprecate";
         this.EDIT_TYPE_ADD_RELATION = "add_connection";
@@ -33,7 +34,6 @@ class EditConcept extends React.Component {
             type: this.EDIT_TYPE_NONE,
             isSaveEnabledEditState: false,
             isSaveEnabledReasonState: false,
-            isSaveEnabledQualityState: false,
         };
         // edit context
         this.editContext = {
@@ -43,11 +43,6 @@ class EditConcept extends React.Component {
         // reason context
         this.reasonContext = {
             setEnableSave: (enabled) => { this.setState({isSaveEnabledReasonState: enabled})},
-            onSave: null,
-        };
-        // quality context
-        this.qualityContext = {
-            setEnableSave: (enabled) => { this.setState({isSaveEnabledQualityState: enabled})},
             onSave: null,
         };
     }
@@ -64,7 +59,7 @@ class EditConcept extends React.Component {
     onSaveClicked() {
         if(this.editContext.onSave) {
             EventDispatcher.fire(Constants.EVENT_SHOW_SAVE_INDICATOR);
-            this.editContext.onSave(this.reasonContext.message, this.qualityContext.quality, () => {
+            this.editContext.onSave(this.reasonContext.message, null, () => {
                 this.props.onItemUpdated();
                 EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
             });
@@ -88,6 +83,7 @@ class EditConcept extends React.Component {
                 <option value={this.EDIT_TYPE_NONE}>--</option>
                 {renderOption(this.EDIT_TYPE_NAME)}
                 {renderOption(this.EDIT_TYPE_DESCRIPTION)}
+                {renderOption(this.EDIT_TYPE_QUALITY)}
                 {renderOption(this.EDIT_TYPE_ADD_RELATION)}
                 {renderOption(this.EDIT_TYPE_REMOVE_RELATION)}
                 {renderOption(isDeprecated ? this.EDIT_TYPE_REFERENCED_TO : this.EDIT_TYPE_DEPRICATE)}
@@ -104,20 +100,14 @@ class EditConcept extends React.Component {
         }
     }
 
-    renderQuality() {
-        if(this.state.type != this.EDIT_TYPE_NONE) {
-            return ( 
-                <EditConceptQuality editContext={this.qualityContext}/>
-            );
-        }
-    }
-
     render() {
         var getEditPage = (type) => {
             if(type == this.EDIT_TYPE_NAME) {
                 return ( <EditConceptName item={this.props.item} editContext={this.editContext}/> );
             } else if(type == this.EDIT_TYPE_DESCRIPTION) {
                 return ( <EditConceptDefinition item={this.props.item} editContext={this.editContext}/> );
+            } else if(type == this.EDIT_TYPE_QUALITY) {
+                return ( <EditConceptQuality item={this.props.item} editContext={this.editContext}/> );
             } else if(type == this.EDIT_TYPE_DEPRICATE) {
                 return ( <EditConceptDeprecate item={this.props.item} editContext={this.editContext}/> );
             } else if(type == this.EDIT_TYPE_ADD_RELATION) {
@@ -141,7 +131,6 @@ class EditConcept extends React.Component {
                         {this.renderTypeSelection()}
                     </div>
                     {getEditPage(this.state.type)}
-                    {this.renderQuality()}
                     {this.renderReason()}
                 </div>
                 <div className="dialog_content_buttons">

@@ -14,8 +14,13 @@ class EditConceptQuality extends React.Component {
             value: "1",
             isChanged: false,
 		};
-		// NOTE: temporary
+        this.props.editContext.onSave = this.onSave.bind(this);
 		this.props.editContext.setEnableSave(true);
+    }
+
+    onSave(message, quality, callback) {
+        // TODO: impl
+        callback();
     }
 
     onValueChanged(e) {
@@ -39,6 +44,7 @@ class EditConceptQuality extends React.Component {
 					<option>1</option>
 					<option>2</option>
 					<option>3</option>
+					<option value="undefined">{Localization.get("undefined")}</option>
 				</select>
             </div>
         );
