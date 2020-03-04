@@ -164,7 +164,7 @@ class ConceptsSearch extends React.Component {
             if(!root) {
                 root = ControlUtil.createTreeViewItem(this.queryTreeView, {type: element.type});
                 root.setText(Localization.get("db_" + element.type));
-                root.setExpanded(true);                
+                //root.setExpanded(true);                
                 roots.push(root);
             }
             var child = ControlUtil.createTreeViewItem(this.queryTreeView, element);
@@ -228,7 +228,6 @@ class ConceptsSearch extends React.Component {
                         }
                         root = ControlUtil.createTreeViewItem(this.queryTreeView, target);
                         root.setText(target.preferredLabel);
-                        root.setExpanded(true);
                         this.queryTreeView.addRoot(root);
                     }
                     var child = ControlUtil.createTreeViewItem(this.queryTreeView, source);
@@ -241,7 +240,6 @@ class ConceptsSearch extends React.Component {
                     if(root == null) {
                         root = ControlUtil.createTreeViewItem(this.queryTreeView, target);
                         root.setText(target.preferredLabel);
-                        root.setExpanded(true);
                         this.queryTreeView.addRoot(root);
                     }                    
                 }
@@ -257,6 +255,12 @@ class ConceptsSearch extends React.Component {
                 return a.text > b.text ? 1 : 0;
             });
         }
+        this.queryTreeView.roots.sort((a, b) => {
+            if(a.text < b.text) { 
+                return -1; 
+            }
+            return a.text > b.text ? 1 : 0;
+        });
         this.queryTreeView.shouldUpdateState = true;
         this.queryTreeView.invalidate();
     }
@@ -299,7 +303,7 @@ class ConceptsSearch extends React.Component {
         Rest.getGraph(Constants.RELATION_NARROWER, Constants.CONCEPT_SKILL_HEADLINE, Constants.CONCEPT_SKILL, (data) => {            
             this.state.data = data.graph;
             this.sortData(this.state.data.nodes);
-            this.populateTreeSkill(null);
+            this.filterAndPopulate(this.searchReference.value);
             this.onFetchComplete(true);
             this.setState({loadingData: false});
         }, (status) => {
@@ -361,7 +365,7 @@ class ConceptsSearch extends React.Component {
         if(query.length > 0) {
             var q = query.toLowerCase();
             if(this.state.queryType == this.TYPE_SKILL) {
-                var data = this.state.data.nodes.filter((item, i) => {
+                var data = this.state.data.nodes.filter((item) => {
                     var isDeprecated = item.deprecated ? item.deprecated : false;
                     if(this.state.showDeprecated != isDeprecated) {
                         return false;
@@ -383,16 +387,12 @@ class ConceptsSearch extends React.Component {
             }
         } else {            
             if(this.state.queryType == this.TYPE_SKILL) { 
-                // TODO: this also needs to be reworked               
-                if(!this.state.showDeprecated) {
-                    var data = this.state.data.nodes.filter((item) => {
-                        return !item.deprecated;
-                    });
-                    this.sortData(data);
-                    this.populateTreeSkill(data);
-                } else  {
-                    this.populateTreeSkill(null);
-                }
+                var data = this.state.data.nodes.filter((item, i) => {
+                    var isDeprecated = item.deprecated ? item.deprecated : false;
+                    return this.state.showDeprecated == isDeprecated;
+                });
+                this.sortData(data);
+                this.populateTreeSkill(data);
             } else {
                 var data = this.state.data.filter((item) => { 
                     var isDeprecated = item.deprecated ? item.deprecated : false;                   

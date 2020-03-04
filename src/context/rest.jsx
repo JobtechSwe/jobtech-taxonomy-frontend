@@ -203,6 +203,7 @@ class Rest {
     }
 
     searchConcepts(query, onSuccess, onError) {
+        // NOTE: this wont hold, we will need a new private version for this
         this.get("/suggesters/autocomplete?query-string=" + encodeURIComponent(query), onSuccess, onError);
     }
 
