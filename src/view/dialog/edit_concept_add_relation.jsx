@@ -64,12 +64,14 @@ class EditConceptAddRelation extends React.Component {
         // TODO: handle message and quality
         var state = this.state;
         var sub = state.substitutability.trim();
+        if(sub.length == 0) {
+            sub = "0";
+        }
         App.addSaveRequest();
         Rest.postAddRelation(this.props.item.id, 
                              state.selected.id, 
                              state.type,
-                             "",
-                             sub.length == 0 ? "0" : sub, 
+                             state.type == "substitutability" ? sub : null, 
                              () => {
             
             App.removeSaveRequest();

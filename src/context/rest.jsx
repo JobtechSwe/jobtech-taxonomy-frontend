@@ -260,8 +260,8 @@ class Rest {
         this.post("/private/replace-concept?old-concept-id=" + oldId + "&new-concept-id=" + newId, onSuccess, onError);
     }
 
-    postAddRelation(conceptId, relationId, relationType, definition, substitutability, onSuccess, onError) {
-        var query = "concept-1=" + conceptId + "&concept-2=" + relationId + "&relation-type=" + relationType + "&definition=" + definition;
+    postAddRelation(conceptId, relationId, relationType, substitutability, onSuccess, onError) {
+        var query = "concept-1=" + conceptId + "&concept-2=" + relationId + "&relation-type=" + relationType;
         if(substitutability) {
             query += "&substitutability-percentage=" + substitutability;
         }
