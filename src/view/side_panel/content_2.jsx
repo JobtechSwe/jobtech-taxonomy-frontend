@@ -41,8 +41,17 @@ class Content2 extends React.Component {
         });
     }
 
-    onVersionSelected(item) {
-        EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item);
+    onVersionSelected(item) {        
+        var prevItem = null;
+        var pos = this.state.versions.indexOf(item);
+        if(pos == 0) {
+            prevItem = this.state.versions[this.state.versions.length -1];
+        } else if(pos > 1) {
+            prevItem = this.state.versions[pos -1];
+        }
+        EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, {
+            selected: item,
+            prev: prevItem});
     }
 
     renderLoader() {

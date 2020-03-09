@@ -812,7 +812,7 @@ body {
 
 .version_list_item > div:nth-child(2) {
     padding-right: 10px;
-    width: 160px;
+    width: 250px;
     overflow-wrap: break-word;
 }
 
@@ -844,7 +844,7 @@ body {
 
 .version_list_header > div:nth-child(2) {
     padding-right: 10px;
-    width: 160px;
+    width: 250px;
     cursor: pointer;
 }
 

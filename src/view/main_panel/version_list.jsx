@@ -111,11 +111,19 @@ class VersionList extends React.Component {
         });
     }
 
-    onFilterChange(value) {        
+    onFilterChange(value) {  
+        if(this.state.selected != null) {
+            EventDispatcher.fire(this.VERSION_LIST_EVENT_ID);
+            this.onItemSelected(null);
+        }      
         this.setState({filter: value});
     }
 
     onSortClicked(sortBy) {
+        if(this.state.selected != null) {
+            EventDispatcher.fire(this.VERSION_LIST_EVENT_ID);
+            this.onItemSelected(null);
+        }      
         if(this.sortBy == sortBy) {
             this.sortDesc = !this.sortDesc;
         } else {

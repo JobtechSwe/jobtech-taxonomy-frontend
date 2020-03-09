@@ -13,6 +13,7 @@ class Content2 extends React.Component {
         super();
         this.state = {
             selectedVersion: null,
+            prevVersion: null,
             selectedItem: null,    
         };
         this.boundSideItemSelected = this.onSideItemSelected.bind(this);
@@ -31,7 +32,9 @@ class Content2 extends React.Component {
     }
 
     onSideItemSelected(item) {
-        this.setState({selectedVersion: item});
+        this.setState({
+            selectedVersion: item == null ? null : item.selected,
+            prevVersion: item == null ? null : item.prev});
     }
 
     onVersionItemSelected(item) {
@@ -64,11 +67,16 @@ class Content2 extends React.Component {
 
     renderVersionItemHistory() {
         if(this.state.selectedItem) {
+            var from = this.state.prevVersion == null ? null : this.state.prevVersion.date;
+            var to = this.state.selectedVersion.date;
             return (
                 <Group
                     css="version_list_group"
                     text={Localization.get("history")}>
-                    <ItemHistory item={this.state.selectedItem["changed-concept"]}/>
+                    <ItemHistory 
+                        item={this.state.selectedItem["changed-concept"]}
+                        from={from}
+                        to={to}/>
                 </Group>
             );
         }

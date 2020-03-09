@@ -20,6 +20,8 @@ class ItemHistory extends React.Component {
             selected: null,
             loadingConceptChanges: false,
             loadingRelationChanges: false,
+            from: null,
+            to: null
         }
     }
 
@@ -38,6 +40,8 @@ class ItemHistory extends React.Component {
             selected: null,
             loadingConceptChanges: true,
             loadingRelationChanges: true,
+            from: props.from,
+            to: props.to
         }, () => {
             if(props.item) {
                 Rest.getConceptDayNotes(props.item.id, (data) => {
@@ -47,6 +51,7 @@ class ItemHistory extends React.Component {
                         item.date = new Date(item.timestamp);
                         item.event = item["event-type"];
                     }
+                    data = this.filterBetween(data, this.state.from, this.state.to);
                     this.state.data.push(...data);
                     this.setState({
                         data: Util.sortByKey(this.state.data, "date", false),
@@ -61,6 +66,7 @@ class ItemHistory extends React.Component {
                         item.date = new Date(item.timestamp);
                         item.event = item["event-type"];                        
                     }
+                    data = this.filterBetween(data, this.state.from, this.state.to);
                     this.state.data.push(...data);
                     this.setState({
                         data: Util.sortByKey(this.state.data, "date", false),
@@ -71,6 +77,20 @@ class ItemHistory extends React.Component {
                 });
             }
         });
+    }
+
+    filterBetween(data, from, to) {
+        if(from != null) {
+            data = data.filter((item) => {
+                return item.date >= from;
+            });
+        }
+        if(to != null) {
+            data = data.filter((item) => {
+                return item.date < to;
+            });
+        }
+        return data;
     }
 
     onCloseDialogClicked() {
