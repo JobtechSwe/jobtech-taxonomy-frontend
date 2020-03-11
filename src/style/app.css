@@ -1202,3 +1202,13 @@ body {
     align-items: flex-end;
     flex-grow: 1;
 }
+
+.dialog_export_list {
+    min-width: 200px;
+    min-height: 200px;
+}
+
+.dialog_export_list > div {
+    display: flex;
+    
+}

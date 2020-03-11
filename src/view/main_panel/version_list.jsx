@@ -11,6 +11,7 @@ import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Util from '../../context/util.jsx';
 import App from '../../context/app.jsx';
+import Export from '../dialog/export.jsx';
 
 class VersionList extends React.Component { 
 
@@ -142,18 +143,57 @@ class VersionList extends React.Component {
         }
     }
 
+
+
     onSaveClicked() {
-        var data = this.filterData().map((item) => {
-            var ret = {};
-            ret[Localization.get("event")] = Localization.get(item["event-type"]);
-            ret[Localization.get("value_storage")] = Localization.get("db_" + item["changed-concept"].type);
-            ret[Localization.get("name")] = item["changed-concept"].preferredLabel;
-            return ret;            
-        }); 
-        var worksheet = XLSX.utils.json_to_sheet(data);
-        var new_workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(new_workbook, worksheet, "Version - " + this.state.item.version);
-        XLSX.writeFile(new_workbook, "Version.xlsx");
+
+        var onSaveExcel = (values) => {
+            var data = this.filterData().map((item) => {
+                var ret = {};
+                for(var i=0; i<values.length; ++i) {
+                    if(values[i].selected) {
+                        ret[values[i].text] = values[i].get(item);
+                    }
+                }
+                return ret;            
+            }); 
+            var worksheet = XLSX.utils.json_to_sheet(data);
+            var new_workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(new_workbook, worksheet, "Version - " + this.state.item.version);
+            XLSX.writeFile(new_workbook, "Version.xlsx");
+        }
+
+        var values = [];
+        values.push({
+            text: Localization.get("event"),
+            get: (item) => {
+                return Localization.get(item["event-type"]);
+            },
+            selected: true
+        });
+        values.push({
+            text: Localization.get("value_storage"),
+            get: (item) => {
+                return Localization.get("db_" + item["changed-concept"].type);
+            },
+            selected: true
+        });
+        values.push({
+            text: Localization.get("name"),
+            get: (item) => {
+                return item["changed-concept"].preferredLabel;
+            },
+            selected: true
+        });
+
+        EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
+            title: Localization.get("export"),
+            content: <Export 
+                        values={values}
+                        onSaveExcel={onSaveExcel}
+                    />
+        });
+
     }
 
     renderLoader() {
@@ -206,10 +246,6 @@ class VersionList extends React.Component {
         );
     }
 
-    /*<Button                             
-    onClick={this.onSaveClicked.bind(this)}
-    text={Localization.get("Save as XLSX")}/>*/
-
     render() {        
         return (
             <div className="version_list">
@@ -227,12 +263,15 @@ class VersionList extends React.Component {
                     dataRender={this.renderItem.bind(this)}>
                     {this.renderLoader()}
                 </List>
-                 <div className="version_list_buttons">
-                        <Button 
-                            isEnabled={this.state.selected != null}
-                            onClick={this.onVisitClicked.bind(this)}
-                            text={Localization.get("visit")}/>
-                    </div>
+                <div className="version_list_buttons">
+                    <Button 
+                        isEnabled={this.state.selected != null}
+                        onClick={this.onVisitClicked.bind(this)}
+                        text={Localization.get("visit")}/>
+                    <Button                             
+                        onClick={this.onSaveClicked.bind(this)}
+                        text={Localization.get("export")}/>
+                </div>
             </div>
         );
     }
