@@ -60,6 +60,7 @@ class Export extends React.Component {
                 <List css="dialog_export_list">{values}</List>
                 <div className="dialog_content_buttons">
                     <Button 
+                        isEnabled={false}
                         onClick={this.onSavePdfClicked.bind(this)}
                         text={Localization.get("export_pdf")}/>
                     <Button 

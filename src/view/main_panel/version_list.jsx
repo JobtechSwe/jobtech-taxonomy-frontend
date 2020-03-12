@@ -143,21 +143,25 @@ class VersionList extends React.Component {
         }
     }
 
-
-
     onSaveClicked() {
-
         var onSaveExcel = (values) => {
             var data = this.filterData().map((item) => {
                 var ret = {};
                 for(var i=0; i<values.length; ++i) {
-                    if(values[i].selected) {
-                        ret[values[i].text] = values[i].get(item);
-                    }
+                    ret[values[i].text] = values[i].get(item);
                 }
                 return ret;            
             }); 
-            var worksheet = XLSX.utils.json_to_sheet(data);
+            var width = [];
+            for(var i=0; i<values.length; ++i) {
+                var key = values[i].text;
+                var maxWidth = Math.max(...(data.map((item) => {
+                    return item[key] != null ? item[key].length : 0;
+                })));
+                width.push({width: maxWidth});
+            }
+            var worksheet = XLSX.utils.json_to_sheet(data);            
+            worksheet['!cols'] = width;
             var new_workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(new_workbook, worksheet, "Version - " + this.state.item.version);
             XLSX.writeFile(new_workbook, "Version.xlsx");
