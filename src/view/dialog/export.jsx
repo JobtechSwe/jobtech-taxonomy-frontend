@@ -15,20 +15,28 @@ class Export extends React.Component {
         }
     }
 
+    getFinalValues() {
+        return this.state.values.filter((x) => {
+            return x.selected;
+        });
+    }
+
     onSelectedChanged(element, e) {
         element.selected = e.target.checked;
         this.forceUpdate();
     }
 
     onSavePdfClicked() {
-        if(this.props.onSavePdf) {
-            this.props.onSavePdf(this.state.values);
+        var values = this.getFinalValues();
+        if(this.props.onSavePdf && values.length) {
+            this.props.onSavePdf(values);
         }
     }
 
     onSaveExcelClicked() {
-        if(this.props.onSaveExcel) {
-            this.props.onSaveExcel(this.state.values);
+        var values = this.getFinalValues();
+        if(this.props.onSaveExcel && values.length) {
+            this.props.onSaveExcel(values);
         }
     }
     
@@ -52,7 +60,6 @@ class Export extends React.Component {
                 <List css="dialog_export_list">{values}</List>
                 <div className="dialog_content_buttons">
                     <Button 
-                        isEnabled={false}
                         onClick={this.onSavePdfClicked.bind(this)}
                         text={Localization.get("export_pdf")}/>
                     <Button 

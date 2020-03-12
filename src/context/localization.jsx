@@ -167,6 +167,7 @@ class Localization {
                 export_pdf: "PDF",
                 export_excel: "Excel",
                 export: "Exportera",
+                code: "Kod",
             },
             // english
             en: {

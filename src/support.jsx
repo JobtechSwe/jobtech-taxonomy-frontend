@@ -90,6 +90,17 @@ class Support {
                 }
             });
         }
+        if(!('forEach' in Object.prototype)) {
+            Object.defineProperty(Object.prototype, "forEach", {
+                value: function(action, that) {
+                    for(var i=0, n=this.length; i<n; i++) {
+                        if(i in this) {
+                            action.call(that, this[i], i, this);
+                        }
+                    }
+                }
+            });
+        }
         if(!('map' in Array.prototype)) {
             Object.defineProperty(Array.prototype, "map", {
                 value: function(mapper, that /*opt*/) {

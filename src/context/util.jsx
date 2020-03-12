@@ -175,6 +175,89 @@ class Util {
                 break;
         }
     }
+
+    getFullyPopulatedConcept(id, type, onSuccess, onError) {
+        var success = (concepts) => {
+            var onFetchComplete = (context) => {
+                if(--context.depth == 0) {
+                    onSuccess(context.concept);
+                }
+            };
+            var onFetchError = (context, status) => {
+                if(--context.depth == 0) {
+                    onError(status);
+                }
+            };
+            var fetchRelations = (context, type) => {
+                context.depth++;
+                Rest.getAllConceptRelations(context.concept.id, type, (data) => {
+                    var result = [];
+                    var findConcept = (id) => {
+                        return result.find((e) => {
+                            return e.concept.id == id;
+                        });
+                    };
+                    var fetchParent = (child) => {
+                        context.depth++;
+                        Rest.getAllConceptRelations(child.id, Constants.RELATION_BROADER, (parents) => {
+                            for(var i=0; i<parents.length; ++i) {
+                                var p = findConcept(parents[i]);
+                                if(p == null) {
+                                    p = {
+                                        concept: parents[i],
+                                        children: [],
+                                    };
+                                    result.push(p);
+                                } 
+                                p.children.push(child);
+                            }
+                            onFetchComplete(context);
+                        }, (status) => {
+                            onFetchError(context, status);
+                        });
+                    };
+                    for(var i=0; i<data.length; ++i) {
+                        var connection = {
+                            concept: data[i],
+                            children: [],
+                        };
+                        if(data[i].type == "skill") {
+                            fetchParent(data[i]);
+                        }
+                        result.push(connection);
+                    }
+                    context.concept[type + "_list"] = result;
+                    onFetchComplete(context);
+                }, (status) => { 
+                    onFetchError(context, status);
+                });
+            };
+            // context to keep track of where we are
+            var context = {
+                concept: concepts[0],
+                depth: 0,
+            };
+            context.depth++;
+            // get all relations
+            if(context.concept.relations.broader) {
+                fetchRelations(context, Constants.RELATION_BROADER);
+            }
+            if(context.concept.relations.narrower) {
+                fetchRelations(context, Constants.RELATION_NARROWER);
+            }
+            if(context.concept.relations.related) {
+                fetchRelations(context, Constants.RELATION_RELATED);
+            }
+            // get local history
+
+            // get special fields
+            if(context.concept["ssyk-code-2012"] && context.concept["ssyk-code-2012"].length > 3) {
+                // TODO: get all isco4 codes
+            }
+            onFetchComplete(context);
+        }
+        this.getConcept(id, type, success, onError);
+    }
 }
 
 export default new Util;
