@@ -107,7 +107,14 @@ class Content1 extends React.Component {
                     v: text.trim(),
                 }
             }
-            Util.getFullyPopulatedConcept(item.id, item.type, (concept) => {
+            var includeRelations = values.find((e) => { return e.id == 1; }) != null;
+            var includeHistory = values.find((e) => { return e.id == 2; }) != null;
+            Util.getFullyPopulatedConceptParameterized(
+                item.id, 
+                item.type, 
+                includeRelations,
+                includeHistory,
+                true, (concept) => {
                 var sheets = [];
                 for(var i=0; i<values.length; ++i) {
                     var sheet = {
@@ -165,7 +172,22 @@ class Content1 extends React.Component {
                         sheet['!cols'] = [{width: 15}, {width: 30}, {width: 30}, {width: 15}];
                         sheets.push(sheet);
                     } else if(values[i].id == 2) {
-
+                        var index = 1;
+                        // build sheet
+                        sheet['A' + index] = createCell(Localization.get("type"));
+                        sheet['B' + index] = createCell(Localization.get("date"));
+                        sheet['C' + index] = createCell("User-id");
+                        index++;
+                        for(var j=0; j<concept.local_history.length; ++j) {
+                            var e = concept.local_history[j];
+                            sheet['A' + index] = createCell(e.event);
+                            sheet['B' + index] = createCell(e.date.toLocaleString());
+                            sheet['C' + index] = createCell(e['user-id']);
+                            index++;
+                        }
+                        sheet['!ref'] = "A1:C" + index;
+                        sheet['!cols'] = [{width: 30}, {width: 30}, {width: 15}];
+                        sheets.push(sheet);
                     }
                 }
                 if(sheets.length) {

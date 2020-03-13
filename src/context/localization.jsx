@@ -168,6 +168,7 @@ class Localization {
                 export_excel: "Excel",
                 export: "Exportera",
                 code: "Kod",
+                date: "Datum",
             },
             // english
             en: {
