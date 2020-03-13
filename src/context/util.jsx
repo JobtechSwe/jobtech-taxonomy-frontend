@@ -176,7 +176,7 @@ class Util {
         }
     }
 
-    getFullyPopulatedConcept(id, type, onSuccess, onError) {
+    getFullyPopulatedConceptParameterized(id, type, includeRelations, includeHistory, includeFields, onSuccess, onError) {
         var success = (concepts) => {
             var onFetchComplete = (context) => {
                 if(--context.depth == 0) {
@@ -232,31 +232,68 @@ class Util {
                     onFetchError(context, status);
                 });
             };
+            var fetchLocalHistory = (context) => {
+                var processData = (data) => {
+                    data = data.filter(Boolean);
+                    for(var i=0; i<data.length; ++i) {
+                        var item = data[i];
+                        item.date = new Date(item.timestamp);
+                        item.event = item["event-type"];
+                    }
+                    return data;
+                };
+                context.depth++;
+                Rest.getConceptDayNotes(context.concept.id, (conceptData) => {
+                    context.depth++;
+                    context.concept.local_history = processData(conceptData);
+                    context.concept.local_history = this.sortByKey(context.concept.local_history, "date", false);
+                    Rest.getRelationDayNotes(context.concept.id, (relationData) => {
+                        context.concept.local_history = context.concept.local_history.concat(processData(relationData));
+                        context.concept.local_history = this.sortByKey(context.concept.local_history, "date", false);
+                        onFetchComplete(context);
+                    }, (status) => {
+                        onFetchError(context, status);
+                    });
+                    onFetchComplete(context);
+                }, (status) => { 
+                    onFetchError(context, status);
+                });
+            };
             // context to keep track of where we are
             var context = {
                 concept: concepts[0],
                 depth: 0,
             };
             context.depth++;
-            // get all relations
-            if(context.concept.relations.broader) {
-                fetchRelations(context, Constants.RELATION_BROADER);
-            }
-            if(context.concept.relations.narrower) {
-                fetchRelations(context, Constants.RELATION_NARROWER);
-            }
-            if(context.concept.relations.related) {
-                fetchRelations(context, Constants.RELATION_RELATED);
+            if(includeRelations) {
+                // get all relations
+                if(context.concept.relations.broader) {
+                    fetchRelations(context, Constants.RELATION_BROADER);
+                }
+                if(context.concept.relations.narrower) {
+                    fetchRelations(context, Constants.RELATION_NARROWER);
+                }
+                if(context.concept.relations.related) {
+                    fetchRelations(context, Constants.RELATION_RELATED);
+                }
             }
             // get local history
-
+            if(includeHistory) {
+                fetchLocalHistory(context);
+            }
             // get special fields
-            if(context.concept["ssyk-code-2012"] && context.concept["ssyk-code-2012"].length > 3) {
-                // TODO: get all isco4 codes
+            if(includeFields) {
+                if(context.concept["ssyk-code-2012"] && context.concept["ssyk-code-2012"].length > 3) {
+                    // TODO: get all isco4 codes
+                }
             }
             onFetchComplete(context);
         }
         this.getConcept(id, type, success, onError);
+    }
+
+    getFullyPopulatedConcept(id, type, onSuccess, onError) {
+        return this.getFullyPopulatedConceptParameterized(id, type, true, true, true, onSuccess, onError);
     }
 }
 
