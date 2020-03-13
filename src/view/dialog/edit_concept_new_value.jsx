@@ -29,12 +29,12 @@ class EditConceptNewValue extends React.Component {
         this.props.editContext.onSave = this.onSave.bind(this);
     }
 
-    onSaveRelation(callback, from, to, type, note, substitutability) {
-        if(substitutability && substitutability.trim().length == 0) {
+    onSaveRelation(callback, from, to, type, substitutability) {
+        if(type != "substitutability" || (substitutability && substitutability.trim().length == 0)) {
             substitutability = null;
         }
         App.addSaveRequest();
-        Rest.postAddRelation(from.id, to.id, type, note, substitutability, (data) => {
+        Rest.postAddRelation(from.id, to.id, type, substitutability, (data) => {
             if(App.removeSaveRequest()) {
                 // TODO: update props item, increment relations counter
                 callback();
@@ -49,17 +49,17 @@ class EditConceptNewValue extends React.Component {
         // TODO: handle message and quality
         var state = this.state;
         App.addSaveRequest();
-        Rest.postConcept(state.type, state.name.trim(), state.definition, (data) => {
+        Rest.postConcept(state.type, state.name.trim(), encodeURIComponent(state.definition), (data) => {
 
             CacheManager.invalidateCachedTypeList(data.concept.type);
 
             if(state.parent) {
                 // add relation between new concept and its selected parent
-                this.onSaveRelation(callback, data.concept, state.parent, "broader", "note", null);
+                this.onSaveRelation(callback, data.concept, state.parent, "broader", null);
             }
             if(this.props.item) {
                 // add relation between new concept and source concept
-                this.onSaveRelation(callback, data.concept, this.props.item, state.relationType, "note", state.substitutability);
+                this.onSaveRelation(callback, data.concept, this.props.item, state.relationType, state.substitutability);
             }
             if(App.removeSaveRequest()) {
                 // TODO: update props item, increment relations counter
@@ -86,6 +86,9 @@ class EditConceptNewValue extends React.Component {
         });
         if(parentType != null && parentConcepts.length == 0) {
             Rest.getConcepts(parentType, (data) => {
+                if(parentType === "skill-headline") {
+                    data = ContextUtil.sortByKey(data, "preferredLabel", true);
+                }
                 this.setState({parentConcepts: data});
             }, (status) => {
 

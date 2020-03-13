@@ -22,7 +22,7 @@ class EditConceptDefinition extends React.Component {
         // TODO: handle message and quality
         var item = this.props.item;
         App.addSaveRequest();
-        Rest.patchConcept(item.id, "&definition=" + this.state.value, () => {
+        Rest.patchConcept(item.id, "&definition=" + encodeURIComponent(this.state.value), () => {
             this.props.item.definition = this.state.value;
             App.removeSaveRequest();
             callback();

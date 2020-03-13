@@ -200,7 +200,7 @@ class Content1 extends React.Component {
     onSideItemSelected(item) {
         var components = [];
         var key = 0;
-        if(item) {
+        if(item) {            
             var deprecated = item.deprecated != null ? item.deprecated : false;
             var css = item.type == Constants.CONCEPT_ISCO_LEVEL_4 ? "isco_color" : null;
 
