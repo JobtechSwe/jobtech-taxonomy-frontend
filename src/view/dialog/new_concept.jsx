@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from './../../control/button.jsx';
+import DialogWindow from './../../control/dialog_window.jsx';
 import Label from './../../control/label.jsx';
 import App from './../../context/app.jsx';
 import EventDispatcher from './../../context/event_dispatcher.jsx';
@@ -18,6 +19,7 @@ class NewConcept extends React.Component {
             isSaveEnabledEditState: false,
             isSaveEnabledReasonState: false,
             isSaveEnabledQualityState: false,
+            showQloseQuery: false,
         };
         // edit context
         this.editContext = {
@@ -40,9 +42,17 @@ class NewConcept extends React.Component {
         this.setState({type: e.target.value});
     }
 
-    onCloseClicked() {
-        Rest.abort();
-        EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
+    onAbortClicked() {
+        this.setState({showQloseQuery: false});
+    }
+
+    onCloseClicked(force) {
+        if((this.state.isSaveEnabledEditState || this.state.isSaveEnabledReasonState) && !force) {
+            this.setState({showQloseQuery: true});
+        } else {
+            Rest.abort();
+            EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
+        }
     }
 
     onSaveClicked() {
@@ -56,6 +66,31 @@ class NewConcept extends React.Component {
 
     isSaveEnabled() {
         return this.state.isSaveEnabledEditState && this.state.isSaveEnabledReasonState;
+    }
+
+    renderCloseQuery() {
+        if(this.state.showQloseQuery) {
+            return (
+                <div className="overlay_window">
+                    <DialogWindow title={Localization.get("dialog_unsaved_changes")}>
+                        <div className="dialog_content edit_concept_dialog_page">
+                            <div className="dialog_content_buttons">
+                            <Button
+                                    text={Localization.get("abort")}
+                                    onClick={this.onAbortClicked.bind(this)}/>
+                                <Button
+                                    text={Localization.get("close")}
+                                    onClick={this.onCloseClicked.bind(this, true)}/>
+                                <Button
+                                    isEnabled={this.isSaveEnabled()}
+                                    text={Localization.get("save")}
+                                    onClick={this.onSaveClicked.bind(this)}/>
+                            </div>
+                        </div>
+                    </DialogWindow>
+                </div>
+            );
+        }
     }
 
     render() {
@@ -75,6 +110,7 @@ class NewConcept extends React.Component {
                         text={Localization.get("save")}
                         onClick={this.onSaveClicked.bind(this)}/>
                 </div>
+                {this.renderCloseQuery()}
             </div>
         );
     }
