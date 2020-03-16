@@ -197,10 +197,13 @@ class Util {
                             return e.concept.id == id;
                         });
                     };
-                    var fetchParent = (child) => {
+                    var fetchParent = (child, parentType) => {
                         context.depth++;
                         Rest.getAllConceptRelations(child.id, Constants.RELATION_BROADER, (parents) => {
                             for(var i=0; i<parents.length; ++i) {
+                                if(parentType && parents[i].type != parentType) {
+                                    continue;
+                                }
                                 var p = findConcept(parents[i]);
                                 if(p == null) {
                                     p = {
@@ -222,7 +225,7 @@ class Util {
                             children: [],
                         };
                         if(data[i].type == "skill") {
-                            fetchParent(data[i]);
+                            fetchParent(data[i], "skill-headline");
                         }
                         result.push(connection);
                     }

@@ -253,6 +253,9 @@ class Connections extends React.Component {
         this.waitingFor++;
         Rest.getAllConceptRelations(item.data.id, Constants.RELATION_BROADER, (data) => {
             for(var i=0; i<data.length; ++i) {
+                if(data[i].type != "skill-headline") {
+                    continue;
+                }
                 var headline = this.findSkillHeadline(root, data[i].id);
                 if(headline == null) {
                     headline = ControlUtil.createTreeViewItem(this.relationTreeView, data[i]);
