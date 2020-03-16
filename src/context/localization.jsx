@@ -162,13 +162,14 @@ class Localization {
                 select_actions: "Välj typ av åtgärd",
                 select_relations: "Välj relationer",
                 select_types: "Välj ett eller flera värdeförråd",
-                not_published: "Ej publiserat",
+                not_published: "Ej publiserad",
                 export_headline: "Markera det innehåll som ska exporteras",
                 export_pdf: "PDF",
                 export_excel: "Excel",
                 export: "Exportera",
                 code: "Kod",
                 date: "Datum",
+                new_version: "Ny version",
             },
             // english
             en: {

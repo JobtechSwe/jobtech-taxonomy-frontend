@@ -56,27 +56,9 @@ class Content2 extends React.Component {
     renderVersionList() {
         if(this.state.selectedVersion) {
             return (
-                <Group 
-                    css="version_list_group"
+                <Group                     
                     text={Localization.get("content")}>
                     <VersionList item={this.state.selectedVersion}/>
-                </Group>
-            );
-        }
-    }
-
-    renderVersionItemHistory() {
-        if(this.state.selectedItem) {
-            var from = this.state.prevVersion == null ? null : this.state.prevVersion.date;
-            var to = this.state.selectedVersion.date;
-            return (
-                <Group
-                    css="version_list_group"
-                    text={Localization.get("history")}>
-                    <ItemHistory 
-                        item={this.state.selectedItem["changed-concept"]}
-                        from={from}
-                        to={to}/>
                 </Group>
             );
         }
@@ -86,8 +68,7 @@ class Content2 extends React.Component {
         return (
             <div className="main_content_2">
                 {this.renderTitle()}
-                {this.renderVersionList()}
-                {this.renderVersionItemHistory()}
+                {this.renderVersionList()}                
             </div>
         );
     }

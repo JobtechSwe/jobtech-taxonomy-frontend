@@ -807,17 +807,43 @@ body {
 
 .version_list_item > div:nth-child(1) {
     padding-right: 10px;
-    width: 100px;
+    width: 250px;
+    overflow-wrap: break-word;
 }
 
 .version_list_item > div:nth-child(2) {
+    padding-right: 10px;
+    width: 100px;
+}
+
+.version_list_item > div:nth-child(3) {
     padding-right: 10px;
     width: 250px;
     overflow-wrap: break-word;
 }
 
-.version_list_item > div:nth-child(3) {
+.version_list_item > div:nth-child(4) {
     padding-right: 10px;
+    width: 100px;
+    overflow-wrap: break-word;
+}
+
+.version_list_item > div:nth-child(5) {
+    padding-right: 10px;
+    width: 100px;
+    overflow-wrap: break-word;
+}
+
+.version_list_item > div:nth-child(6) {
+    padding-right: 10px;
+    width: 100px;
+    overflow-wrap: break-word;
+}
+
+.version_list_item > div:nth-child(7) {
+    padding-right: 10px;
+    width: 100px;
+    overflow-wrap: break-word;
 }
 
 .version_list_header {
@@ -838,22 +864,44 @@ body {
 
 .version_list_header > div:nth-child(1) {
     padding-right: 10px;
-    width: 100px;
+    width: 250px;
     cursor: pointer;
 }
 
 .version_list_header > div:nth-child(2) {
     padding-right: 10px;
-    width: 250px;
+    width: 100px;
     cursor: pointer;
 }
 
 .version_list_header > div:nth-child(3) {
     padding-right: 10px;
+    width: 250px;
     cursor: pointer;
 }
 
-.version_list_group {
+.version_list_header > div:nth-child(4) {
+    padding-right: 10px;
+    width: 100px;
+    cursor: pointer;
+}
+
+.version_list_header > div:nth-child(5) {
+    padding-right: 10px;
+    width: 100px;
+    cursor: pointer;
+}
+
+.version_list_header > div:nth-child(6) {
+    padding-right: 10px;
+    width: 100px;
+    cursor: pointer;
+}
+
+.version_list_header > div:nth-child(7) {
+    padding-right: 10px;
+    width: 100px;
+    cursor: pointer;
 }
 
 .version_list_buttons {
