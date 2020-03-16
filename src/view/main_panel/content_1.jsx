@@ -1,5 +1,6 @@
 import React from 'react';
 import XLSX from 'xlsx';
+import Excel from 'exceljs';
 import ControlUtil from '../../control/util.jsx';
 import Label from '../../control/label.jsx';
 import Button from '../../control/button.jsx';
@@ -48,6 +49,91 @@ class Content1 extends React.Component {
 
     onExportClicked() {
         var item = this.state.item;
+
+        /*var workbook = new Excel.Workbook();
+        // add image resources
+        var logoId = workbook.addImage({
+            base64: Constants.ICON_AF_EXPORT,
+            extension: 'png',
+        });
+        // setup sheet
+        var sheet = workbook.addWorksheet('My Sheet');
+
+        // colums
+        sheet.getColumn('A').width = 10;
+        sheet.getColumn('B').width = 1;
+        sheet.getColumn('C').width = 20;
+        sheet.getColumn('D').width = 25;
+        sheet.getColumn('E').width = 2;
+        sheet.getColumn('F').width = 2;
+        sheet.getColumn('G').width = 6;
+        sheet.getColumn('H').width = 35;
+
+        // header
+        sheet.addRow([]).height = 40;
+        sheet.addRow([]).height = 10;
+        sheet.addRow([]).height = 15;
+        sheet.addRow([]).height = 35;
+        sheet.addRow([]).height = 100;  
+        sheet.addRow([]).height = 35;   // headline
+        sheet.addRow([]).height = 5;
+        sheet.addRow([]).height = 14;   // sub headline
+        sheet.addRow([]).height = 14;   // last change text
+
+        // insert image
+        sheet.addImage(logoId, 'B2:C4');
+
+        // print date
+        var dateCell = sheet.getCell('H3');
+        dateCell.value = "Utskriftsdatum: " + new Date().toLocaleDateString();
+        dateCell.alignment = { horizontal: 'right' };
+        
+        // headline
+        sheet.mergeCells('B6:H6');
+        var headline = sheet.getCell('B6');
+        headline.value = "Kompetenser";
+        headline.alignment = { 
+            vertical: 'middle',
+            horizontal: 'center',
+        };
+        headline.font = {
+            name: 'Arial',
+            size: 18,
+            bold: true,
+        };
+
+        // sub headline
+        sheet.mergeCells('B8:H8');
+        headline = sheet.getCell('B8');
+        headline.value = "Lista över alla kompetenser";
+        headline.alignment = { 
+            vertical: 'middle',
+            horizontal: 'center',
+        };
+        headline.font = {
+            name: 'Arial',
+            size: 10,
+            bold: true,
+        };
+        
+        // last changed
+        sheet.mergeCells('B9:H9');
+        headline = sheet.getCell('B9');
+        headline.value = "Senast ändrad: ";
+        headline.alignment = { 
+            vertical: 'middle',
+            horizontal: 'center',
+        };
+
+        // download
+        workbook.xlsx.writeBuffer().then((buffer) => {
+            var blob = new Blob([buffer], { type: "excel/xlsx" });
+            var link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = "test.xlsx";
+            link.click();
+        });*/
+
         // special fields
         var specialFields = [{
             id: "ssyk-code-2012", 
