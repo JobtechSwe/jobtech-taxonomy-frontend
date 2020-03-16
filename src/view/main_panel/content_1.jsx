@@ -1,6 +1,5 @@
 import React from 'react';
 import XLSX from 'xlsx';
-import Excel from 'exceljs';
 import ControlUtil from '../../control/util.jsx';
 import Label from '../../control/label.jsx';
 import Button from '../../control/button.jsx';
@@ -20,6 +19,7 @@ import Save from '../dialog/save.jsx';
 import EditConcept from '../dialog/edit_concept.jsx';
 import Export from '../dialog/export.jsx';
 import Util from '../../context/util.jsx';
+import Excel from '../../context/excel.jsx';
 
 class Content1 extends React.Component { 
 
@@ -48,92 +48,7 @@ class Content1 extends React.Component {
     }
 
     onExportClicked() {
-        var item = this.state.item;
-
-        /*var workbook = new Excel.Workbook();
-        // add image resources
-        var logoId = workbook.addImage({
-            base64: Constants.ICON_AF_EXPORT,
-            extension: 'png',
-        });
-        // setup sheet
-        var sheet = workbook.addWorksheet('My Sheet');
-
-        // colums
-        sheet.getColumn('A').width = 10;
-        sheet.getColumn('B').width = 1;
-        sheet.getColumn('C').width = 20;
-        sheet.getColumn('D').width = 25;
-        sheet.getColumn('E').width = 2;
-        sheet.getColumn('F').width = 2;
-        sheet.getColumn('G').width = 6;
-        sheet.getColumn('H').width = 35;
-
-        // header
-        sheet.addRow([]).height = 40;
-        sheet.addRow([]).height = 10;
-        sheet.addRow([]).height = 15;
-        sheet.addRow([]).height = 35;
-        sheet.addRow([]).height = 100;  
-        sheet.addRow([]).height = 35;   // headline
-        sheet.addRow([]).height = 5;
-        sheet.addRow([]).height = 14;   // sub headline
-        sheet.addRow([]).height = 14;   // last change text
-
-        // insert image
-        sheet.addImage(logoId, 'B2:C4');
-
-        // print date
-        var dateCell = sheet.getCell('H3');
-        dateCell.value = "Utskriftsdatum: " + new Date().toLocaleDateString();
-        dateCell.alignment = { horizontal: 'right' };
-        
-        // headline
-        sheet.mergeCells('B6:H6');
-        var headline = sheet.getCell('B6');
-        headline.value = "Kompetenser";
-        headline.alignment = { 
-            vertical: 'middle',
-            horizontal: 'center',
-        };
-        headline.font = {
-            name: 'Arial',
-            size: 18,
-            bold: true,
-        };
-
-        // sub headline
-        sheet.mergeCells('B8:H8');
-        headline = sheet.getCell('B8');
-        headline.value = "Lista över alla kompetenser";
-        headline.alignment = { 
-            vertical: 'middle',
-            horizontal: 'center',
-        };
-        headline.font = {
-            name: 'Arial',
-            size: 10,
-            bold: true,
-        };
-        
-        // last changed
-        sheet.mergeCells('B9:H9');
-        headline = sheet.getCell('B9');
-        headline.value = "Senast ändrad: ";
-        headline.alignment = { 
-            vertical: 'middle',
-            horizontal: 'center',
-        };
-
-        // download
-        workbook.xlsx.writeBuffer().then((buffer) => {
-            var blob = new Blob([buffer], { type: "excel/xlsx" });
-            var link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = "test.xlsx";
-            link.click();
-        });*/
-
+        var item = this.state.item;        
         // special fields
         var specialFields = [{
             id: "ssyk-code-2012", 
@@ -187,29 +102,70 @@ class Content1 extends React.Component {
         }];
         // excel
         var onSaveExcel = (values) => {
-            var createCell = (text) => {
-                return {
-                    t: "s",
-                    v: text.trim(),
+            var splitRelationTypes = (relations) => {
+                var result = [];
+                if(relations) {
+                    for(var i=0; i<relations.length; ++i) {
+                        var concept = relations[i].concept;
+                        var slot = result.find((x) => {
+                            return x.type == concept.type;
+                        });
+                        if(slot == null) {
+                            slot = {
+                                type: concept.type,
+                                items: [],
+                            };
+                            result.push(slot);
+                        }
+                        slot.items.push(concept);
+                    }
                 }
-            }
-            var includeRelations = values.find((e) => { return e.id == 1; }) != null;
-            var includeHistory = values.find((e) => { return e.id == 2; }) != null;
-            Util.getFullyPopulatedConceptParameterized(
-                item.id, 
-                item.type, 
-                includeRelations,
-                includeHistory,
-                true, (concept) => {
-                var sheets = [];
+                return result;
+            };
+            Util.getFullyPopulatedConcept(item.id, item.type, (concept) => {
+                // extract special title
+                var specialTitle = null;
+                if(item.type.startsWith("ssyk")) {
+                    specialTitle = "SSYK " + item["ssyk-code-2012"];
+                } else if(item.type.startsWith("isco")) {
+                    specialTitle = "ISCO " + item["isco-code-08"];
+                }
+                // find last change
+                var lastChange = null;
+                if(concept.local_history && concept.local_history.length) {
+                    lastChange = concept.local_history[0].date.toLocaleString();
+                }
+                // setup excel writer
+                var context = Excel.create(item.preferredLabel, item.preferredLabel, specialTitle, lastChange);
+                
+                // broader relations
+                var currentType = null;
+                var broaderRelations = splitRelationTypes(concept.broader_list);
+                for(var i=0; i<broaderRelations.length; ++i) {
+                    var collection = broaderRelations[i];
+                    if(currentType != collection.type) {
+                        context.addRow(Localization.get("db_" + collection.type), true);
+                        for(var j=0; j<collection.items.length; ++j) {
+                            context.addRow(collection.items[j].preferredLabel);
+                        }
+                        context.addRow();
+                    }
+                }
+
+                // database id
+
+                // definition
+                context.addRow(Localization.get("description"), true);
+                context.addRow(item.definition, false, true, 28);
+                context.addRow();
+
+                console.log(concept);
+                
+                
                 for(var i=0; i<values.length; ++i) {
-                    var sheet = {
-                        text: values[i].text,
-                    };
                     if(values[i].id == 0) {
-                        var index = 4;
                         // build sheet
-                        sheet['A1'] = createCell(Localization.get("name"));
+                        /*sheet['A1'] = createCell(Localization.get("name"));
                         sheet['B1'] = createCell(concept.preferredLabel);
                         sheet['A2'] = createCell(Localization.get("type"));
                         sheet['B2'] = createCell(concept.type);
@@ -223,12 +179,9 @@ class Content1 extends React.Component {
                                 sheet['A' + index] = createCell(specialFields[j].text);
                                 sheet['B' + index] = createCell(concept[specialFields[j].id]);
                             }
-                        }
-                        sheet['!ref'] = "A1:B" + index;
-                        sheet['!cols'] = [{width: 15}, {width: 30}];
-                        sheets.push(sheet);
+                        }*/
                     } else if(values[i].id == 1) {
-                        var index = 1;
+                        /*var index = 1;
                         var pushRelations = (list, type) => {
                             for(var j=0; j<list.length; ++j) {
                                 var rc = list[j].concept;
@@ -239,12 +192,6 @@ class Content1 extends React.Component {
                                 index++;
                             }
                         };
-                        // build sheet
-                        sheet['A' + index] = createCell(Localization.get("connection"));
-                        sheet['B' + index] = createCell(Localization.get("name"));
-                        sheet['C' + index] = createCell(Localization.get("type"));
-                        sheet['D' + index] = createCell("ID");
-                        index++;
                         if(concept.relations.broader) {
                             pushRelations(concept.broader_list, "Broader");
                         }
@@ -253,36 +200,18 @@ class Content1 extends React.Component {
                         }
                         if(concept.relations.related) {
                             pushRelations(concept.related_list, "Related");
-                        }
-                        sheet['!ref'] = "A1:D" + index;
-                        sheet['!cols'] = [{width: 15}, {width: 30}, {width: 30}, {width: 15}];
-                        sheets.push(sheet);
+                        }*/
                     } else if(values[i].id == 2) {
-                        var index = 1;
-                        // build sheet
-                        sheet['A' + index] = createCell(Localization.get("type"));
-                        sheet['B' + index] = createCell(Localization.get("date"));
-                        sheet['C' + index] = createCell("User-id");
-                        index++;
-                        for(var j=0; j<concept.local_history.length; ++j) {
+                        /*for(var j=0; j<concept.local_history.length; ++j) {
                             var e = concept.local_history[j];
                             sheet['A' + index] = createCell(e.event);
                             sheet['B' + index] = createCell(e.date.toLocaleString());
                             sheet['C' + index] = createCell(e['user-id']);
                             index++;
-                        }
-                        sheet['!ref'] = "A1:C" + index;
-                        sheet['!cols'] = [{width: 30}, {width: 30}, {width: 15}];
-                        sheets.push(sheet);
+                        }*/
                     }
                 }
-                if(sheets.length) {
-                    var workbook = XLSX.utils.book_new();
-                    for(var i=0; i<sheets.length; ++i) {
-                        XLSX.utils.book_append_sheet(workbook, sheets[i], sheets[i].text);
-                    }
-                    XLSX.writeFile(workbook, concept.preferredLabel + ".xlsx");
-                }
+                context.download(item.preferredLabel + ".xlsx");
             });
         };
         // pdf
