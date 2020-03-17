@@ -171,10 +171,6 @@ class Localization {
                 date: "Datum",
                 new_version: "Ny version",
             },
-            // english
-            en: {
-                locale: "en-GB"
-            }
         }
         // find active language
         this.code = this.setLanguage();
@@ -198,8 +194,8 @@ class Localization {
             console.log("selecting localization: " + key);
             this.lang = this.resources[key];
         } else {
-            console.log("localization not found: '" + key + "' defaulting to english");
-            this.lang = this.resources["en"];
+            console.log("localization not found: '" + key + "' selecting default");
+            this.lang = this.resources["sv"];
         }
         return lang;
     }
