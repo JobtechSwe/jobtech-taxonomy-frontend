@@ -163,7 +163,7 @@ class Localization {
                 select_relations: "Välj relationer",
                 select_types: "Välj ett eller flera värdeförråd",
                 not_published: "Ej publiserad",
-                export_headline: "Markera det innehåll som ska exporteras",
+                export_headline: "Exporterings inställningar",
                 export_pdf: "PDF",
                 export_excel: "Excel",
                 export: "Exportera",

@@ -28,14 +28,14 @@ class Export extends React.Component {
 
     onSavePdfClicked() {
         var values = this.getFinalValues();
-        if(this.props.onSavePdf && values.length) {
+        if(this.props.onSavePdf) {
             this.props.onSavePdf(values);
         }
     }
 
     onSaveExcelClicked() {
         var values = this.getFinalValues();
-        if(this.props.onSaveExcel && values.length) {
+        if(this.props.onSaveExcel) {
             this.props.onSaveExcel(values);
         }
     }

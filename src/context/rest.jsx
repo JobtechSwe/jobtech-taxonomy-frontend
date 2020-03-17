@@ -104,7 +104,6 @@ class Rest {
             CacheManager.cacheTypeList(type, data);
             onSuccessCallback(data);
         };
-        //this.get("/main/concepts?type=" + type, onSuccess, onError);
         this.get("/private/concepts?type=" + type, onSuccess, onError);
     }
 

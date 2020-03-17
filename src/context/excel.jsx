@@ -25,16 +25,16 @@ class Excel {
         sheet.getColumn('E').width = 2;
         sheet.getColumn('F').width = 2;
         sheet.getColumn('G').width = 6;
-		sheet.getColumn('H').width = 35;
+		sheet.getColumn('H').width = 39;
 		sheet.getColumn('I').width = 2;
 		sheet.getColumn('J').width = 5;
-		['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map((element) => {
+		/*['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map((element) => {
 			sheet.getColumn(element).fill = {
 				type: 'pattern',
 				pattern: 'solid',
 				fgColor: { argb: 'FFFFFFFF' },
 			};
-		});
+		});*/
         // header
         sheet.addRow([]).height = 40;
         sheet.addRow([]).height = 10;
@@ -95,6 +95,9 @@ class Excel {
 				size: 10,
 			};
 		}
+		sheet.pageSetup = {
+			fitToPage: true,
+		};
 		return {
 			workbook: workbook,
 			sheet: sheet,
@@ -108,28 +111,102 @@ class Excel {
 					link.click();
 				});
 			},
-			addRow: (text, isBold, isTextBlock, height) => {
+			/*
+			config = {
+				width: 10,
+				bold: true,
+				italic: true,
+				wrapText: true,
+				fontSize: 10
+				indent: 1
+			}
+			*/
+			addRow: (text, config) => {
 				var row = sheet.addRow([]);
-				row.height = height == null ? 14 : height;
+				config = config ? config : {};
+				row.height = config.height == null ? 14 : config.height;
 				if(text) {
 					sheet.mergeCells('C' + row._number + ':H' + row._number +'');
 					var cell = sheet.getCell('C' + row._number);
 					cell.value = text;
 					cell.font = {
 						name: 'Arial',
-						size: 10,
-						bold: isBold == null ? false : isBold,
+						size: config.fontSize == null ? 10 : config.fontSize,
+						bold: config.bold == null ? false : config.bold,
+						italic: config.italic == null ? false : config.italic,
 					};
-					if(isTextBlock) {
-						cell.alignment = { 
-							vertical: 'top',
-							wrapText: true,
-						};
-					}
+					cell.alignment = {
+						vertical: 'top',
+						wrapText: config.wrapText == null ? false : config.wrapText,
+						indent: config.indent == null ? false : config.indent,
+					};
 				}
 			},
 			addHeadlines: (leftTitle, rightTitle) => {
-
+				var row = sheet.addRow([]);
+				sheet.mergeCells('C' + row._number + ':D' + row._number +'');
+				sheet.mergeCells('G' + row._number + ':H' + row._number +'');
+				if(leftTitle) {
+					var cell = sheet.getCell('C' + row._number);
+					cell.value = leftTitle;
+					cell.font = {
+						name: 'Arial',
+						size: 12,
+						bold: true,
+						italic: true,
+					};
+				}
+				if(rightTitle) {
+					var cell = sheet.getCell('G' + row._number);
+					cell.value = rightTitle;
+					cell.font = {
+						name: 'Arial',
+						size: 12,
+						bold: true,
+						italic: true,
+					};
+				}
+			},
+			/*
+			left / right = {
+				text: "text",
+				bold: true,
+			}
+			*/
+			addLeftRight: (left, right) => {
+				var row = sheet.addRow([]);
+				sheet.mergeCells('C' + row._number + ':D' + row._number +'');
+				sheet.mergeCells('G' + row._number + ':H' + row._number +'');
+				if(left) {
+					var cell = sheet.getCell('C' + row._number);
+					cell.value = left.text;
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: left.bold == null ? false : left.bold,
+					};
+					cell.alignment = { 
+						wrapText: true,
+					};
+					if(left.bold == null || left.bold == false) {
+						cell.alignment.indent = 1;
+					}
+				}
+				if(right) {
+					var cell = sheet.getCell('G' + row._number);
+					cell.value = right.text;
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: right.bold == null ? false : right.bold,
+					};
+					cell.alignment = { 
+						wrapText: true,
+					};
+					if(right.bold == null || right.bold == false) {
+						cell.alignment.indent = 1;
+					}
+				}
 			},
 		};
     }

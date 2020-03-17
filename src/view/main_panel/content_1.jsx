@@ -48,57 +48,12 @@ class Content1 extends React.Component {
     }
 
     onExportClicked() {
-        var item = this.state.item;        
-        // special fields
-        var specialFields = [{
-            id: "ssyk-code-2012", 
-            text: "SSYK",
-        }, {
-            id: "isco-code-08", 
-            text: "ISCO",
-        }, {
-            id: "iso-3166-1-alpha-2-2013", 
-            text: Localization.get("code"),
-        }, {
-            id: "iso-3166-1-alpha-3-2013", 
-            text: Localization.get("name"),
-        }, {
-            id: "driving-licence-code-2013", 
-            text: Localization.get("type"),
-        }, {
-            id: "eures-code-2014", 
-            text: Localization.get("type"),
-        }, {
-            id: "iso-639-3-alpha-2-2007", 
-            text: Localization.get("code"),
-        }, {
-            id: "iso-639-3-alpha-3-2007", 
-            text: Localization.get("name"),
-        }, {
-            id: "nuts-level-3-code-2013", 
-            text: "NUTS",
-        }, {
-            id: "sni-level-code-2007", 
-            text: "SNI",
-        }, {
-            id: "sun-education-level-code-2020", 
-            text: "SUN",
-        }, {
-            id: "sun-education-field-code-2020", 
-            text: "SUN",
-        }];
+        var item = this.state.item;
         // values
         var values = [{
-            text: "Info",
-            selected: true,
+            text: "Inkludera databas-ID",
+            selected: false,
             id: 0,
-        }, {
-            text: Localization.get("connections"),
-            selected: true,
-            id: 1,
-        }, {
-            text: Localization.get("history"),
-            id: 2,
         }];
         // excel
         var onSaveExcel = (values) => {
@@ -117,7 +72,7 @@ class Content1 extends React.Component {
                             };
                             result.push(slot);
                         }
-                        slot.items.push(concept);
+                        slot.items.push(relations[i]);
                     }
                 }
                 return result;
@@ -125,10 +80,10 @@ class Content1 extends React.Component {
             Util.getFullyPopulatedConcept(item.id, item.type, (concept) => {
                 // extract special title
                 var specialTitle = null;
-                if(item.type.startsWith("ssyk")) {
-                    specialTitle = "SSYK " + item["ssyk-code-2012"];
-                } else if(item.type.startsWith("isco")) {
-                    specialTitle = "ISCO " + item["isco-code-08"];
+                if(concept.type.startsWith("ssyk")) {
+                    specialTitle = "SSYK " + concept["ssyk-code-2012"];
+                } else if(concept.type.startsWith("isco")) {
+                    specialTitle = "ISCO " + concept["isco-code-08"];
                 }
                 // find last change
                 var lastChange = null;
@@ -136,82 +91,116 @@ class Content1 extends React.Component {
                     lastChange = concept.local_history[0].date.toLocaleString();
                 }
                 // setup excel writer
-                var context = Excel.create(item.preferredLabel, item.preferredLabel, specialTitle, lastChange);
+                var context = Excel.create(concept.preferredLabel, concept.preferredLabel, specialTitle, lastChange);
                 
-                // broader relations
-                var currentType = null;
-                var broaderRelations = splitRelationTypes(concept.broader_list);
-                for(var i=0; i<broaderRelations.length; ++i) {
-                    var collection = broaderRelations[i];
-                    if(currentType != collection.type) {
-                        context.addRow(Localization.get("db_" + collection.type), true);
+                context.addRow();
+
+                if(concept.type == "ssyk-level-4") {
+                    // broader relations
+                    var broaderRelations = splitRelationTypes(concept.broader_list);
+                    for(var i=0; i<broaderRelations.length; ++i) {
+                        var collection = broaderRelations[i];
+                        context.addRow(Localization.get("db_" + collection.type), { bold: true });
                         for(var j=0; j<collection.items.length; ++j) {
-                            context.addRow(collection.items[j].preferredLabel);
+                            context.addRow(collection.items[j].concept.preferredLabel);
                         }
                         context.addRow();
                     }
                 }
 
                 // database id
+                if(values.length) {
+                    context.addRow("Databas-ID", { bold: true });
+                    context.addRow(concept.id);
+                    context.addRow();
+                }
 
                 // definition
-                context.addRow(Localization.get("description"), true);
-                context.addRow(item.definition, false, true, 28);
+                context.addRow(Localization.get("description"), { bold: true });
+                context.addRow(concept.definition, { height: 28, wrapText: true });
                 context.addRow();
 
-                console.log(concept);
-                
-                
-                for(var i=0; i<values.length; ++i) {
-                    if(values[i].id == 0) {
-                        // build sheet
-                        /*sheet['A1'] = createCell(Localization.get("name"));
-                        sheet['B1'] = createCell(concept.preferredLabel);
-                        sheet['A2'] = createCell(Localization.get("type"));
-                        sheet['B2'] = createCell(concept.type);
-                        sheet['A3'] = createCell("ID");
-                        sheet['B3'] = createCell(concept.id);
-                        sheet['A4'] = createCell(Localization.get("description"));
-                        sheet['B4'] = createCell(concept.definition);
-                        for(var j=0; j<specialFields.length; ++j) {
-                            if(concept[specialFields[j].id] != null) {
-                                index++;
-                                sheet['A' + index] = createCell(specialFields[j].text);
-                                sheet['B' + index] = createCell(concept[specialFields[j].id]);
+                if(concept.type == "ssyk-level-4") {
+                    var relations = splitRelationTypes(concept.narrower_list);
+                    relations = relations.concat(splitRelationTypes(concept.related_list));
+                    // find skill-headline and occupation-name
+                    var skills = relations.find((x) => {
+                        return x.type == "skill-headline";
+                    });
+                    skills = skills == null ? [] : skills.items;
+                    var names = relations.find((x) => {
+                        return x.type == "occupation-name";
+                    });
+                    names = names == null ? [] : names.items;
+                    // headline
+                    context.addRow();
+                    context.addHeadlines(Localization.get("db_occupation-name"), Localization.get("db_skill"));
+                    // create virtual rows
+                    var nextSkillIndex = 0;
+                    var nextNameIndex = 0;
+                    var rows = [];
+                    var count = skills.length > names.length ? skills.length : names.length;
+                    for(var i=0; i<count; ++i) {
+                        var skillHeadline = i < skills.length ? skills[i] : null;
+                        var name = i < names.length ? names[i] : null;
+                        // add row
+                        rows.push({});
+                        // setup row
+                        if(skillHeadline) {
+                            // add headline
+                            rows[nextSkillIndex++].right = {
+                                bold: true,
+                                text: skillHeadline.concept.preferredLabel,
+                            };
+                            // add skills
+                            for(var j=0; j<skillHeadline.children.length; ++j) {
+                                rows.push({
+                                    right: { text: skillHeadline.children[j].preferredLabel },
+                                });
+                                nextSkillIndex++;
                             }
-                        }*/
-                    } else if(values[i].id == 1) {
-                        /*var index = 1;
-                        var pushRelations = (list, type) => {
-                            for(var j=0; j<list.length; ++j) {
-                                var rc = list[j].concept;
-                                sheet['A' + index] = createCell(type);
-                                sheet['B' + index] = createCell(rc.preferredLabel);
-                                sheet['C' + index] = createCell(rc.type);
-                                sheet['D' + index] = createCell(rc.id);
-                                index++;
+                        }
+                        if(name) {
+                            rows[nextNameIndex++].left = { text: name.concept.preferredLabel };
+                        }
+                    }
+                    // add rows
+                    for(var i=0; i<rows.length; ++i) {
+                        context.addLeftRight(rows[i].left, rows[i].right);
+                    }
+                } else {
+                    var relations = splitRelationTypes(concept.broader_list);
+                    relations = relations.concat(splitRelationTypes(concept.narrower_list));
+                    relations = relations.concat(splitRelationTypes(concept.related_list));
+                    for(var i=0; i<relations.length; ++i) {
+                        var collection = relations[i];
+                        if(collection.type == 'skill-headline' && concept.type == 'skill-headline') {
+                            // skip this since the concept is the headline
+                            continue;
+                        }
+                        context.addRow(Localization.get("db_" + collection.type), { 
+                            bold: true, 
+                            italic: true,
+                            fontSize: 12,
+                        });
+                        if(collection.type == 'skill-headline') {
+                            for(var j=0; j<collection.items.length; ++j) {
+                                var skillHeadline = collection.items[j];
+                                context.addRow(skillHeadline.concept.preferredLabel, { bold: true });
+                                for(var k=0; k<skillHeadline.children.length; ++k) {
+                                    context.addRow(skillHeadline.children[k].preferredLabel, { indent: 1 });
+                                }
                             }
-                        };
-                        if(concept.relations.broader) {
-                            pushRelations(concept.broader_list, "Broader");
+                        } else {
+                            for(var j=0; j<collection.items.length; ++j) {
+                                context.addRow(collection.items[j].concept.preferredLabel);
+                            }
                         }
-                        if(concept.relations.narrower) {
-                            pushRelations(concept.narrower_list, "Narrower");
-                        }
-                        if(concept.relations.related) {
-                            pushRelations(concept.related_list, "Related");
-                        }*/
-                    } else if(values[i].id == 2) {
-                        /*for(var j=0; j<concept.local_history.length; ++j) {
-                            var e = concept.local_history[j];
-                            sheet['A' + index] = createCell(e.event);
-                            sheet['B' + index] = createCell(e.date.toLocaleString());
-                            sheet['C' + index] = createCell(e['user-id']);
-                            index++;
-                        }*/
+                        context.addRow();
                     }
                 }
-                context.download(item.preferredLabel + ".xlsx");
+                // download the file
+                context.download(concept.preferredLabel + ".xlsx");
             });
         };
         // pdf
