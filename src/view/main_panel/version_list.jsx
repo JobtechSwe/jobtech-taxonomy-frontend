@@ -45,6 +45,7 @@ class VersionList extends React.Component {
     UNSAFE_componentWillReceiveProps(props) {
         if(this.state.item == null || this.state.item.version != props.item.version) {
             EventDispatcher.fire(this.VERSION_LIST_EVENT_ID);
+            this.state.selected = null;
             this.getChanges(props.item);
         }
     }
@@ -73,7 +74,9 @@ class VersionList extends React.Component {
         }
         var lowerCaseFilter = this.state.filter.toLowerCase();
         return this.state.data.filter((e) => {
-            return e["changed-concept"].preferredLabel.toLowerCase().indexOf(lowerCaseFilter) >= 0;
+            return e["changed-concept"].preferredLabel.toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
+                Localization.get("db_" + e["changed-concept"].type).toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
+                Localization.get(e["event-type"]).toLowerCase().indexOf(lowerCaseFilter) >= 0;
         });
     }
 
