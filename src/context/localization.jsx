@@ -170,6 +170,12 @@ class Localization {
                 code: "Kod",
                 date: "Datum",
                 new_version: "Ny version",
+                error: "Fel",
+                publish_error_0: "Relation till SSYK-4 saknas",
+                publish_error_1: "Relation till ISCO-4 saknas",
+                publish_error_2: "Relation till kompetensgrupp saknas",
+                publish_error_3: "Relation till SSYK-4 saknas",
+                publish: "Publicera"
             },
         }
         // find active language

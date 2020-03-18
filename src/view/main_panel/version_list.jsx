@@ -10,6 +10,7 @@ import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Util from '../../context/util.jsx';
+import Excel from '../../context/excel.jsx';
 import App from '../../context/app.jsx';
 import Export from '../dialog/export.jsx';
 import PublishVersion from '../dialog/publish_version.jsx';
@@ -87,7 +88,6 @@ class VersionList extends React.Component {
                 Rest.abort();
                 if(item.version == -1) {
                     Rest.getUnpublishedChanges(item.latestVersion, (data) => {
-                        console.log(data);
                         this.setState({
                             data: this.sortData(data), 
                             loadingData: false,
@@ -150,8 +150,10 @@ class VersionList extends React.Component {
 
     onShowInfoClicked() {
         if(this.state.selected != null) {
-            //TODO: title = date event_type user
-            var title = this.state.selected["event-type"];
+            var title = <div className="publish_info_header">
+                            <div>{"[date] " + Localization.get(this.state.selected["event-type"])}</div>
+                            <div>[user]</div>
+                        </div>;
             EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
                 title: title,
                 content: this.renderInfoDialog(),
@@ -161,6 +163,7 @@ class VersionList extends React.Component {
 
     onSaveClicked() {
         var onSaveExcel = (values) => {
+            console.log(values);
             var data = this.filterData().map((item) => {
                 var ret = {};
                 for(var i=0; i<values.length; ++i) {
@@ -226,11 +229,62 @@ class VersionList extends React.Component {
         EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
     }
 
+    renderInfoItem(name, value, key) {
+        return (
+            <div 
+                key={key}
+                className="publish_info_item">
+                <div>
+                    {name}
+                </div>
+                <div>
+                    {value}
+                </div>                
+            </div>
+        )
+    }
+
     renderInfoDialog() {
-        var info = "Info goes here";
+        var info = [];
+        var key = 0;
+        if(this.state.selected["event-type"] === "CREATED") {
+            info.push(this.renderInfoItem("Namn", this.state.selected["changed-concept"].preferredLabel, key++));
+            info.push(this.renderInfoItem("Definition", "[definition]", key++));
+            info.push(this.renderInfoItem("Id", this.state.selected["changed-concept"].id, key++));
+            info.push(this.renderInfoItem("Typ", Localization.get("db_" + this.state.selected["changed-concept"].type), key++));
+            info.push(this.renderInfoItem("Kvalitetsnivå", "[kvalitetsnivå]", key++));
+            info.push(this.renderInfoItem("Anteckning", "[anteckning]", key++));                 
+        } else if(this.state.selected["event-type"] === "UPDATED") {
+            info.push(this.renderInfoItem("Namn", this.state.selected["changed-concept"].preferredLabel, key++));
+            info.push(this.renderInfoItem("Definition", "[definition]", key++));
+            info.push(this.renderInfoItem("Id", this.state.selected["changed-concept"].id, key++));
+            info.push(this.renderInfoItem("Typ", Localization.get("db_" + this.state.selected["changed-concept"].type), key++));
+            info.push(this.renderInfoItem("Åtgärd", "[åtgärd]", key++));
+            info.push(this.renderInfoItem("Från", "[från]", key++));
+            info.push(this.renderInfoItem("Till", "[till]", key++));
+            info.push(this.renderInfoItem("Anteckning", "[anteckning]", key++));    
+        } else if(this.state.selected["event-type"] === "DEPRECATED") {
+            info.push(this.renderInfoItem("Namn", this.state.selected["changed-concept"].preferredLabel, key++));
+            info.push(this.renderInfoItem("Definition", "[definition]", key++));
+            info.push(this.renderInfoItem("Id", this.state.selected["changed-concept"].id, key++));
+            info.push(this.renderInfoItem("Typ", Localization.get("db_" + this.state.selected["changed-concept"].type), key++));
+            info.push(this.renderInfoItem("Åtgärd", "[åtgärd]", key++));
+            info.push(this.renderInfoItem("Hävisad till", "[hänvisad_till]", key++));
+            info.push(this.renderInfoItem("Anteckning", "[anteckning]", key++));    
+        } else {
+            info.push(this.renderInfoItem("Namn", this.state.selected["changed-concept"].preferredLabel, key++));
+            info.push(this.renderInfoItem("Definition", "[definition]", key++));
+            info.push(this.renderInfoItem("Id", this.state.selected["changed-concept"].id, key++));
+            info.push(this.renderInfoItem("Typ", Localization.get("db_" + this.state.selected["changed-concept"].type), key++));
+            info.push(this.renderInfoItem("Kvalitetsnivå", "[kvalitetsnivå]", key++));
+            info.push(this.renderInfoItem("Anteckning", "[anteckning]", key++));
+        }
+
         return(
-            <div className="dialog_content item_history_dialog">                
-                {info}
+            <div className="dialog_content item_history_dialog">
+                <div>
+                    {info}
+                </div>
                 <div>
                     <Button 
                         text={Localization.get("close")}
@@ -309,8 +363,7 @@ class VersionList extends React.Component {
     renderPublishButton() {
         if(this.state.item && this.state.item.version == -1) {
             return (
-                <Button          
-                    isEnabled={false}                   
+                <Button
                     onClick={this.onPublishNewVersionClicked.bind(this)}
                     text={Localization.get("new_version")}/>
             );
@@ -340,7 +393,7 @@ class VersionList extends React.Component {
                         onClick={this.onVisitClicked.bind(this)}
                         text={Localization.get("visit")}/>
                     <Button 
-                        isEnabled={false}
+                        isEnabled={this.state.selected != null}
                         onClick={this.onShowInfoClicked.bind(this)}
                         text={Localization.get("show")}/>
                     {this.renderPublishButton()}
