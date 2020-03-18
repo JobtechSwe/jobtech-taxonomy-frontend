@@ -466,6 +466,9 @@ class ConceptsSearch extends React.Component {
         }, () => {
             this.search();
         });
+        if(this.props.onTypeChangedCallback) {
+            this.props.onTypeChangedCallback(e.target.value);
+        }
     }
 
     onSearchClicked() {

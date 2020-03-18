@@ -11,7 +11,7 @@ class Export extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            values: props.values,
+            values: props.values ? props.values : [],
         }
     }
 

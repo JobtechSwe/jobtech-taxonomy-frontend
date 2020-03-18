@@ -208,6 +208,34 @@ class Excel {
 					}
 				}
 			},
+			addGroupRow: (title, number, text) => {
+				var row = sheet.addRow([]);
+				sheet.mergeCells('C' + row._number + ':D' + row._number +'');
+				if(title) {
+					var cell = sheet.getCell('C' + row._number);
+					cell.value = title;
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+					};
+				}
+				if(number) {
+					var cell = sheet.getCell('G' + row._number);
+					cell.value = "" + number;
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+					};
+				}
+				if(text) {
+					var cell = sheet.getCell('H' + row._number);
+					cell.value = text;
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+					};
+				}
+			},
 		};
     }
 
