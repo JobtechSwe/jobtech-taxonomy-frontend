@@ -1262,7 +1262,7 @@ body {
 
 .dialog_publish_dialog {
     min-height: 400px;
-    min-width: 600px;
+    min-width: 800px;
 }
 
 .dialog_publish_list {
@@ -1293,7 +1293,7 @@ body {
 }
 
 .dialog_publish_list_item > div:nth-child(2) {
-    width: 250px;
+    width: 450px;
 }
 
 .dialog_publish_list_item > div:nth-child(3) {
@@ -1326,7 +1326,7 @@ body {
 }
 
 .dialog_publish_list_header > div:nth-child(2) {
-    width: 250px;
+    width: 450px;
 }
 
 .dialog_publish_list_header > div:nth-child(3) {
