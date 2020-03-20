@@ -95,20 +95,6 @@ class Description extends React.Component {
         return request;
     }
 
-    onLabelChanged(e) {
-        var request = this.createEditRequest("preferred-label", e.target.value, this.onUndoLabel.bind(this));
-        request.text = Localization.get("name");
-        App.addEditRequest(request);
-        this.setState({preferredLabel: e.target.value});
-    }
-
-    onDefinitionChanged(e) {
-        var request = this.createEditRequest("definition", e.target.value, this.onUndoDefinition.bind(this));
-        request.text = Localization.get("description");
-        App.addEditRequest(request);
-        this.setState({definition: e.target.value});
-    }
-
     onDeprecateClicked() {
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
             title: Localization.get("deprecate"),
@@ -196,9 +182,18 @@ class Description extends React.Component {
                 <input 
                     type="text" 
                     className="rounded"
-                    disabled={this.state.isLocked ? "disabled" : ""}
-                    value={this.state.preferredLabel}
-                    onChange={this.onLabelChanged.bind(this)}/>
+                    disabled="disabled"
+                    value={this.state.preferredLabel}/>
+            </div>
+        );
+        elements.push(
+            <div key="quality-key" className="description_quality_value">
+                <Label text={Localization.get("quality_control")}/>
+                <input 
+                    type="text" 
+                    className="rounded"
+                    disabled="disabled"
+                    value={""}/>
             </div>
         );
         this.renderSpecialValue(elements, "id", "ID");
@@ -239,9 +234,8 @@ class Description extends React.Component {
                 <textarea 
                     rows="10" 
                     className="rounded"
-                    disabled={this.state.isLocked ? "disabled" : ""}
-                    value={this.state.definition}
-                    onChange={this.onDefinitionChanged.bind(this)}/>
+                    disabled="disabled"
+                    value={this.state.definition}/>
             </div>
         );
     }

@@ -597,6 +597,11 @@ body {
     overflow-y: auto;
 }
 
+.description_quality_value {
+    max-width: 110px;
+    margin-left: 5px;
+}
+
 .connections {    
     display: flex;
     flex-direction: column;
