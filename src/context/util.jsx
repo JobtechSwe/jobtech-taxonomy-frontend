@@ -48,7 +48,13 @@ class Util {
         });
     }
     
-    sortValue(direction, a, b) {
+    sortValue(direction, aa, bb) {
+        var a = aa;
+        var b = bb;
+        if(typeof(a) === "string" && typeof(b) === "string") {
+            a = a.toLowerCase();
+            b = b.toLowerCase();
+        }
         if(direction) {
             if(a < b) return -1;
             if(a > b) return 1;

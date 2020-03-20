@@ -44,8 +44,8 @@ class EditConceptRemoveRelation extends React.Component {
 		}
     }
 
-    onSave(message, quality, callback) {
-        // TODO: handle message and quality
+    onSave(message, callback) {
+        // TODO: handle message
         var item = this.props.item;
 		var conceptId = item.id;
 		var relationCounter = {};

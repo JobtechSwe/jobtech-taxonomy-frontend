@@ -31,11 +31,6 @@ class NewConcept extends React.Component {
             setEnableSave: (enabled) => { this.setState({isSaveEnabledReasonState: enabled})},
             onSave: null,
         };
-        // quality context
-        this.qualityContext = {
-            setEnableSave: (enabled) => { this.setState({isSaveEnabledQualityState: enabled})},
-            onSave: null,
-        };
     }
 
     onTypeSelected(e) {
@@ -58,7 +53,7 @@ class NewConcept extends React.Component {
     onSaveClicked() {
         if(this.editContext.onSave) {
             EventDispatcher.fire(Constants.EVENT_SHOW_SAVE_INDICATOR);
-            this.editContext.onSave(this.reasonContext.message, this.qualityContext.quality, () => {
+            this.editContext.onSave(this.reasonContext.message, () => {
                 EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
             });
         }
@@ -98,7 +93,6 @@ class NewConcept extends React.Component {
             <div className="dialog_content edit_concept_dialog edit_concept_dialog_page">
                 <div>
                     <EditConceptNewValue editContext={this.editContext}/>
-                    <EditConceptQuality editContext={this.qualityContext}/>
                     <EditConceptReason editContext={this.reasonContext}/>
                 </div>
                 <div className="dialog_content_buttons">

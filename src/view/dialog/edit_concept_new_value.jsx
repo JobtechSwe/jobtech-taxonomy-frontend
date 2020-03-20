@@ -10,6 +10,7 @@ import CacheManager from './../../context/cache_manager';
 import Localization from './../../context/localization.jsx';
 import Constants from './../../context/constants.jsx';
 import Rest from './../../context/rest.jsx';
+import EditConceptQuality from './edit_concept_quality.jsx';
 
 class EditConceptNewValue extends React.Component { 
 
@@ -27,6 +28,10 @@ class EditConceptNewValue extends React.Component {
             isNameInvalid: false,
 		};
         this.props.editContext.onSave = this.onSave.bind(this);
+        this.qualityContext = {
+            setEnableSave: (enabled) => {},
+            onSave: null,
+        };
     }
 
     onSaveRelation(callback, from, to, type, substitutability) {
@@ -36,7 +41,10 @@ class EditConceptNewValue extends React.Component {
         App.addSaveRequest();
         Rest.postAddRelation(from.id, to.id, type, substitutability, (data) => {
             if(App.removeSaveRequest()) {
-                // TODO: update props item, increment relations counter
+                EventDispatcher.fire(Constants.EVENT_NEW_CONCEPT, {
+                    concept: this.concept,
+                    parent: this.state.parent,
+                });
                 callback();
             }
         }, (status) => {
@@ -45,14 +53,14 @@ class EditConceptNewValue extends React.Component {
         });
     }
 
-    onSave(message, quality, callback) {
+    onSave(message, callback) {
         // TODO: handle message and quality
+        // this.qualityContext.quality
         var state = this.state;
         App.addSaveRequest();
         Rest.postConcept(state.type, state.name.trim(), encodeURIComponent(state.definition), (data) => {
-
             CacheManager.invalidateCachedTypeList(data.concept.type);
-
+            this.concept = data.concept;
             if(state.parent) {
                 // add relation between new concept and its selected parent
                 this.onSaveRelation(callback, data.concept, state.parent, "broader", null);
@@ -62,7 +70,10 @@ class EditConceptNewValue extends React.Component {
                 this.onSaveRelation(callback, data.concept, this.props.item, state.relationType, state.substitutability);
             }
             if(App.removeSaveRequest()) {
-                // TODO: update props item, increment relations counter
+                EventDispatcher.fire(Constants.EVENT_NEW_CONCEPT, {
+                    concept: this.concept,
+                    parent: this.state.parent,
+                });
                 callback();
             }
         }, (status) => {
@@ -304,6 +315,7 @@ class EditConceptNewValue extends React.Component {
                 {this.renderSubsitutability()}
                 {this.renderParentSelector()}
                 {this.renderNameField()}
+                <EditConceptQuality editContext={this.qualityContext}/>
                 {this.renderDefinitionField()}
             </div>
         );

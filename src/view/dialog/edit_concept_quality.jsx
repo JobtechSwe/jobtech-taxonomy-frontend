@@ -18,7 +18,7 @@ class EditConceptQuality extends React.Component {
 		this.props.editContext.setEnableSave(true);
     }
 
-    onSave(message, quality, callback) {
+    onSave(message, callback) {
         // TODO: impl
         callback();
     }

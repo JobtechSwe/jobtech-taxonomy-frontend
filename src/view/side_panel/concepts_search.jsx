@@ -11,6 +11,7 @@ import Settings from '../../context/settings.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import App from '../../context/app.jsx';
 import Label from '../../control/label.jsx';
+import CacheManager from '../../context/cache_manager.jsx';
 
 class ConceptsSearch extends React.Component { 
 
@@ -65,10 +66,12 @@ class ConceptsSearch extends React.Component {
         this.queryTreeView.onItemSelected = this.onQueryItemSelected.bind(this);
         this.queryTreeView.onAllowItemSelection = this.onAllowItemSelection.bind(this);
         this.boundMainItemSelected = this.onMainItemSelected.bind(this);
+        this.boundNewConcept = this.onNewConcept.bind(this);
     }    
 
     componentDidMount() {
         EventDispatcher.add(this.boundMainItemSelected, Constants.EVENT_MAINPANEL_ITEM_SELECTED);
+        EventDispatcher.add(this.boundNewConcept, Constants.EVENT_NEW_CONCEPT);
         if(this.props.lockToType) {
             this.state.selectableType = false;
             this.queryType = this.props.lockToType;
@@ -101,6 +104,7 @@ class ConceptsSearch extends React.Component {
 
     componentWillUnmount() {
         EventDispatcher.remove(this.boundMainItemSelected);
+        EventDispatcher.remove(this.boundNewConcept);
     }
 
     addOption(options, type){
@@ -179,88 +183,57 @@ class ConceptsSearch extends React.Component {
 
     populateTreeSkill(data) {
         this.queryTreeView.shouldUpdateState = false;
-        if(data == null) {
-            for(var i=0; i<this.state.data.nodes.length; ++i) {
-                var element = this.state.data.nodes[i];
-                if(element.type === Constants.CONCEPT_SKILL_HEADLINE) {
-                    var root = this.queryTreeView.roots.find((d) => {
-                        return d.data.id === element.id;
-                    });
-                    if(root == null) {
-                        root = ControlUtil.createTreeViewItem(this.queryTreeView, element);
-                        root.setText(element.preferredLabel);
-                        this.queryTreeView.addRoot(root);
-                    }
-                }
-            }            
-            for(var i=0; i<this.state.data.edges.length; ++i) {
-                var edge = this.state.data.edges[i];
+        // setup all root nodes
+        for(var i=0; i<data.length; ++i) {
+            var element = data[i];
+            if(element.type === Constants.CONCEPT_SKILL_HEADLINE) {
                 var root = this.queryTreeView.roots.find((d) => {
-                    return d.data.id === edge.target;
+                    return d.data.id === element.id;
                 });
-                if(root) {
-                    var item = this.state.data.nodes.find((d) => {
-                        return d.id === edge.source;
-                    });
-                    var child = ControlUtil.createTreeViewItem(this.queryTreeView, item);
-                    child.setText(item.preferredLabel);
-                    root.addChild(child);
+                if(root == null) {
+                    root = ControlUtil.createTreeViewItem(this.queryTreeView, element);
+                    root.setText(element.preferredLabel);
+                    root.setForceShowButton(element.relations.narrower);
+                    root.setShowButton(element.relations.narrower);
+                    this.queryTreeView.addRoot(root);
                 }
             }
-        } else {
-            for(var i=0; i<this.state.data.edges.length; ++i) {
-                var edge = this.state.data.edges[i];
-                var target = data.find((d) => {
-                    return d.id === edge.target;
-                });
-                var source = data.find((d) => {
-                    return d.id === edge.source;
-                });
-                if(source) {
-                    var root = this.queryTreeView.roots.find((d) => {
-                        return d.data.id === edge.target;
-                    });
-                    if(root == null) {
-                        if(target == null) {
-                            var target = this.state.data.nodes.find((d) => {
-                                return d.id === edge.target;
-                            });
-                        }
-                        root = ControlUtil.createTreeViewItem(this.queryTreeView, target);
-                        root.setText(target.preferredLabel);
-                        this.queryTreeView.addRoot(root);
-                    }
-                    var child = ControlUtil.createTreeViewItem(this.queryTreeView, source);
-                    child.setText(source.preferredLabel);
-                    root.addChild(child);
-                } else if(target) {
-                    var root = this.queryTreeView.roots.find((d) => {
-                        return d.data.id === edge.target;
-                    });
-                    if(root == null) {
-                        root = ControlUtil.createTreeViewItem(this.queryTreeView, target);
-                        root.setText(target.preferredLabel);
-                        this.queryTreeView.addRoot(root);
-                    }                    
-                }
-            }            
+        }
+        // setup children
+        for(var i=0; i<this.state.data.edges.length; ++i) {
+            var edge = this.state.data.edges[i];
+            var item = data.find((d) => {
+                return d.id === edge.source;
+            });
+            if(item == null) {
+                // child node not found in data (filter might be active)
+                continue;
+            }
+            var root = this.queryTreeView.roots.find((d) => {
+                return d.data.id === edge.target;
+            });
+            var rootItem = this.state.data.nodes.find((d) => {
+                return d.id === edge.target;
+            });
+            if(root == null && rootItem) {
+                // when a filter is used, sometimes a root is not "hit" by the query
+                // so we also need to setup the root node
+                root = ControlUtil.createTreeViewItem(this.queryTreeView, rootItem);
+                root.setText(rootItem.preferredLabel);
+                this.queryTreeView.addRoot(root);
+            }
+            if(root) {
+                var child = ControlUtil.createTreeViewItem(this.queryTreeView, item);
+                child.setText(item.preferredLabel);
+                root.addChild(child);
+            }
         }
         //sort
         for(var i=0; i<this.queryTreeView.roots.length; ++i) {
             var root = this.queryTreeView.roots[i];
-            root.children.sort((a, b) => {
-                if(a.text < b.text) { 
-                    return -1; 
-                }
-                return a.text > b.text ? 1 : 0;
-            });
+            Util.sortByKey(root.children, "text", true);
         }
-        this.queryTreeView.roots.sort((a, b) => {
-            if(a.text < b.text) { 
-                return -1; 
-            }
-            return a.text > b.text ? 1 : 0;
-        });
+        Util.sortByKey(this.queryTreeView.roots, "text", true);
         this.queryTreeView.shouldUpdateState = true;
         this.queryTreeView.invalidate();
     }
@@ -300,9 +273,26 @@ class ConceptsSearch extends React.Component {
     }
 
     fetchSkills() {
-        Rest.getGraph(Constants.RELATION_NARROWER, Constants.CONCEPT_SKILL_HEADLINE, Constants.CONCEPT_SKILL, (data) => {            
-            this.state.data = data.graph;
-            this.sortData(this.state.data.nodes);
+        this.state.data = {
+            nodes: [],
+            edges: [],
+        };
+        Rest.getConcepts(Constants.CONCEPT_SKILL_HEADLINE, (headlines) => {
+            this.state.data.nodes = headlines;
+            this.filterAndPopulate(this.searchReference.value);
+        }, (status) => {
+            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
+        });
+        Rest.getGraph(Constants.RELATION_NARROWER, Constants.CONCEPT_SKILL_HEADLINE, Constants.CONCEPT_SKILL, (data) => {
+            // merge nodes
+            for(var i=0; i<data.graph.nodes.length; ++i) {
+                var node = data.graph.nodes[i];
+                if(node.type == Constants.CONCEPT_SKILL) {
+                    this.state.data.nodes.push(node);
+                }
+            }
+            // setup
+            this.state.data.edges = data.graph.edges;
             this.filterAndPopulate(this.searchReference.value);
             this.onFetchComplete(true);
             this.setState({loadingData: false});
@@ -325,12 +315,7 @@ class ConceptsSearch extends React.Component {
     }
 
     sortData(data) {
-        data.sort((a, b) => {
-            if(a.preferredLabel < b.preferredLabel) { 
-                return -1; 
-            }
-            return a.preferredLabel > b.preferredLabel ? 1 : 0;
-        });
+        Util.sortByKey(data, "preferredLabel", true);
     }
 
     search(query) {
@@ -446,6 +431,52 @@ class ConceptsSearch extends React.Component {
                 }, () => {
                     this.search();
                 });
+            }
+        }
+    }
+    
+    onNewConcept(data) {
+        if(data.concept) {
+            var type = data.concept.type == Constants.CONCEPT_SKILL_HEADLINE ? Constants.CONCEPT_SKILL : data.concept.type;
+            if(type == this.state.queryType) {
+                // create tree node for item
+                var node = ControlUtil.createTreeViewItem(this.queryTreeView, data.concept);
+                node.setText(data.concept.preferredLabel);
+                // update structure correctly
+                if(type == Constants.CONCEPT_SKILL) {
+                    this.state.data.nodes.push(data.concept);
+                    if(data.parent) {
+                        this.state.data.edges.push({
+                            source: data.concept.id,
+                            target: data.parent.id,
+                        });
+                    }
+                } else {
+                    this.state.data.push(data.concept);
+                }
+                // update tree
+                this.queryTreeView.shouldUpdateState = false;
+                if(data.parent) {
+                    var root = this.queryTreeView.roots.find((d) => {
+                        return d.data.id === data.parent.id;
+                    });
+                    if(root) {
+                        // update data item
+                        root.data.relations.narrower += 1;
+                        // update tree item
+                        root.setForceShowButton(true);
+                        root.setShowButton(true);
+                        root.addChild(node);
+                        Util.sortByKey(root.children, "text", true);
+                        // update cache
+                        CacheManager.updateTypeListItem(root.data);
+                    }
+                } else {
+                    this.queryTreeView.addRoot(node);
+                    Util.sortByKey(this.queryTreeView.roots, "text", true);
+                }
+                this.queryTreeView.shouldUpdateState = true;
+                this.queryTreeView.invalidate();
             }
         }
     }

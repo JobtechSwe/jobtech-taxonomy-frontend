@@ -60,8 +60,8 @@ class EditConceptAddRelation extends React.Component {
         this.fetchRoot(13, this.roots.length - 1);
     }
 
-    onSave(message, quality, callback) {
-        // TODO: handle message and quality
+    onSave(message, callback) {
+        // TODO: handle message
         var state = this.state;
         var sub = state.substitutability.trim();
         if(sub.length == 0) {

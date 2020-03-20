@@ -19,8 +19,8 @@ class EditConceptName extends React.Component {
         this.props.editContext.onSave = this.onSave.bind(this);
     }
 
-    onSave(message, quality, callback) {
-        // TODO: handle message and quality
+    onSave(message, callback) {
+        // TODO: handle message
         var item = this.props.item;
         App.addSaveRequest();
         Rest.patchConcept(item.id, "&preferred-label=" + this.state.value.trim(), () => {
