@@ -169,7 +169,7 @@ class ItemHistory extends React.Component {
             info.push(this.renderInfoItem(Localization.get("to_name"), item.relation.target["concept/preferredLabel"], key++));
             info.push(this.renderInfoItem(Localization.get("to_id"), item.relation.target["concept/id"], key++));
             info.push(this.renderInfoItem(Localization.get("to_type"), "[Till typ]", key++));
-            info.push(this.renderInfoItem(Location.get("relation_type"), item.relation["relation-type"], key++));
+            info.push(this.renderInfoItem(Localization.get("relation_type"), item.relation["relation-type"], key++));
             info.push(this.renderInfoItem(Localization.get("referred_to"), "[relationsvikt]", key++));
             info.push(this.renderInfoItem(Localization.get("note"), "[anteckning]", key++));
         }
