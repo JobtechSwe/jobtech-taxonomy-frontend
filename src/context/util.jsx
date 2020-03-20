@@ -299,6 +299,7 @@ class Util {
     getFullyPopulatedConcept(id, type, onSuccess, onError) {
         return this.getFullyPopulatedConceptParameterized(id, type, true, true, true, onSuccess, onError);
     }
+
 }
 
 export default new Util;

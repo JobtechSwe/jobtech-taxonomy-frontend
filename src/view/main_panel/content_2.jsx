@@ -63,12 +63,28 @@ class Content2 extends React.Component {
             );
         }
     }
+
+    renderVersionItemHistory() {
+        if(this.state.selectedItem) {
+            var from = this.state.prevVersion == null ? null : this.state.prevVersion.date;
+            var to = this.state.selectedVersion.date;
+            return (
+                <Group text={Localization.get("history")}>
+                    <ItemHistory 
+                        item={this.state.selectedItem["changed-concept"]}
+                        from={from}
+                        to={to}/>
+                </Group>
+            );
+        }
+    }
     
     render() {
         return (
             <div className="main_content_2">
                 {this.renderTitle()}
-                {this.renderVersionList()}                
+                {this.renderVersionList()}
+                {this.renderVersionItemHistory()}
             </div>
         );
     }

@@ -672,6 +672,8 @@ body {
 
 .item_history_dialog {
     min-height: 250px;
+    max-height: 500px;
+    width: 600px;
 }
 
 .item_history_dialog > div:nth-child(2) {
@@ -682,51 +684,20 @@ body {
 .item_history_dialog_item {
     display: flex;
     margin: 2px;
-    background: #fff;
+    border-radius: 4px;
+    background: #eee;
+    padding: 4px;
 }
 
-.item_history_dialog_item > div:not(:first-child) {
-    padding-left: 2px;
-}
-
-.item_history_dialog_item > div:first-child {    
-    min-width: 150px;
-    width: 150px;
-    overflow-wrap: break-word;
+.item_history_dialog_item > div:nth-child(1) {
+    width: 120px;
+    font-weight: bold;
 }
 
 .item_history_dialog_item > div:nth-child(2) {
-    min-width: 500px;
-    display: flex;
-    flex-grow: 1;
-}
-
-.item_history_dialog_item > div:nth-child(2) > div {
-    min-width: 50%;
-    margin-right: 2px;
+    max-width: 490px;
     overflow-wrap: break-word;
-}
-
-.item_history_dialog_head {
-    display: flex;
-    font-weight: bold;
-    padding-left: 2px;    
-}
-
-.item_history_dialog_head > div:nth-child(1) {
-    min-width: 150px;
-    margin: 2px;
-}
-
-.item_history_dialog_head > div:nth-child(2) {
-    min-width: 500px;
-    display: flex;
-    margin: 2px;
-    flex-grow: 1;
-}
-
-.item_history_dialog_head > div:nth-child(2) > div {
-    min-width: 50%;
+    white-space: pre-wrap;
 }
 
 .edit_concept_dialog {
@@ -823,7 +794,7 @@ body {
 
 .version_list_item > div:nth-child(3) {
     padding-right: 10px;
-    width: 250px;
+    width: 350px;
     overflow-wrap: break-word;
 }
 
@@ -1351,9 +1322,10 @@ body {
     font-weight: bold;
 }
 
-.publish_info_item > div:nth-child(1) {
-    max-width: 300px;
+.publish_info_item > div:nth-child(2) {
+    max-width: 490px;
     overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .publish_info_header {

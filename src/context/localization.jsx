@@ -156,6 +156,7 @@ class Localization {
                 show_deprecated: "Visa avaktualiserade",
                 concept: "Begrepp",
                 replaced_by_concept: "Hänvisat begrepp",
+                action: "Åtgärd",
                 actions: "Åtgärder",
                 select_search: "Typ av sökning",
                 select_date: "Datumintervall",
@@ -175,7 +176,10 @@ class Localization {
                 publish_error_1: "Relation till ISCO-4 saknas",
                 publish_error_2: "Relation till kompetensgrupp saknas",
                 publish_error_3: "Relation till SSYK-4 saknas",
-                publish: "Publicera"
+                publish: "Publicera",
+                to_name: "Till namn",
+                to_type: "Till typ",
+                to_id: "Till id",
             },
         }
         // find active language

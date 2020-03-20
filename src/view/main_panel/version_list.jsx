@@ -313,21 +313,8 @@ class VersionList extends React.Component {
                 );
             }
         };
-        return(
-            <div className="version_list_header no_select font">               
-                <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_TYPE)}>
-                    {Localization.get("value_storage")}
-                    {renderArrow(this.SORT_CONCEPT_TYPE)}
-                </div>
-                <div onClick={this.onSortClicked.bind(this, this.SORT_EVENT_TYPE)}>
-                    {Localization.get("event")}
-                    {renderArrow(this.SORT_EVENT_TYPE)}
-                </div>
-                <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_LABEL)}>
-                    {Localization.get("name")}
-                    {renderArrow(this.SORT_CONCEPT_LABEL)}
-                </div>
-                <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_FROM)}>
+
+        /*<div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_FROM)}>
                     {Localization.get("from")}
                     {renderArrow(this.SORT_CONCEPT_FROM)}
                 </div>
@@ -343,6 +330,21 @@ class VersionList extends React.Component {
                     {Localization.get("relation_type")}
                     {renderArrow(this.SORT_CONCEPT_RELATION)}
                 </div>
+                */
+        return(
+            <div className="version_list_header no_select font">               
+                <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_TYPE)}>
+                    {Localization.get("value_storage")}
+                    {renderArrow(this.SORT_CONCEPT_TYPE)}
+                </div>
+                <div onClick={this.onSortClicked.bind(this, this.SORT_EVENT_TYPE)}>
+                    {Localization.get("event")}
+                    {renderArrow(this.SORT_EVENT_TYPE)}
+                </div>
+                <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_LABEL)}>
+                    {Localization.get("name")}
+                    {renderArrow(this.SORT_CONCEPT_LABEL)}
+                </div>                
             </div>
         );
     }
@@ -373,7 +375,13 @@ class VersionList extends React.Component {
         }
     }
 
-    render() {        
+    render() {
+        /*
+         <Button 
+                        isEnabled={this.state.selected != null}
+                        onClick={this.onShowInfoClicked.bind(this)}
+                        text={Localization.get("show")}/>
+         */
         return (
             <div className="version_list">
                 <Label text={Localization.get("title_filter")}/>
@@ -394,11 +402,7 @@ class VersionList extends React.Component {
                     <Button 
                         isEnabled={this.state.selected != null}
                         onClick={this.onVisitClicked.bind(this)}
-                        text={Localization.get("visit")}/>
-                    <Button 
-                        isEnabled={this.state.selected != null}
-                        onClick={this.onShowInfoClicked.bind(this)}
-                        text={Localization.get("show")}/>
+                        text={Localization.get("visit")}/>                   
                     {this.renderPublishButton()}
                     <Button                             
                         onClick={this.onSaveClicked.bind(this)}

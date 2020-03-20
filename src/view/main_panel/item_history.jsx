@@ -16,13 +16,14 @@ class ItemHistory extends React.Component {
         super();
         this.LIST_EVENT_ID = "ITEMHISTORY_LIST_ID";
         this.state = {
+            concept: null,
             data: [],
             selected: null,
             loadingConceptChanges: false,
             loadingRelationChanges: false,
             from: null,
             to: null
-        }
+        };
     }
 
     componentDidMount() {
@@ -36,6 +37,7 @@ class ItemHistory extends React.Component {
 
     init(props) {
         this.setState({
+            concept: props.item,
             data: [],
             selected: null,
             loadingConceptChanges: true,
@@ -110,117 +112,78 @@ class ItemHistory extends React.Component {
         this.setState({selected: item});
     }
 
-    renderHistoryConcept(concept) {
-        var keys = Object.keys(concept);
-        keys.sort((a, b) => Util.sortValue(true, Localization.get(a), Localization.get(b)));
-        var items = keys.map((attName, index) => {            
-            return (
-                <div 
-                    key={index}
-                    className="item_history_dialog_item">
-                    <div>{Localization.get(attName)}</div>
-                    <div>
-                        <div>{concept[attName]}</div>
-                    </div>
-                </div>
-            );
-        });
+    renderInfoItem(name, value, key) {
         return (
-            <div>
-                <div className="item_history_dialog_head">
-                    <div>Attribut</div>
-                    <div>
-                        <div>Värde</div>
-                    </div>
+            <div 
+                key={key}
+                className="item_history_dialog_item">
+                <div>
+                    {name}
                 </div>
-                <List>
-                    {items}
-                </List>
+                <div>
+                    {value}
+                </div>
             </div>
         );
     }
 
-    renderHistoryChanges(changes) {
-        changes.sort((a, b) => Util.sortValue(true, Localization.get(a.attribute), Localization.get(b.attribute)));
-        var items = changes.map((item, index) => {
-            return (
-                <div 
-                    key={index}
-                    className="item_history_dialog_item">
-                    <div>{Localization.get(item.attribute)}</div>
-                    <div>
-                        <div>{item["new-value"]}</div>
-                        <div>{item["old-value"]}</div>
-                    </div>
-                </div>
-            );
-        });
-        return (
-            <div>
-                <div className="item_history_dialog_head">
-                    <div>Attribut</div>
-                    <div>
-                        <div>Nytt värde</div>
-                        <div>Gammalt värde</div>
-                    </div>
-                </div>
-                <List>
-                    {items}
-                </List>
-            </div>
-        );
-    }
-
-    renderHistoryRelation(relation) {
-        var index = 0;
-        var items = [];
-        items.push(<div
-            key={index++}
-            className="item_history_dialog_item">
-            <div>{Localization.get("from")}</div>
-            <div>
-                <div>{relation.source["concept/id"]}</div>
-                <div>{relation.source["concept/preferredLabel"]}</div>
-            </div>
-        </div>);
-        items.push(<div
-            key={index++}
-            className="item_history_dialog_item">
-            <div>{Localization.get("to")}</div>
-            <div>
-                <div>{relation.target["concept/id"]}</div>
-                <div>{relation.target["concept/preferredLabel"]}</div>
-            </div>
-        </div>);
-        return (
-            <div>
-                <div className="item_history_dialog_head">
-                    <div>Attribut</div>
-                    <div>
-                        <div>Id</div>
-                        <div>Namn</div>
-                    </div>
-                </div>
-                <List>
-                    {items}
-                </List>
-                <Label text={Localization.get("relation_type") + ": " + relation["relation-type"]}/>
-            </div>
-        );
-    }
-
-    renderHistoryDialog() {        
-        var info = null;
-        if(this.state.selected.concept) {
-            info = this.renderHistoryConcept(this.state.selected.concept);        
-        } else if(this.state.selected.changes) {
-            info = this.renderHistoryChanges(this.state.selected.changes);
-        } else if(this.state.selected.relation) {
-            info = this.renderHistoryRelation(this.state.selected.relation);
+    renderHistoryShowItem(item) {
+        var info = [];
+        var key = 0;
+        if(item.concept) {
+            info.push(this.renderInfoItem(Localization.get("name"), item.concept["concept/preferredLabel"], key++));
+            info.push(this.renderInfoItem(Localization.get("definition"), item.concept["concept/definition"], key++));
+            info.push(this.renderInfoItem(Localization.get("id"), item.concept["concept/id"], key++));
+            info.push(this.renderInfoItem(Localization.get("type"), Localization.get("db_" + item.concept["concept/type"]), key++));
+            if(item["event-type"] === "CREATED") {
+                //not deprecated
+                info.push(this.renderInfoItem("Kvalitetsnivå", "[kvalitetsnivå]", key++));
+            } else {
+                //deprecated
+                info.push(this.renderInfoItem(Localization.get("action"), "[åtgärd]", key++));
+                info.push(this.renderInfoItem("Hävisad till", "[hänvisad_till]", key++));
+            }            
+            info.push(this.renderInfoItem(Localization.get("note"), "[anteckning]", key++));
         }
-        return(
-            <div className="dialog_content item_history_dialog">                
-                {info}
+        if(item.changes) {
+            //info.push(this.renderInfoItem("Namn", item.preferredLabel, key++));
+            //info.push(this.renderInfoItem("Definition", "[definition]", key++));
+            if(this.selected) {
+                info.push(this.renderInfoItem(Localization.get("id"), this.selected.id, key++));
+            }
+            //info.push(this.renderInfoItem("Typ", Localization.get("db_" + item.type), key++));
+            for(var i=0; i<item.changes.length; ++i) {
+                var change = item.changes[i];
+                info.push(this.renderInfoItem(Localization.get("action"), Localization.get("changed") + " " + Localization.get(change.attribute), key++));
+                info.push(this.renderInfoItem(Localization.get("from"), change["old-value"], key++));
+                info.push(this.renderInfoItem(Localization.get("to"), change["new-value"], key++));
+            }
+            info.push(this.renderInfoItem(Localization.get("note"), "[anteckning]", key++));
+        }
+        if(item.relation) {
+            //info.push(this.renderInfoItem("Namn", item.preferredLabel, key++));
+            if(this.selected) {
+                info.push(this.renderInfoItem(Localization.get("id"), this.selected.id, key++));
+            }
+            //info.push(this.renderInfoItem("Typ", Localization.get("db_" + item.type), key++));
+            info.push(this.renderInfoItem(Localization.get("to_name"), item.relation.target["concept/preferredLabel"], key++));
+            info.push(this.renderInfoItem(Localization.get("to_id"), item.relation.target["concept/id"], key++));
+            info.push(this.renderInfoItem(Localization.get("to_type"), "[Till typ]", key++));
+            info.push(this.renderInfoItem(Location.get("relation_type"), item.relation["relation-type"], key++));
+            info.push(this.renderInfoItem(Localization.get("referred_to"), "[relationsvikt]", key++));
+            info.push(this.renderInfoItem(Localization.get("note"), "[anteckning]", key++));
+        }
+        return info;
+    }
+
+    renderHistoryDialog() {
+        var info = null;
+        info = this.renderHistoryShowItem(this.state.selected);
+        return (
+            <div className="dialog_content item_history_dialog">
+                <div>
+                    {info}
+                </div>
                 <div>
                     <Button 
                         text={Localization.get("close")}
@@ -235,7 +198,7 @@ class ItemHistory extends React.Component {
         if(item.relation) {
             event = Localization.get("relation") + " - " + event;
         }
-        return(
+        return (
             <div className="item_history_item">
                 <div>
                     {new Date(item.date).toLocaleString()}
@@ -252,7 +215,7 @@ class ItemHistory extends React.Component {
 
     renderLoader() {
         if(this.state.loadingConceptChanges || this.state.loadingRelationChanges) {
-            return(<Loader/>);
+            return (<Loader/>);
         }        
     }
 
