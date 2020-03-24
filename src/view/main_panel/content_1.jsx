@@ -51,9 +51,13 @@ class Content1 extends React.Component {
         var item = this.state.item;
         // values
         var values = [{
+            text: "Inkludera kvalitetssäkring",
+            selected: true,
+            id: 0,
+        }, {
             text: "Inkludera databas-ID",
             selected: false,
-            id: 0,
+            id: 1,
         }];
         // excel
         var onSaveExcel = (values) => {
@@ -108,11 +112,18 @@ class Content1 extends React.Component {
                     }
                 }
 
-                // database id
-                if(values.length) {
-                    context.addRow("Databas-ID", { bold: true });
-                    context.addRow(concept.id);
-                    context.addRow();
+                for(var i=0; i<values.length; ++i) {
+                    if(values[i].id == 0) {
+                        // quality control
+                        context.addRow(Localization.get("quality_control"), { bold: true });
+                        context.addRow();
+                        context.addRow();
+                    } else if(values[i].id == 1) {
+                        // database id
+                        context.addRow("Databas-ID", { bold: true });
+                        context.addRow(concept.id);
+                        context.addRow();
+                    }
                 }
 
                 // definition

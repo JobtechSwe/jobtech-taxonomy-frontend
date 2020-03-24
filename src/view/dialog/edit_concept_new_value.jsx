@@ -209,6 +209,18 @@ class EditConceptNewValue extends React.Component {
     }
 
     renderType() {
+        var types = Constants.DB_TYPES;
+        types.sort((a, b) => {
+            a = Localization.get("db_" + a);
+            b = Localization.get("db_" + b);
+            if(a < b) {
+                return -1;
+            }
+            if(a > b) {
+                return 1;
+            }
+            return 0;
+        });
         return (
             <div className="edit_concept_value_group">
                 <Label 
@@ -219,7 +231,7 @@ class EditConceptNewValue extends React.Component {
                     value={this.state.type}
                     onChange={this.onTypeSelected.bind(this)}>
                     <option>--</option>
-                    {Constants.DB_TYPES.map((value, index) => {
+                    {types.map((value, index) => {
                         return ( <option key={index} value={value}>{Localization.get("db_" + value)}</option> );
                     })}
                 </select>
