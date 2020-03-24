@@ -477,6 +477,12 @@ class ConceptsSearch extends React.Component {
                 }
                 this.queryTreeView.shouldUpdateState = true;
                 this.queryTreeView.invalidate();
+            } else {
+                // update cache
+                CacheManager.updateTypeListItem(data.concept);
+                if(data.concept.type == Constants.CONCEPT_SKILL) {
+                    CacheManager.invalidateCachedTypeList(Constants.CONCEPT_SKILL_HEADLINE);
+                }
             }
         }
     }
