@@ -149,16 +149,17 @@ class Content4 extends React.Component {
         </select>
         );
     }
-
+/*
+<div className="sub_panel">
+    <Button 
+        text={Localization.get("statistics")} 
+        onClick={this.onStatisticsClicked.bind(this)}
+    />
+</div>
+*/
     render() {
         return (
             <div className="side_content_4">
-                <div className="sub_panel">
-                    <Button 
-                        text={Localization.get("statistics")} 
-                        onClick={this.onStatisticsClicked.bind(this)}
-                    />
-                </div>
                 <div className="sub_panel">
                     {this.renderTypeSelect(this.state.queryType1, this.onTypeChanged.bind(this, 1))}
                     {this.renderTypeSelect(this.state.queryType2, this.onTypeChanged.bind(this, 2))}
