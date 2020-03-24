@@ -73,6 +73,7 @@ class Localization {
                 /* regular words */          
                 "occupation-name": "Yrkesbenämning",
                 "occupation-field": "Yrkesområde",
+
                 competense: "Kompetens",
                 connections: "Relationer",
                 connection: "Relation",
@@ -180,6 +181,8 @@ class Localization {
                 to_name: "Till namn",
                 to_type: "Till typ",
                 to_id: "Till id",
+                graph: "Graf",
+                tools: "Verktyg",
             },
         }
         // find active language
