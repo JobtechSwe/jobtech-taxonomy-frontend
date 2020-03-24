@@ -415,23 +415,25 @@ class ConceptsSearch extends React.Component {
 
     onMainItemSelected(item) {
         if(item && item.id) {
-            if(item.deprecated) {
-                this.state.showDeprecated = true;
-            }
-            this.searchReference.value = "";
-            this.expandedItem = null;
-            this.preSelectId = item.id;
-            var type = item.type == this.TYPE_SKILL_HEADLINE ? this.TYPE_SKILL : item.type;
-            if(type == this.state.queryType) {
-                this.onFetchComplete(type == this.TYPE_SKILL);
-            } else {
-                this.setState({
-                    scrollTarget: null,
-                    queryType: type,
-                }, () => {
-                    this.search();
-                });
-            }
+            this.setState({
+                showDeprecated: item.deprecated ? true : false,
+            }, () => {
+                this.searchReference.value = "";
+                this.expandedItem = null;
+                this.preSelectId = item.id;
+                var type = item.type == this.TYPE_SKILL_HEADLINE ? this.TYPE_SKILL : item.type;
+                if(type == this.state.queryType) {
+                    this.filterAndPopulate(this.searchReference.value);
+                    this.onFetchComplete(type == this.TYPE_SKILL);
+                } else {
+                    this.setState({
+                        scrollTarget: null,
+                        queryType: type,
+                    }, () => {
+                        this.search();
+                    });
+                }    
+            });
         }
     }
     
