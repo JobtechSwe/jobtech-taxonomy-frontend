@@ -284,18 +284,19 @@ class ConceptsSearch extends React.Component {
             App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
         });
         Rest.getGraph(Constants.RELATION_NARROWER, Constants.CONCEPT_SKILL_HEADLINE, Constants.CONCEPT_SKILL, (data) => {
-            // merge nodes
-            for(var i=0; i<data.graph.nodes.length; ++i) {
-                var node = data.graph.nodes[i];
-                if(node.type == Constants.CONCEPT_SKILL) {
-                    this.state.data.nodes.push(node);
+            Rest.getConcepts(Constants.CONCEPT_SKILL, (skills) => {
+                // merge
+                for(var i=0; i<skills.length; ++i) {
+                    this.state.data.nodes.push(skills[i]);
                 }
-            }
-            // setup
-            this.state.data.edges = data.graph.edges;
-            this.filterAndPopulate(this.searchReference.value);
-            this.onFetchComplete(true);
-            this.setState({loadingData: false});
+                // setup
+                this.state.data.edges = data.graph.edges;
+                this.filterAndPopulate(this.searchReference.value);
+                this.onFetchComplete(true);
+                this.setState({loadingData: false});
+            }, (status) => {
+                App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
+            });
         }, (status) => {
             App.showError(Util.getHttpMessage(status) + " : misslyckades hämta graph");
         });
