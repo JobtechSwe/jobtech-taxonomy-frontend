@@ -180,19 +180,23 @@ class SearchChangesDate extends React.Component {
                     <div className="search_changes_column">
                         <div className="search_changes_date">
                             <Label text={Localization.get("from") + ":"}/>
-                            <DatePicker 
-                                selected={this.state.fromDate} 
-                                onChange={this.onSetFromDate.bind(this)}
-                                locale={Localization.get("locale")}
-                                dateFormat="yyyy-MM-dd"/>
+                            <div className="search_changes_date_picker">
+                                <DatePicker 
+                                    selected={this.state.fromDate} 
+                                    onChange={this.onSetFromDate.bind(this)}
+                                    locale={Localization.get("locale")}
+                                    dateFormat="yyyy-MM-dd"/>
+                            </div>
                         </div>
                         <div className="search_changes_date">
                             <Label text={Localization.get("to") + ":"}/>
-                            <DatePicker 
-                                selected={this.state.toDate} 
-                                onChange={this.onSetToDate.bind(this)}
-                                locale={Localization.get("locale")}
-                                dateFormat="yyyy-MM-dd"/>
+                            <div className="search_changes_date_picker">
+                                <DatePicker 
+                                    selected={this.state.toDate} 
+                                    onChange={this.onSetToDate.bind(this)}
+                                    locale={Localization.get("locale")}
+                                    dateFormat="yyyy-MM-dd"/>
+                            </div>
                         </div>
                     </div>
                 </div>                

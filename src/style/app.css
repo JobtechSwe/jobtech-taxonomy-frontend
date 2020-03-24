@@ -1214,8 +1214,20 @@ body {
 }
 
 .search_changes_date > div {
+    flex: 1 0 0;
+    padding-left: 5px;
+}
+
+.search_changes_date_picker > div.react-datepicker-wrapper {
+    width: 100%;
+ } 
+
+ .search_changes_date_picker > div > div.react-datepicker__input-container {
     display: flex;
-    flex: 1 1 0;
+ }
+
+.search_changes_date_picker > div > div.react-datepicker__input-container input {
+    width: 100%;
 }
 
 .search_changes_select {
