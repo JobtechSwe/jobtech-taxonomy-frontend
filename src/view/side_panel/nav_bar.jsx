@@ -4,6 +4,7 @@ import App from './../../context/app.jsx';
 import Util from './../../context/util.jsx';
 import Constants from './../../context/constants.jsx';
 import EventDispatcher from './../../context/event_dispatcher.jsx';
+import Localization from './../../context/localization.jsx';
 
 class NavBar extends React.Component { 
 
@@ -65,11 +66,11 @@ class NavBar extends React.Component {
     render() {
         return (
             <div className="side_nav_bar">
-                {this.renderButton("View 1", Constants.ICON_TMP_1, Constants.WORK_MODE_1)}
-                {this.renderButton("View 2", Constants.ICON_TMP_2, Constants.WORK_MODE_2)}
-                {this.renderButton("View 3", Constants.ICON_TMP_3, Constants.WORK_MODE_3)}
-                {this.renderButton("View 4", Constants.ICON_TMP_4, Constants.WORK_MODE_4)}
-                {this.renderButton("View 5", Constants.ICON_TMP_5, Constants.WORK_MODE_5)}
+                {this.renderButton(Localization.get("value_storage"), Constants.ICON_TMP_1, Constants.WORK_MODE_1)}
+                {this.renderButton(Localization.get("version"), Constants.ICON_TMP_2, Constants.WORK_MODE_2)}
+                {this.renderButton(Localization.get("graph"), Constants.ICON_TMP_3, Constants.WORK_MODE_3)}
+                {this.renderButton(Localization.get("tools"), Constants.ICON_TMP_4, Constants.WORK_MODE_4)}
+                {this.renderButton(Localization.get("settings"), Constants.ICON_TMP_5, Constants.WORK_MODE_5)}
             </div>
         );
     }

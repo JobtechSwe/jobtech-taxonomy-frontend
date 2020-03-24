@@ -153,13 +153,15 @@ class CacheManager {
 
     updateTypeListItem(item) {
         var list = this.getCompressedValue("typeList_" + item.type);
-        var obj = list.find((x) => {
-            return x.id == item.id;
-        });
-        if(obj) {
-            var index = list.indexOf(obj);
-            list.splice(index, 1, item);
-            this.setCompressedValue("typeList_" + item.type, JSON.stringify(list));
+        if(list) {
+            var obj = list.find((x) => {
+                return x.id == item.id;
+            });
+            if(obj) {
+                var index = list.indexOf(obj);
+                list.splice(index, 1, item);
+                this.setCompressedValue("typeList_" + item.type, JSON.stringify(list));
+            }
         }
     }
 
