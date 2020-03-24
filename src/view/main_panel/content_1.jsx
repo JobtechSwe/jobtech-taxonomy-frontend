@@ -212,6 +212,7 @@ class Content1 extends React.Component {
                 }
                 // download the file
                 context.download(concept.preferredLabel + ".xlsx");
+                EventDispatcher.fire(Constants.EVENT_HIDE_POPUP_INDICATOR);
             });
         };
         // pdf

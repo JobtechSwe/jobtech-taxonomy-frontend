@@ -166,7 +166,6 @@ class VersionList extends React.Component {
 
     onSaveClicked() {
         var onSaveExcel = (values) => {
-            console.log(values);
             var data = this.filterData().map((item) => {
                 var ret = {};
                 for(var i=0; i<values.length; ++i) {
@@ -187,6 +186,7 @@ class VersionList extends React.Component {
             var new_workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(new_workbook, worksheet, "Version - " + this.state.item.version);
             XLSX.writeFile(new_workbook, "Version.xlsx");
+            EventDispatcher.fire(Constants.EVENT_HIDE_POPUP_INDICATOR);
         }
 
         var values = [];

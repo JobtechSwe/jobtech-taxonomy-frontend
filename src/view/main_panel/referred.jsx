@@ -128,6 +128,7 @@ class Referred extends React.Component {
             var new_workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(new_workbook, worksheet, Localization.get("referred"));
             XLSX.writeFile(new_workbook, Localization.get("referred") + ".xlsx");
+            EventDispatcher.fire(Constants.EVENT_HIDE_POPUP_INDICATOR);
         }        
 
         var values = [];

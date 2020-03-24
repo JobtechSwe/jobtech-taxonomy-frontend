@@ -36,7 +36,10 @@ class Export extends React.Component {
     onSaveExcelClicked() {
         var values = this.getFinalValues();
         if(this.props.onSaveExcel) {
-            this.props.onSaveExcel(values);
+            EventDispatcher.fire(Constants.EVENT_SHOW_POPUP_INDICATOR, Localization.get("exporting") + "...");
+            setTimeout(() => {
+                this.props.onSaveExcel(values);
+            }, 500);
         }
     }
     

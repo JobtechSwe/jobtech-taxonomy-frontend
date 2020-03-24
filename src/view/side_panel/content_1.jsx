@@ -72,6 +72,7 @@ class Content1 extends React.Component {
                 }
             }
             context.download(name + ".xlsx");
+            EventDispatcher.fire(Constants.EVENT_HIDE_POPUP_INDICATOR);
         };
         var exportSsykRelations = (relationType, fieldType) => {
             Rest.getGraph(relationType, this.type, Constants.CONCEPT_SSYK_LEVEL_4, (data) => {
@@ -103,6 +104,7 @@ class Content1 extends React.Component {
                         context.addRow(data[i].preferredLabel);
                     }
                     context.download(name + ".xlsx");
+                    EventDispatcher.fire(Constants.EVENT_HIDE_POPUP_INDICATOR);
                 }, (status) => {
 
                 });

@@ -169,6 +169,7 @@ class Localization {
                 export_pdf: "PDF",
                 export_excel: "Excel",
                 export: "Exportera",
+                exporting: "Exporterar",
                 code: "Kod",
                 date: "Datum",
                 new_version: "Ny version",
