@@ -783,18 +783,18 @@ body {
 
 .version_list_item > div:nth-child(1) {
     padding-right: 10px;
-    width: 200px;
+    width: 25px;
     overflow-wrap: break-word;
 }
 
 .version_list_item > div:nth-child(2) {
     padding-right: 10px;
-    width: 100px;
+    width: 25px;
 }
 
 .version_list_item > div:nth-child(3) {
     padding-right: 10px;
-    width: 350px;
+    width: 200px;
     overflow-wrap: break-word;
 }
 
@@ -806,7 +806,7 @@ body {
 
 .version_list_item > div:nth-child(5) {
     padding-right: 10px;
-    width: 100px;
+    width: 350px;
     overflow-wrap: break-word;
 }
 
@@ -840,19 +840,19 @@ body {
 
 .version_list_header > div:nth-child(1) {
     padding-right: 10px;
-    width: 200px;
+    width: 25px;
     cursor: pointer;
 }
 
 .version_list_header > div:nth-child(2) {
     padding-right: 10px;
-    width: 100px;
+    width: 25px;
     cursor: pointer;
 }
 
 .version_list_header > div:nth-child(3) {
     padding-right: 10px;
-    width: 250px;
+    width: 200px;
     cursor: pointer;
 }
 
@@ -864,7 +864,7 @@ body {
 
 .version_list_header > div:nth-child(5) {
     padding-right: 10px;
-    width: 100px;
+    width: 250px;
     cursor: pointer;
 }
 

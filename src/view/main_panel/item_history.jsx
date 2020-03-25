@@ -56,7 +56,7 @@ class ItemHistory extends React.Component {
                     data = this.filterBetween(data, this.state.from, this.state.to);
                     this.state.data.push(...data);
                     this.setState({
-                        data: Util.sortByKey(this.state.data, "date", false),
+                        data: Util.sortByKey(this.state.data, "date", true),
                         loadingConceptChanges: false,
                     });
                 }, (status) => {
@@ -71,7 +71,7 @@ class ItemHistory extends React.Component {
                     data = this.filterBetween(data, this.state.from, this.state.to);
                     this.state.data.push(...data);
                     this.setState({
-                        data: Util.sortByKey(this.state.data, "date", false),
+                        data: Util.sortByKey(this.state.data, "date", true),
                         loadingRelationChanges: false,
                     });
                 }, (status) => {

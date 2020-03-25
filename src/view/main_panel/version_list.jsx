@@ -23,13 +23,11 @@ class VersionList extends React.Component {
         this.SORT_EVENT_TYPE = 0;
         this.SORT_CONCEPT_TYPE = 1;
         this.SORT_CONCEPT_LABEL = 2;
-        this.SORT_CONCEPT_FROM = 3;
-        this.SORT_CONCEPT_TO = 4;
-        this.SORT_EVENT_DATE = 5;
-        this.SORT_CONCEPT_RELATION = 6;
+        this.SORT_CREATED = 3;
+        this.SORT_DEPRECATED  = 4;
         this.state = {
             item: null,
-            data: [],
+            data: [],            
             filter: "",
             loadingData: false,
             selected: null,
@@ -63,6 +61,12 @@ class VersionList extends React.Component {
             case this.SORT_CONCEPT_LABEL:
                 cmp = (a) => {return a["changed-concept"].preferredLabel;};
                 break;
+            case this.SORT_CREATED:
+                cmp = (a) => {return a.created ? 1 : 0;};
+                break;
+            case this.SORT_DEPRECATED:
+                cmp = (a) => {return a.deprecated ? 1 : 0;};
+                break;
         }
         return Util.sortByCmp(data, cmp, this.sortDesc);
     }
@@ -80,6 +84,24 @@ class VersionList extends React.Component {
         });
     }
 
+    prepareData(data) {
+        var res = [];
+        for(var i=data.length-1; i>=0; --i) {
+            var dataItem = data[i];
+            var item = res.find((e) => e["changed-concept"].id == dataItem["changed-concept"].id);
+            if(item == null) {                
+                item = dataItem;
+                res.push(item);
+            } 
+            if(dataItem["event-type"] === "CREATED") {
+                item.created = true;
+            } else if(dataItem["event-type"] === "DEPRECATED") {
+                item.deprecated = true;
+            }
+        }
+        return res;
+    }
+
     getChanges(item) {        
         this.setState({
             data: [], 
@@ -92,7 +114,7 @@ class VersionList extends React.Component {
                 if(item.version == -1) {
                     Rest.getUnpublishedChanges(item.latestVersion, (data) => {
                         this.setState({
-                            data: this.sortData(data), 
+                            data: this.sortData(this.prepareData(data)), 
                             loadingData: false,
                         });
                     }, (status) => {
@@ -102,7 +124,7 @@ class VersionList extends React.Component {
                 } else {
                     Rest.getChanges(item.version - 1, item.version, (data) => {
                         this.setState({
-                            data: this.sortData(data), 
+                            data: this.sortData(this.prepareData(data)), 
                             loadingData: false,
                         });
                     }, (status) => {
@@ -332,7 +354,19 @@ class VersionList extends React.Component {
                 </div>
                 */
         return(
-            <div className="version_list_header no_select font">               
+            <div className="version_list_header no_select font">
+                <div
+                    title={Localization.get("CREATED")} 
+                    onClick={this.onSortClicked.bind(this, this.SORT_CREATED)}>
+                    {Localization.get("created_short")}
+                    {renderArrow(this.SORT_CREATED)}
+                </div>
+                <div
+                    title={Localization.get("DEPRECATED")}
+                    onClick={this.onSortClicked.bind(this, this.SORT_DEPRECATED)}>
+                    {Localization.get("deprecated_short")}
+                    {renderArrow(this.SORT_DEPRECATED)}
+                </div>
                 <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_TYPE)}>
                     {Localization.get("value_storage")}
                     {renderArrow(this.SORT_CONCEPT_TYPE)}
@@ -351,7 +385,13 @@ class VersionList extends React.Component {
 
     renderItem(item) {
         return(
-            <div className="version_list_item">               
+            <div className="version_list_item">     
+                <div>
+                    {item.created ? Localization.get("created_short") : ""}
+                </div>
+                <div>
+                    {item.deprecated ? Localization.get("deprecated_short") : ""}
+                </div>
                 <div>
                     {Localization.get("db_" + item["changed-concept"].type)}
                 </div>

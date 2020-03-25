@@ -184,6 +184,8 @@ class Localization {
                 to_id: "Till id",
                 graph: "Graf",
                 tools: "Verktyg",
+                created_short: "S",
+                deprecated_short: "A",
             },
         }
         // find active language
