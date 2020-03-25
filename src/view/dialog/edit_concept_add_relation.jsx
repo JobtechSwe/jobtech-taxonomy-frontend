@@ -184,6 +184,20 @@ class EditConceptAddRelation extends React.Component {
         );
     }
 
+    renderTypeHint() {
+        if(this.state.selected) {
+            var type = Constants.getRelationType(this.props.item.type, this.state.selected.type);
+            if(type && type != this.state.type) {
+                return (
+                    <div className="edit_concept_error_text font">
+                        Den rekommenderade relationstypen är "{type}"
+                    </div>
+                );
+                
+            }
+        }
+    }
+
     renderTypeList() {
         return (
             <div className="edit_concept_value_group">
@@ -198,6 +212,7 @@ class EditConceptAddRelation extends React.Component {
                     <option value="related">Related</option>
                     <option value="substitutability">Substitutability</option>
                 </select>
+                {this.renderTypeHint()}
             </div>
         );
     }

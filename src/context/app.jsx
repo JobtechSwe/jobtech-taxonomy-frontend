@@ -112,7 +112,6 @@ class App {
 
     removeSaveRequest() {
         if(--this.pendingSaveRequests == 0) {
-            console.log("close the popup");
             EventDispatcher.fire(Constants.EVENT_HIDE_SAVE_INDICATOR);
         }
         return this.pendingSaveRequests == 0;
