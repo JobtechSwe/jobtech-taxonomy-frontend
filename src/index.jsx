@@ -24,6 +24,7 @@ class Index extends React.Component {
         };
         // callbacks
         this.boundShowPopupIndicator = this.onShowPopup.bind(this);
+        this.boundHidePopIndicator = this.onHidePopup.bind(this);
         this.boundShowSaveIndicator = this.onShowSaveIndicator.bind(this);
         this.boundHideSaveIndicator = this.onHideSaveIndicator.bind(this);
         this.boundShowOverlayWindow = this.onShowOverlayWindow.bind(this);
@@ -34,7 +35,7 @@ class Index extends React.Component {
     componentDidMount() {
         Util.initSearchUrl("default");
         EventDispatcher.add(this.boundShowPopupIndicator, Constants.EVENT_SHOW_POPUP_INDICATOR);
-        EventDispatcher.add(this.boundHideSaveIndicator, Constants.EVENT_HIDE_POPUP_INDICATOR);
+        EventDispatcher.add(this.boundHidePopIndicator, Constants.EVENT_HIDE_POPUP_INDICATOR);
         EventDispatcher.add(this.boundShowSaveIndicator, Constants.EVENT_SHOW_SAVE_INDICATOR);
         EventDispatcher.add(this.boundHideSaveIndicator, Constants.EVENT_HIDE_SAVE_INDICATOR);
         EventDispatcher.add(this.boundShowOverlayWindow, Constants.EVENT_SHOW_OVERLAY);
@@ -66,10 +67,14 @@ class Index extends React.Component {
     }
 
     onShowPopup(text) {
-        this.setState({popupText: text}, () => {
-            var indicator = document.getElementById("save_indicator");
-            indicator.classList.add("save_enter_margin");
-        });
+        var indicator = document.getElementById("save_indicator");
+        indicator.classList.add("save_enter_margin");
+        this.setState({popupText: text});
+    }
+
+    onHidePopup() {
+        var indicator = document.getElementById("save_indicator");
+        indicator.classList.remove("save_enter_margin");
     }
 
     onShowSaveIndicator() {
@@ -77,8 +82,7 @@ class Index extends React.Component {
     }
     
     onHideSaveIndicator() {
-        var indicator = document.getElementById("save_indicator");
-        indicator.classList.remove("save_enter_margin");
+        this.onHidePopup();
     }
 
     onShowOverlayWindow(data) {
