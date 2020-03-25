@@ -85,6 +85,7 @@ class EditConceptNewValue extends React.Component {
     onTypeSelected(e) {
         var parentType = this.getParentType(e.target.value);
         var parentConcepts = parentType == this.state.parentType ? this.state.parentConcepts : [];
+        var relationType = this.props.item == null ? null : Constants.getRelationType(this.props.item.type, e.target.value);
         this.setState({
             name: "",
             definition: "",
@@ -92,6 +93,7 @@ class EditConceptNewValue extends React.Component {
             parent: null,
             parentType: parentType,
             parentConcepts: parentConcepts,
+            relationType: relationType == null ? this.state.relationType : relationType,
         }, () => {
             this.updateSaveStatus();
         });

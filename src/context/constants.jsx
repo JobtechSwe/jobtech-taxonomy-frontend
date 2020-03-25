@@ -122,6 +122,46 @@ class Constants {
             "sun-education-level-2",
             "sun-education-level-3",
         ];
+        this.CONCEPT_RELATION_TYPES = {
+            "ssyk-level-4": {
+                "ssyk-level-3": this.RELATION_BROADER,
+                "isco-level-4": this.RELATION_RELATED,
+                "occupation-field": this.RELATION_BROADER,
+            },
+            "ssyk-level-3": {
+                "ssyk-level-2": this.RELATION_BROADER,
+            },
+            "ssyk-level-2": {
+                "ssyk-level-1": this.RELATION_BROADER,
+            },
+            "isco-level-4": {
+                "ssyk-level-4": this.RELATION_RELATED,
+            },
+            "occupation-name": {
+                "ssyk-level-4": this.RELATION_BROADER,
+                "isco-level-4": this.RELATION_BROADER,
+                "occupation-field": this.RELATION_BROADER,
+                "occupation-name": this.RELATION_SUBSTITUTABILITY,
+                "keyword": this.RELATION_RELATED,
+            },
+            "occupation-collection": {
+
+            },
+            "skill": {
+                "skill-headline": this.RELATION_BROADER,
+                "ssyk-level-4": this.RELATION_RELATED,
+                "keyword": this.RELATION_RELATED,
+            },
+            "municipality": {
+                "region": this.RELATION_BROADER,
+            },
+            "region": {
+                "country": this.RELATION_BROADER,
+            },
+            "country": {
+                "continent": this.RELATION_BROADER,
+            },
+        };
 
         // settings
         this.REST_IP = "http://jobtech-taxonomy-api-for-frontend-route-jobtech-taxonomy-api.test.services.jtech.se/v1/taxonomy";
@@ -160,7 +200,13 @@ class Constants {
 			}
 		}
 		return null;
-	}
+    }
+    
+    getRelationType(from, to) {
+        if(this.CONCEPT_RELATION_TYPES[from]) {
+            return this.CONCEPT_RELATION_TYPES[from][to];
+        }
+    }
 }
 
 export default new Constants;

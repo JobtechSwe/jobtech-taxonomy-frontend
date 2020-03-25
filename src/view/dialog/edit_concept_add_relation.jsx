@@ -84,7 +84,11 @@ class EditConceptAddRelation extends React.Component {
 
     onQueryItemSelected(item) {
         this.props.editContext.setEnableSave(true);
-        this.setState({selected: item.data});
+        var type = Constants.getRelationType(this.props.item.type, item.data.type);
+        this.setState({
+            selected: item.data,
+            type: type == null ? this.state.type : type,
+        });
     }
 
     onTypeSelected(e) {
