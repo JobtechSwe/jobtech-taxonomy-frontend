@@ -56,7 +56,7 @@ class ItemHistory extends React.Component {
                     data = this.filterBetween(data, this.state.from, this.state.to);
                     this.state.data.push(...data);
                     this.setState({
-                        data: Util.sortByKey(this.state.data, "date", true),
+                        data: Util.sortByKey(this.state.data, "date", false),
                         loadingConceptChanges: false,
                     });
                 }, (status) => {
@@ -71,7 +71,7 @@ class ItemHistory extends React.Component {
                     data = this.filterBetween(data, this.state.from, this.state.to);
                     this.state.data.push(...data);
                     this.setState({
-                        data: Util.sortByKey(this.state.data, "date", true),
+                        data: Util.sortByKey(this.state.data, "date", false),
                         loadingRelationChanges: false,
                     });
                 }, (status) => {
@@ -102,7 +102,7 @@ class ItemHistory extends React.Component {
     onShowClicked() {
         if(this.state.selected) {
             EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
-                title:this.renderItem(this.state.selected),
+                title:this.renderItem(this.state.selected, true),
                 content: this.renderHistoryDialog(),
             });
         }
@@ -193,10 +193,25 @@ class ItemHistory extends React.Component {
         );
     }
 
-    renderItem(item) {
+    renderItem(item, simple) {
         var event = Localization.get(item.event);
         if(item.relation) {
-            event = Localization.get("relation") + " - " + event;
+            if(item.event == "CREATED") {
+                event = Localization.get("relation_created");
+            } else if(item.event == "DEPRECATED") {
+                event = Localization.get("relation_removed");
+            } else {
+                event = Localization.get("relation_updated");
+            }
+        }
+        if(!simple) {
+            if(item.concept) {
+                item.concept["concept/definition"];
+            } else if(item.changes) {
+                event = Localization.get(item.changes[0].attribute) + " " + event;                
+            } else if(item.relation) {
+                event += " " + Localization.get("against") + " " + item.relation.target["concept/preferredLabel"];
+            }
         }
         return (
             <div className="item_history_item">

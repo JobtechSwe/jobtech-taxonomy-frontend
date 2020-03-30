@@ -69,7 +69,7 @@ class Localization {
                 /* Actions */
                 CREATED: "Skapad",
                 UPDATED: "Uppdaterad",
-                DEPRECATED: "Avaktualiserat",
+                DEPRECATED: "Avaktualiserad",
                 /* regular words */          
                 "occupation-name": "Yrkesbenämning",
                 "occupation-field": "Yrkesområde",
@@ -186,6 +186,11 @@ class Localization {
                 tools: "Verktyg",
                 created_short: "S",
                 deprecated_short: "A",
+                against: "till",
+                changed: "Uppdaterat",
+                relation_created: "Relation skapad",
+                relation_removed: "Relation borttagen",
+                relation_updated: "Relation uppdaterad"
             },
         }
         // find active language
