@@ -190,7 +190,8 @@ class Localization {
                 changed: "Uppdaterat",
                 relation_created: "Relation skapad",
                 relation_removed: "Relation borttagen",
-                relation_updated: "Relation uppdaterad"
+                relation_updated: "Relation uppdaterad",
+                relation_weight: "Relationsvikt",
             },
         }
         // find active language

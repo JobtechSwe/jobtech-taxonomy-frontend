@@ -66,7 +66,7 @@ class ItemHistory extends React.Component {
                     for(var i=0; i<data.length; ++i) {
                         var item = data[i];
                         item.date = new Date(item.timestamp);
-                        item.event = item["event-type"];                        
+                        item.event = item["event-type"];
                     }
                     data = this.filterBetween(data, this.state.from, this.state.to);
                     this.state.data.push(...data);
@@ -142,12 +142,10 @@ class ItemHistory extends React.Component {
                 //deprecated
                 info.push(this.renderInfoItem(Localization.get("action"), "[åtgärd]", key++));
                 info.push(this.renderInfoItem("Hävisad till", "[hänvisad_till]", key++));
-            }            
+            }
             info.push(this.renderInfoItem(Localization.get("note"), "[anteckning]", key++));
         }
         if(item.changes) {
-            //info.push(this.renderInfoItem("Namn", item.preferredLabel, key++));
-            //info.push(this.renderInfoItem("Definition", "[definition]", key++));
             if(this.selected) {
                 info.push(this.renderInfoItem(Localization.get("id"), this.selected.id, key++));
             }
@@ -161,7 +159,6 @@ class ItemHistory extends React.Component {
             info.push(this.renderInfoItem(Localization.get("note"), "[anteckning]", key++));
         }
         if(item.relation) {
-            //info.push(this.renderInfoItem("Namn", item.preferredLabel, key++));
             if(this.selected) {
                 info.push(this.renderInfoItem(Localization.get("id"), this.selected.id, key++));
             }
@@ -170,7 +167,7 @@ class ItemHistory extends React.Component {
             info.push(this.renderInfoItem(Localization.get("to_id"), item.relation.target["concept/id"], key++));
             info.push(this.renderInfoItem(Localization.get("to_type"), "[Till typ]", key++));
             info.push(this.renderInfoItem(Localization.get("relation_type"), item.relation["relation-type"], key++));
-            info.push(this.renderInfoItem(Localization.get("referred_to"), "[relationsvikt]", key++));
+            // TODO: info.push(this.renderInfoItem(Localization.get("relation_weight"), "[relationsvikt]", key++));
             info.push(this.renderInfoItem(Localization.get("note"), "[anteckning]", key++));
         }
         return info;
@@ -208,7 +205,7 @@ class ItemHistory extends React.Component {
             if(item.concept) {
                 item.concept["concept/definition"];
             } else if(item.changes) {
-                event = Localization.get(item.changes[0].attribute) + " " + event;                
+                event = Localization.get(item.changes[0].attribute) + " " + event;
             } else if(item.relation) {
                 event += " " + Localization.get("against") + " " + item.relation.target["concept/preferredLabel"];
             }
