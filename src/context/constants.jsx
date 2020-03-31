@@ -1,4 +1,6 @@
 
+import Config from './../../config.js';
+
 class Constants { 
 
     constructor() {
@@ -164,8 +166,8 @@ class Constants {
         };
 
         // settings
-        this.REST_IP = "http://jobtech-taxonomy-api-for-frontend-route-jobtech-taxonomy-api.test.services.jtech.se/v1/taxonomy";
-        this.REST_API_KEY = "";
+        this.REST_IP = Config.api_path;
+        this.REST_API_KEY = Config.api_key;
         // resources
         this.ICON_TMP_1 = "./resource/icon_tmp_1.png";
         this.ICON_TMP_2 = "./resource/icon_tmp_2.png";
