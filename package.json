@@ -30,6 +30,7 @@
     "d3": "^5.15.0",
     "exceljs": "^3.8.1",
     "javascript-excel": "^1.0.3",
+    "jspdf": "^1.5.3",
     "keycharm": "^0.2.0",
     "lz-string": "^1.4.4",
     "moment": "^2.24.0",

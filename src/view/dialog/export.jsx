@@ -63,10 +63,11 @@ class Export extends React.Component {
                 <List css="dialog_export_list">{values}</List>
                 <div className="dialog_content_buttons">
                     <Button 
-                        isEnabled={false}
+                        isEnabled={this.props.onSavePdf ? true : false}
                         onClick={this.onSavePdfClicked.bind(this)}
                         text={Localization.get("export_pdf")}/>
                     <Button 
+                        isEnabled={this.props.onSaveExcel ? true : false}
                         onClick={this.onSaveExcelClicked.bind(this)}
                         text={Localization.get("export_excel")}/>
                     <Button 

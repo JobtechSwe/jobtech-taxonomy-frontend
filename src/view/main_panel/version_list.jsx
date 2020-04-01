@@ -11,9 +11,11 @@ import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Util from '../../context/util.jsx';
 import Excel from '../../context/excel.jsx';
+import Pdf from '../../context/pdf.jsx';
 import App from '../../context/app.jsx';
 import Export from '../dialog/export.jsx';
 import PublishVersion from '../dialog/publish_version.jsx';
+import pdf from '../../context/pdf.jsx';
 
 class VersionList extends React.Component { 
 
@@ -99,6 +101,10 @@ class VersionList extends React.Component {
                 item.deprecated = true;
             }
         }
+        EventDispatcher.fire(Constants.EVENT_VERSION_ITEM_CONTENT_INFO, {
+            nrConcepts: res.length, 
+            nrChanges: data.length,
+        });
         return res;
     }
 
@@ -209,7 +215,31 @@ class VersionList extends React.Component {
             XLSX.utils.book_append_sheet(new_workbook, worksheet, "Version - " + this.state.item.version);
             XLSX.writeFile(new_workbook, "Version.xlsx");
             EventDispatcher.fire(Constants.EVENT_HIDE_POPUP_INDICATOR);
-        }
+        };
+
+        var onSavePdf = (values) => {
+            console.log(values);
+            var data = this.filterData().map((item) => {
+                var ret = {};
+                for(var i=0; i<values.length; ++i) {
+                    ret[values[i].text] = values[i].get(item);
+                }
+                return ret;            
+            }); 
+            var header = [];
+            for(var i=0; i<values.length; ++i) {
+                header.push({
+                    id: values[i].text,
+                    name: values[i].text,
+                    prompt: values[i].text,
+                    width: 65, // mm
+                    align: "right",
+                    padding: 0,
+                });
+            }
+            
+            pdf.createTable("version", header, data);
+        };
 
         var values = [];
         values.push({
@@ -238,7 +268,7 @@ class VersionList extends React.Component {
             title: Localization.get("export"),
             content: <Export 
                         values={values}
-                        onSaveExcel={onSaveExcel}
+                        onSaveExcel={onSaveExcel}                        
                     />
         });
     }

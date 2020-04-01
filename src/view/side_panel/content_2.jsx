@@ -28,6 +28,7 @@ class Content2 extends React.Component {
                     latestVersion = data[i].version;
                 }
             }
+            data = Util.sortByKey(data, "version", false),
             data.unshift({
                 version: -1,
                 latestVersion: latestVersion,
