@@ -12,12 +12,28 @@ class Pdf {
         if(dim.w < width) {
             return text;
         }
+        var getFragment = (from, to, words) => {
+            var res = words[from];
+            for(var i=from + 1; i<to; ++i) {
+                res += " " + words[i];
+            }
+            return res;
+        }
         var words = text.split(" ");
         var result = [];
-        var index = 0;
-        var testing = words.length;
-        
-        
+        var begin = 0;
+        var end = words.length;
+        while (begin < words.length && begin < end) {
+            var fragment = getFragment(begin, end, words);
+            var fragDim = doc.getTextDimensions(fragment);
+            if(fragDim.w < width) {
+                result.push(fragment);
+                begin = end;
+                end = words.length; 
+            } else {
+                end--;
+            }            
+        }        
         return result;
     }
 
@@ -33,13 +49,13 @@ class Pdf {
         //save height for each row
         //draw table header
         //draw table content
-        this.splitTextToSize(doc, );
+        console.log(this.splitTextToSize(doc, "One pretty long text that should be split in two.", 55));
     }
 
     createTable(name, header, data) {
         var doc = new jsPDF();
         //A4 = 210mm x 297mm
-        doc.text('Hello world!', 10, 10);
+        //doc.text('Hello world!', 10, 10);
         
         /*doc.table(14, 30, data, header, {
             padding: 1,
@@ -48,14 +64,10 @@ class Pdf {
             autoSize: true,
         });*/
         
-
-        console.log(doc.getLineHeight(), dim);
-
-        
         var position = this.addHeader(doc);
         this.addTable(doc, 10, position, header, data);
 
-        doc.save(name + '.pdf');
+        //doc.save(name + '.pdf');
     }
 
 }

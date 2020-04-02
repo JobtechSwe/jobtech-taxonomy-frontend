@@ -268,7 +268,7 @@ class VersionList extends React.Component {
             title: Localization.get("export"),
             content: <Export 
                         values={values}
-                        onSaveExcel={onSaveExcel}                        
+                        onSaveExcel={onSaveExcel}
                     />
         });
     }
