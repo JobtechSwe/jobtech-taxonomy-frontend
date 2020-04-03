@@ -210,6 +210,7 @@ class EditConceptAddRelation extends React.Component {
                     onChange={this.onTypeSelected.bind(this)}>
                     <option value="broader">Broader</option>
                     <option value="related">Related</option>
+                    <option value="narrower">Narrower</option>
                     <option value="substitutability">Substitutability</option>
                 </select>
                 {this.renderTypeHint()}

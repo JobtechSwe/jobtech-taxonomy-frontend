@@ -206,9 +206,17 @@ class Constants {
     }
     
     getRelationType(from, to) {
-        if(this.CONCEPT_RELATION_TYPES[from]) {
+        if(this.CONCEPT_RELATION_TYPES[from] && this.CONCEPT_RELATION_TYPES[from][to]) {
             return this.CONCEPT_RELATION_TYPES[from][to];
+        } else if(this.CONCEPT_RELATION_TYPES[to]) {
+            var type = this.CONCEPT_RELATION_TYPES[to][from];
+            if(type == this.RELATION_NARROWER) {
+                return this.RELATION_BROADER;
+            } else if(type == this.RELATION_BROADER) {
+                return this.RELATION_NARROWER;
+            }
         }
+        return null;
     }
 }
 

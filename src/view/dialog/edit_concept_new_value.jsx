@@ -298,6 +298,7 @@ class EditConceptNewValue extends React.Component {
                         onChange={this.onRelationTypeSelected.bind(this)}>
                         <option value="broader">Broader</option>
                         <option value="related">Related</option>
+                        <option value="narrower">Narrower</option>
                         <option value="substitutability">Substitutability</option>
                     </select>
                 </div>
