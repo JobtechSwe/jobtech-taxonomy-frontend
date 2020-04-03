@@ -218,7 +218,6 @@ class VersionList extends React.Component {
         };
 
         var onSavePdf = (values) => {
-            console.log(values);
             var data = this.filterData().map((item) => {
                 var ret = {};
                 for(var i=0; i<values.length; ++i) {
@@ -232,13 +231,18 @@ class VersionList extends React.Component {
                     id: values[i].text,
                     name: values[i].text,
                     prompt: values[i].text,
-                    width: 65, // mm
+                    width: values[i].width, // mm
                     align: "right",
-                    padding: 0,
+                    padding: 1,
                 });
             }
             
-            pdf.createTable("version", header, data);
+            var title = Localization.get("version");
+            if(this.state.item) {
+                title += " - " + (this.state.item.version == -1 ? Localization.get("not_published") : this.state.item.version);
+            }
+
+            pdf.createTable("version", title, header, data);
         };
 
         var values = [];
@@ -247,21 +251,24 @@ class VersionList extends React.Component {
             get: (item) => {
                 return Localization.get(item["event-type"]);
             },
-            selected: true
+            selected: true,
+            width: 30,
         });
         values.push({
             text: Localization.get("value_storage"),
             get: (item) => {
                 return Localization.get("db_" + item["changed-concept"].type);
             },
-            selected: true
+            selected: true,
+            width: 40,
         });
         values.push({
             text: Localization.get("name"),
             get: (item) => {
                 return item["changed-concept"].preferredLabel;
             },
-            selected: true
+            selected: true,
+            width: 90,
         });
 
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
@@ -269,6 +276,7 @@ class VersionList extends React.Component {
             content: <Export 
                         values={values}
                         onSaveExcel={onSaveExcel}
+                        onSavePdf={onSavePdf}
                     />
         });
     }
