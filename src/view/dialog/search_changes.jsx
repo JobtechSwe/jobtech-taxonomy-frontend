@@ -3,6 +3,7 @@ import EventDispatcher from './../../context/event_dispatcher.jsx';
 import Constants from './../../context/constants.jsx';
 import SearchChangesDate from './search_changes_date.jsx';
 import SearchChangesType from './search_changes_type.jsx';
+import Rest from '../../context/rest.jsx';
 
 class SearchChanges extends React.Component { 
 

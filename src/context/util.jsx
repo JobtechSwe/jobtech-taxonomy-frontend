@@ -253,11 +253,11 @@ class Util {
                     return data;
                 };
                 context.depth++;
-                Rest.getConceptDayNotes(context.concept.id, (conceptData) => {
+                Rest.getConceptDayNotes(context.concept.id, null, null, (conceptData) => {
                     context.depth++;
                     context.concept.local_history = processData(conceptData);
                     context.concept.local_history = this.sortByKey(context.concept.local_history, "date", false);
-                    Rest.getRelationDayNotes(context.concept.id, (relationData) => {
+                    Rest.getRelationDayNotes(context.concept.id, null, null, (relationData) => {
                         context.concept.local_history = context.concept.local_history.concat(processData(relationData));
                         context.concept.local_history = this.sortByKey(context.concept.local_history, "date", false);
                         onFetchComplete(context);

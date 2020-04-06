@@ -84,14 +84,28 @@ class Rest {
         this.get("/private/concepts?type=" + type + "&preferred-label=" + encodeURIComponent(name), onSuccess, onError);
     }
 
-    getConceptDayNotes(id, onSuccess, onError) {
-        this.get("/private/concept/automatic-daynotes/?id=" + id, onSuccess, onError);
+    getConceptDayNotes(id, from, to, onSuccess, onError) {
+        var query = "";
+        if(from) {
+            query = "&from-timestamp=" + from.toISOString();            
+        }
+        if(to) {
+            query += "&to-timestamp=" + to.toISOString();            
+        }
+        this.get("/private/concept/automatic-daynotes/?id=" + id + query, onSuccess, onError);
     }
 
-    getRelationDayNotes(id, onSuccess, onError) {
-        this.get("/private/relation/automatic-daynotes/?id=" + id, onSuccess, onError);
+    getRelationDayNotes(id, from, to , onSuccess, onError) {
+        var query = "";
+        if(from) {
+            query = "&from-timestamp=" + from.toISOString();            
+        }
+        if(to) {
+            query += "&to-timestamp=" + to.toISOString();            
+        }
+        this.get("/private/relation/automatic-daynotes/?id=" + id + query, onSuccess, onError);
     }
-    
+
     getConcepts(type, onSuccessCallback, onError) {
         if(CacheManager.hasCachedTypeList(type)) {
             var item = CacheManager.getTypeList(type);

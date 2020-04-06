@@ -46,14 +46,13 @@ class ItemHistory extends React.Component {
             to: props.to
         }, () => {
             if(props.item) {
-                Rest.getConceptDayNotes(props.item.id, (data) => {
+                Rest.getConceptDayNotes(props.item.id, props.from, props.to, (data) => {
                     data = data.filter(Boolean);
                     for(var i=0; i<data.length; ++i) {
                         var item = data[i];
                         item.date = new Date(item.timestamp);
                         item.event = item["event-type"];
                     }
-                    data = this.filterBetween(data, this.state.from, this.state.to);
                     this.state.data.push(...data);
                     this.setState({
                         data: Util.sortByKey(this.state.data, "date", false),
@@ -62,13 +61,12 @@ class ItemHistory extends React.Component {
                 }, (status) => {
                     App.showError(Util.getHttpMessage(status) + " : Hämta daganteckningar (concept) misslyckades");
                 });
-                Rest.getRelationDayNotes(props.item.id, (data) => {
+                Rest.getRelationDayNotes(props.item.id, props.from, props.to, (data) => {
                     for(var i=0; i<data.length; ++i) {
                         var item = data[i];
                         item.date = new Date(item.timestamp);
                         item.event = item["event-type"];
                     }
-                    data = this.filterBetween(data, this.state.from, this.state.to);
                     this.state.data.push(...data);
                     this.setState({
                         data: Util.sortByKey(this.state.data, "date", false),
@@ -79,20 +77,6 @@ class ItemHistory extends React.Component {
                 });
             }
         });
-    }
-
-    filterBetween(data, from, to) {
-        if(from != null) {
-            data = data.filter((item) => {
-                return item.date >= from;
-            });
-        }
-        if(to != null) {
-            data = data.filter((item) => {
-                return item.date < to;
-            });
-        }
-        return data;
     }
 
     onCloseDialogClicked() {
