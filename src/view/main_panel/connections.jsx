@@ -224,7 +224,7 @@ class Connections extends React.Component {
 
     onItemSelected(item) {
         this.selectedItem = item;
-        this.setState({hasSelection: true});
+        this.setState({hasSelection: this.selectedItem.parent ? true : false});
     }
 
     findRootFor(type) {
