@@ -173,7 +173,7 @@ class ConceptsSearch extends React.Component {
             }
             var child = ControlUtil.createTreeViewItem(this.queryTreeView, element);
             child.setShowButton(false);
-            child.setText(element.preferredLabel);
+            child.setText(element.label);
             root.addChild(child);
         }
         for(var i=0; i<roots.length; ++i) {
@@ -183,51 +183,20 @@ class ConceptsSearch extends React.Component {
 
     populateTreeSkill(data) {
         this.queryTreeView.shouldUpdateState = false;
-        // setup all root nodes
         for(var i=0; i<data.length; ++i) {
             var element = data[i];
-            if(element.type === Constants.CONCEPT_SKILL_HEADLINE) {
-                var root = this.queryTreeView.roots.find((d) => {
-                    return d.data.id === element.id;
-                });
-                if(root == null) {
-                    root = ControlUtil.createTreeViewItem(this.queryTreeView, element);
-                    root.setText(element.preferredLabel);
-                    root.setForceShowButton(element.relations.narrower);
-                    root.setShowButton(element.relations.narrower);
-                    this.queryTreeView.addRoot(root);
+            var root = ControlUtil.createTreeViewItem(this.queryTreeView, element);
+            root.setText(element.label);
+            this.queryTreeView.addRoot(root);
+            if(element.skills) {
+                for(var j=0; j<element.skills.length; ++j) {
+                    var skill = element.skills[j];
+                    var child = ControlUtil.createTreeViewItem(this.queryTreeView, skill);
+                    child.setText(skill.label);
+                    root.addChild(child);
                 }
             }
-        }
-        // setup children
-        for(var i=0; i<this.state.data.edges.length; ++i) {
-            var edge = this.state.data.edges[i];
-            var item = data.find((d) => {
-                return d.id === edge.source;
-            });
-            if(item == null) {
-                // child node not found in data (filter might be active)
-                continue;
-            }
-            var root = this.queryTreeView.roots.find((d) => {
-                return d.data.id === edge.target;
-            });
-            var rootItem = this.state.data.nodes.find((d) => {
-                return d.id === edge.target;
-            });
-            if(root == null && rootItem) {
-                // when a filter is used, sometimes a root is not "hit" by the query
-                // so we also need to setup the root node
-                root = ControlUtil.createTreeViewItem(this.queryTreeView, rootItem);
-                root.setText(rootItem.preferredLabel);
-                this.queryTreeView.addRoot(root);
-            }
-            if(root) {
-                var child = ControlUtil.createTreeViewItem(this.queryTreeView, item);
-                child.setText(item.preferredLabel);
-                root.addChild(child);
-            }
-        }
+        }        
         //sort
         for(var i=0; i<this.queryTreeView.roots.length; ++i) {
             var root = this.queryTreeView.roots[i];
@@ -244,7 +213,7 @@ class ConceptsSearch extends React.Component {
             var element = data[i];
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, element);
             item.setShowButton(false);
-            item.setText(element.preferredLabel);
+            item.setText(element.label);
             this.queryTreeView.addRoot(item);
         }
         this.queryTreeView.shouldUpdateState = true;
@@ -276,35 +245,23 @@ class ConceptsSearch extends React.Component {
         this.state.data = {
             nodes: [],
             edges: [],
+            skills: [],
         };
-        Rest.getConcepts(Constants.CONCEPT_SKILL_HEADLINE, (headlines) => {
-            this.state.data.nodes = headlines;
+        Rest.getConceptsSkillsAndHedlines((data) => {
+            this.state.data.skills = data;            
+            this.prepareData(this.state.data.skills);
             this.filterAndPopulate(this.searchReference.value);
+            this.onFetchComplete(true);
+            this.setState({loadingData: false});
         }, (status) => {
             App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
-        });
-        Rest.getGraph(Constants.RELATION_NARROWER, Constants.CONCEPT_SKILL_HEADLINE, Constants.CONCEPT_SKILL, (data) => {
-            Rest.getConcepts(Constants.CONCEPT_SKILL, (skills) => {
-                // merge
-                for(var i=0; i<skills.length; ++i) {
-                    this.state.data.nodes.push(skills[i]);
-                }
-                // setup
-                this.state.data.edges = data.graph.edges;
-                this.filterAndPopulate(this.searchReference.value);
-                this.onFetchComplete(true);
-                this.setState({loadingData: false});
-            }, (status) => {
-                App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
-            });
-        }, (status) => {
-            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta graph");
         });
     }
 
     fetch() {
-        Rest.getConcepts(this.state.queryType, (data) => {
+        Util.getConcepts(this.state.queryType, (data) => {
             this.state.data.push(...data);
+            this.prepareData(this.state.data);
             this.sortData(this.state.data);
             this.filterAndPopulate(this.searchReference.value);
             this.onFetchComplete(false);
@@ -315,8 +272,26 @@ class ConceptsSearch extends React.Component {
         });
     }
 
+    prepareData(data) {
+        for(var i=0; i< data.length; ++i) {
+            var concept = data[i];
+            concept.label = concept.preferredLabel;
+            if(concept.type === Constants.CONCEPT_ISCO_LEVEL_4) {
+                concept.label = concept.isco + " - " + concept.label;
+            } else if(concept.type === Constants.CONCEPT_SSYK_LEVEL_4 ||
+                concept.type === Constants.CONCEPT_SSYK_LEVEL_3 ||
+                concept.type === Constants.CONCEPT_SSYK_LEVEL_2 ||
+                concept.type === Constants.CONCEPT_SSYK_LEVEL_1) {
+                concept.label = concept.ssyk + " - " + concept.label;
+            }
+            if(concept.skills) {
+                this.prepareData(concept.skills);
+            }
+        }
+    }
+
     sortData(data) {
-        Util.sortByKey(data, "preferredLabel", true);
+        Util.sortByKey(data, "label", true);
     }
 
     search(query) {
@@ -351,13 +326,17 @@ class ConceptsSearch extends React.Component {
         if(query.length > 0) {
             var q = query.toLowerCase();
             if(this.state.queryType == this.TYPE_SKILL) {
-                var data = this.state.data.nodes.filter((item) => {
+                var data = this.state.data.skills.filter((item) => {
                     var isDeprecated = item.deprecated ? item.deprecated : false;
                     if(this.state.showDeprecated != isDeprecated) {
                         return false;
                     }
-                    return item.preferredLabel.toLowerCase().indexOf(q) >= 0;
+                    return item.label.toLowerCase().indexOf(q) >= 0;
                 });
+                //TODO filter every skill
+                //for(var i=0; i<data.length; ++i) {
+                    
+                //}
                 this.sortData(data);
                 this.populateTreeSkill(data);
             } else {
@@ -366,14 +345,14 @@ class ConceptsSearch extends React.Component {
                     if(this.state.showDeprecated != isDeprecated) {
                         return false;
                     }
-                    return item.preferredLabel.toLowerCase().indexOf(q) >= 0;
+                    return item.label.toLowerCase().indexOf(q) >= 0;
                 });
                 this.sortData(data);
                 this.populateTree(data);                
             }
         } else {            
             if(this.state.queryType == this.TYPE_SKILL) { 
-                var data = this.state.data.nodes.filter((item, i) => {
+                var data = this.state.data.skills.filter((item, i) => {
                     var isDeprecated = item.deprecated ? item.deprecated : false;
                     return this.state.showDeprecated == isDeprecated;
                 });
@@ -381,7 +360,7 @@ class ConceptsSearch extends React.Component {
                 this.populateTreeSkill(data);
             } else {
                 var data = this.state.data.filter((item) => { 
-                    var isDeprecated = item.deprecated ? item.deprecated : false;                   
+                    var isDeprecated = item.deprecated ? item.deprecated : false;
                     return this.state.showDeprecated == isDeprecated;
                 });
                 this.sortData(data);
@@ -444,15 +423,16 @@ class ConceptsSearch extends React.Component {
             if(type == this.state.queryType) {
                 // create tree node for item
                 var node = ControlUtil.createTreeViewItem(this.queryTreeView, data.concept);
-                node.setText(data.concept.preferredLabel);
+                node.setText(data.concept.label);
                 // update structure correctly
                 if(type == Constants.CONCEPT_SKILL) {
-                    this.state.data.nodes.push(data.concept);
                     if(data.parent) {
-                        this.state.data.edges.push({
-                            source: data.concept.id,
-                            target: data.parent.id,
+                        var parent = this.state.data.find((a) => {
+                            return a.id === data.parent.id;
                         });
+                        if(parent) {
+                            parent.skills.push(data.concept);
+                        }
                     }
                 } else {
                     this.state.data.push(data.concept);

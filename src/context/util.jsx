@@ -137,6 +137,51 @@ class Util {
         }*/
     }
 
+    getConcepts(type, onSuccess, onError) {
+        // fetch fresh object
+        switch(type) {
+            case Constants.CONCEPT_COUNTRY:
+                Rest.getConceptsExtraField(type, "", onSuccess, onError);
+                break;
+            case Constants.CONCEPT_DRIVING_LICENCE:
+                Rest.getConceptsExtraField(type, "driving_licence_code_2013", onSuccess, onError);
+                break;
+            case Constants.CONCEPT_ISCO_LEVEL_4:                
+                Rest.getConceptsExtraField(type, "isco:isco_code_08", onSuccess, onError);
+                break;
+            case Constants.CONCEPT_LANGUAGE:
+                Rest.getConceptsExtraField(type, "", onSuccess, onError);
+                break;
+            case Constants.CONCEPT_REGION:
+                Rest.getConceptsExtraField(type, "", onSuccess, onError);
+                break;
+            case Constants.CONCEPT_SNI_LEVEL_1:
+            case Constants.CONCEPT_SNI_LEVEL_2:
+                Rest.getConceptsExtraField(type, "sni_level_code_2007", onSuccess, onError);
+                break;
+            case Constants.CONCEPT_SSYK_LEVEL_1:
+            case Constants.CONCEPT_SSYK_LEVEL_2:
+            case Constants.CONCEPT_SSYK_LEVEL_3:
+            case Constants.CONCEPT_SSYK_LEVEL_4:
+                Rest.getConceptsExtraField(type, "ssyk:ssyk_code_2012", onSuccess, onError);
+                break;
+            case Constants.CONCEPT_SUN_EDUCATION_FIELD_1:
+            case Constants.CONCEPT_SUN_EDUCATION_FIELD_2:
+            case Constants.CONCEPT_SUN_EDUCATION_FIELD_3:
+            case Constants.CONCEPT_SUN_EDUCATION_FIELD_4:
+                Rest.getConceptsExtraField(type, "sun_education_field_code_2020", onSuccess, onError);
+                break;
+            case Constants.CONCEPT_SUN_EDUCATION_LEVEL_1:
+            case Constants.CONCEPT_SUN_EDUCATION_LEVEL_2:
+            case Constants.CONCEPT_SUN_EDUCATION_LEVEL_3:
+                Rest.getConceptsExtraField(type, "sun_education_level_code_2020", onSuccess, onError);
+                break;
+            default:
+                Rest.getConcepts(type, onSuccess, onError);
+                break;
+        }
+    }
+
     getConcept(id, type, onSuccess, onError) {
         // fetch fresh object
         switch(type) {
