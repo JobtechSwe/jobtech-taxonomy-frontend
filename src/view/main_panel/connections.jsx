@@ -327,7 +327,8 @@ class Connections extends React.Component {
         this.waitingFor = 0;
         this.waitingForItem = null;
         if(item) {
-            console.log(item);
+            this.relationTreeView.shouldUpdateState = false;
+
             if(item.narrower) {
                 for(var i=0; i<item.narrower.length; ++i) {
                     this.addRelationToTree(item.narrower[i]);
@@ -343,21 +344,15 @@ class Connections extends React.Component {
                     this.addRelationToTree(item.related[i]);
                 }
             }
-            
-            /*if(item.relations.broader + item.relations.narrower + item.relations.related) {
-                this.waitingForItem = ControlUtil.createTreeViewItem(this.relationTreeView, null);
-                this.waitingForItem.setText(<Loader/>);
-                this.relationTreeView.addRoot(this.waitingForItem);
+
+            //sort
+            for(var i=0; i<this.relationTreeView.roots.length; ++i) {
+                var root = this.relationTreeView.roots[i];
+                Util.sortByKey(root.children, "text", true);
             }
-            if(item.relations.broader) {
-                this.fetch(item, Constants.RELATION_BROADER);
-            }
-            if(item.relations.narrower) {
-                this.fetch(item, Constants.RELATION_NARROWER);
-            }
-            if(item.relations.related) {
-                this.fetch(item, Constants.RELATION_RELATED);
-            }*/
+            Util.sortByKey(this.relationTreeView.roots, "text", true);
+            this.relationTreeView.shouldUpdateState = true;
+            this.relationTreeView.invalidate();
         }
     }
 
@@ -370,7 +365,14 @@ class Connections extends React.Component {
             root.setExpanded(true);
         }
         var child = ControlUtil.createTreeViewItem(this.relationTreeView, element);
-        child.setText(element.preferredLabel);
+        var text = element.preferredLabel;
+        if(element.isco) {
+            text = element.isco + " - " + text;
+        }
+        else if(element.ssyk) {
+            text = element.ssyk + " - " + text;
+        }
+        child.setText(text);
         root.addChild(child);
     }
 
