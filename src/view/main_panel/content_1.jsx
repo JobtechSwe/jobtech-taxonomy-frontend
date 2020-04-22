@@ -81,7 +81,7 @@ class Content1 extends React.Component {
                 }
                 return result;
             };
-            Util.getFullyPopulatedConcept(item.id, item.type, (concept) => {
+            Util.getFullyPopulatedConcept(item.id, item.type, (concept) => {                
                 // extract special title
                 var specialTitle = null;
                 if(concept.type.startsWith("ssyk")) {

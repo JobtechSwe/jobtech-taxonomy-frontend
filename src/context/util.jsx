@@ -137,94 +137,51 @@ class Util {
         }*/
     }
 
-    getConcepts(type, onSuccess, onError) {
-        // fetch fresh object
+    getExtraFieldForType(type) {
         switch(type) {
             case Constants.CONCEPT_COUNTRY:
-                Rest.getConceptsExtraField(type, "", onSuccess, onError);
-                break;
+                return "iso_3166_1_alpha_2_2013 iso_3166_1_alpha_3_2013";
             case Constants.CONCEPT_DRIVING_LICENCE:
-                Rest.getConceptsExtraField(type, "driving_licence_code_2013", onSuccess, onError);
-                break;
+                return "driving_licence_code_2013";
+            case Constants.CONCEPT_EMPLOYMENT_DURATION:
+                return "eures_code_2014";
             case Constants.CONCEPT_ISCO_LEVEL_4:                
-                Rest.getConceptsExtraField(type, "isco:isco_code_08", onSuccess, onError);
-                break;
+                return "isco:isco_code_08";
             case Constants.CONCEPT_LANGUAGE:
-                Rest.getConceptsExtraField(type, "", onSuccess, onError);
-                break;
+                return "iso_639_3_alpha_2_2007 iso_639_3_alpha_3_2007";
+            case Constants.CONCEPT_MUNICIPALITY:
+                return "lau_2_code_2015";
             case Constants.CONCEPT_REGION:
-                Rest.getConceptsExtraField(type, "", onSuccess, onError);
-                break;
+                return "nuts_level_3_code_2013 national_nuts_level_3_code_2019";
             case Constants.CONCEPT_SNI_LEVEL_1:
             case Constants.CONCEPT_SNI_LEVEL_2:
-                Rest.getConceptsExtraField(type, "sni_level_code_2007", onSuccess, onError);
-                break;
+                return"sni_level_code_2007"
             case Constants.CONCEPT_SSYK_LEVEL_1:
             case Constants.CONCEPT_SSYK_LEVEL_2:
             case Constants.CONCEPT_SSYK_LEVEL_3:
             case Constants.CONCEPT_SSYK_LEVEL_4:
-                Rest.getConceptsExtraField(type, "ssyk:ssyk_code_2012", onSuccess, onError);
-                break;
+                return "ssyk:ssyk_code_2012";
             case Constants.CONCEPT_SUN_EDUCATION_FIELD_1:
             case Constants.CONCEPT_SUN_EDUCATION_FIELD_2:
             case Constants.CONCEPT_SUN_EDUCATION_FIELD_3:
             case Constants.CONCEPT_SUN_EDUCATION_FIELD_4:
-                Rest.getConceptsExtraField(type, "sun_education_field_code_2020", onSuccess, onError);
-                break;
+                return "sun_education_field_code_2020";
             case Constants.CONCEPT_SUN_EDUCATION_LEVEL_1:
             case Constants.CONCEPT_SUN_EDUCATION_LEVEL_2:
             case Constants.CONCEPT_SUN_EDUCATION_LEVEL_3:
-                Rest.getConceptsExtraField(type, "sun_education_level_code_2020", onSuccess, onError);
-                break;
+                return "sun_education_level_code_2020";
             default:
-                Rest.getConcepts(type, onSuccess, onError);
-                break;
+                return "";
         }
+    }
+
+    getConcepts(type, onSuccess, onError) {
+        Rest.getConceptsExtraField(type, this.getExtraFieldForType(type), onSuccess, onError);
     }
 
     getConcept(id, type, onSuccess, onError) {
         // fetch fresh object
-        switch(type) {
-            case Constants.CONCEPT_COUNTRY:
-                Rest.getConceptCountry(id, onSuccess, onError);
-                break;
-            case Constants.CONCEPT_DRIVING_LICENCE:
-                Rest.getConceptDrivingLicence(id, onSuccess, onError);
-                break;
-            case Constants.CONCEPT_ISCO_LEVEL_4:                
-                Rest.getConceptIsco08(id, onSuccess, onError);
-                break;
-            case Constants.CONCEPT_LANGUAGE:
-                Rest.getConceptLanguage(id, onSuccess, onError);
-                break;
-            case Constants.CONCEPT_REGION:
-                Rest.getConceptRegion(id, onSuccess, onError);
-                break;
-            case Constants.CONCEPT_SNI_LEVEL_1:
-            case Constants.CONCEPT_SNI_LEVEL_2:
-                Rest.getConceptSniLevel(id, onSuccess, onError);
-                break;
-            case Constants.CONCEPT_SSYK_LEVEL_1:
-            case Constants.CONCEPT_SSYK_LEVEL_2:
-            case Constants.CONCEPT_SSYK_LEVEL_3:
-            case Constants.CONCEPT_SSYK_LEVEL_4:
-                Rest.getConceptSsyk(id, onSuccess, onError);
-                break;
-            case Constants.CONCEPT_SUN_EDUCATION_FIELD_1:
-            case Constants.CONCEPT_SUN_EDUCATION_FIELD_2:
-            case Constants.CONCEPT_SUN_EDUCATION_FIELD_3:
-            case Constants.CONCEPT_SUN_EDUCATION_FIELD_4:
-                Rest.getConceptSunEducationField(id, onSuccess, onError);
-                break;
-            case Constants.CONCEPT_SUN_EDUCATION_LEVEL_1:
-            case Constants.CONCEPT_SUN_EDUCATION_LEVEL_2:
-            case Constants.CONCEPT_SUN_EDUCATION_LEVEL_3:
-                Rest.getConceptSunEducationLevel(id, onSuccess, onError);
-                break;
-            default:
-                Rest.getConcept(id, onSuccess, onError);
-                break;
-        }
+        Rest.getConceptExtraField(id, this.getExtraFieldForType(type), onSuccess, onError);        
     }
 
     getFullyPopulatedConceptParameterized(id, type, includeRelations, includeHistory, includeFields, onSuccess, onError) {

@@ -39,21 +39,18 @@ class Description extends React.Component {
             definition: Util.getObjectValue(props.item, "definition", ""),
             iscoCodes: [],
         }, () => {
-            if(props.item["ssyk-code-2012"] && props.item["ssyk-code-2012"].length > 3) {
-                Rest.getConceptRelations(props.item.id, Constants.CONCEPT_ISCO_LEVEL_4, Constants.RELATION_RELATED, (data) => {
-                    for(var i=0; i<data.length; ++i) {
-                        Util.getConcept(data[i].id, Constants.CONCEPT_ISCO_LEVEL_4, (data) => {
-                            var code = data[0]["isco-code-08"];
-                            this.state.iscoCodes.push(code);
-                            this.state.iscoCodes.sort();
-                            this.setState({iscoCodes: this.state.iscoCodes});
-                        }, (status) => {
-                            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta isco concept");
-                        });
+            if(props.item["ssyk"] && props.item["ssyk"].length > 3) {
+                // TODO leta i relatedlistan som redan fins populerad i props.item
+                if(props.item.related) {
+                    for(var i=0; i < props.item.related.length; ++i) {
+                        var c = props.item.related[i];
+                        if(c.type === Constants.CONCEPT_ISCO_LEVEL_4) {
+                            this.state.iscoCodes.push(c.isco);
+                        }
                     }
-                }, (status) => {
-                    App.showError(Util.getHttpMessage(status) + " : misslyckades hämta isco relationer");
-                });
+                    this.state.iscoCodes.sort();
+                    this.setState({iscoCodes: this.state.iscoCodes});
+                }
             }
         });
     }
@@ -154,7 +151,7 @@ class Description extends React.Component {
     }
 
     renderIscoCodes() {
-        if(this.props.item["ssyk-code-2012"] && this.props.item["ssyk-code-2012"].length > 3) {
+        if(this.props.item["ssyk"] && this.props.item["ssyk"].length > 3) {
             var codes = this.state.iscoCodes.map((element, i) => {
                 return (
                     <div key={i}>{element}</div>
@@ -197,18 +194,20 @@ class Description extends React.Component {
             </div>
         );
         this.renderSpecialValue(elements, "id", "ID");
-        this.renderSpecialValue(elements, "ssyk-code-2012", "SSYK");
-        this.renderSpecialValue(elements, "isco-code-08", "ISCO");
-        this.renderSpecialValue(elements, "iso-3166-1-alpha-2-2013", "Kod"); // land
-        this.renderSpecialValue(elements, "iso-3166-1-alpha-3-2013", Localization.get("name"));
-        this.renderSpecialValue(elements, "driving-licence-code-2013", "Typ"); // körkort
-        this.renderSpecialValue(elements, "eures-code-2014", "Typ"); // anställningsvaraktighet
-        this.renderSpecialValue(elements, "iso-639-3-alpha-2-2007", "Kod"); // språk
-        this.renderSpecialValue(elements, "iso-639-3-alpha-3-2007", Localization.get("name")); 
-        this.renderSpecialValue(elements, "nuts-level-3-code-2013", "NUTS");  // eu region
-        this.renderSpecialValue(elements, "sni-level-code-2007", "SNI"); 
-        this.renderSpecialValue(elements, "sun-education-level-code-2020", "SUN"); 
-        this.renderSpecialValue(elements, "sun-education-field-code-2020", "SUN"); 
+        this.renderSpecialValue(elements, "ssyk", "SSYK");
+        this.renderSpecialValue(elements, "isco", "ISCO");
+        this.renderSpecialValue(elements, "iso_3166_1_alpha_2_2013", "Kod"); // land
+        this.renderSpecialValue(elements, "iso_3166_1_alpha_3_2013", Localization.get("name"));
+        this.renderSpecialValue(elements, "driving_licence_code_2013", "Typ"); // körkort
+        this.renderSpecialValue(elements, "eures_code_2014", "Typ"); // anställningsvaraktighet
+        this.renderSpecialValue(elements, "iso_639_3_alpha_2_2007", "Kod"); // språk
+        this.renderSpecialValue(elements, "iso_639_3_alpha_3_2007", Localization.get("name")); 
+        this.renderSpecialValue(elements, "national_nuts_level_3_code_2019", "NNUTS");  // eu region
+        this.renderSpecialValue(elements, "nuts_level_3_code_2013", "NUTS");  // eu region
+        this.renderSpecialValue(elements, "sni_level_code_2007", "SNI"); 
+        this.renderSpecialValue(elements, "sun_education_level_code_2020", "SUN"); 
+        this.renderSpecialValue(elements, "sun_education_field_code_2020", "SUN"); 
+        this.renderSpecialValue(elements, "lau_2_code_2015", "LAU");
         return (
             <div className="description_name_and_misc">
                 {elements}

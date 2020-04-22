@@ -386,6 +386,7 @@ class ConceptsSearch extends React.Component {
                         item.data[member] = data[0][member];
                     }
                 }
+                console.log(item.data);
                 EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, item.data);
             }, (status) => {
                 App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");

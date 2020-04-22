@@ -277,7 +277,7 @@ class Connections extends React.Component {
         }); 
     }
 
-    fetch(item, type) {
+    /*fetch(item, type) {
         this.waitingFor++;
         Rest.getAllConceptRelations(item.id, type, (data) => {
             var container = this.relations.find((e) => {
@@ -312,8 +312,8 @@ class Connections extends React.Component {
                 this.hideLoader();
             }
             App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta concept av typ '" + type + "'");
-        }); 
-    }
+        });
+    }*/
 
     hideLoader() {
         if(this.waitingForItem) {
@@ -327,7 +327,24 @@ class Connections extends React.Component {
         this.waitingFor = 0;
         this.waitingForItem = null;
         if(item) {
-            if(item.relations.broader + item.relations.narrower + item.relations.related) {
+            console.log(item);
+            if(item.narrower) {
+                for(var i=0; i<item.narrower.length; ++i) {
+                    this.addRelationToTree(item.narrower[i]);
+                }
+            }
+            if(item.broader) {
+                for(var i=0; i<item.broader.length; ++i) {
+                    this.addRelationToTree(item.broader[i]);
+                }
+            }
+            if(item.related) {
+                for(var i=0; i<item.related.length; ++i) {
+                    this.addRelationToTree(item.related[i]);
+                }
+            }
+            
+            /*if(item.relations.broader + item.relations.narrower + item.relations.related) {
                 this.waitingForItem = ControlUtil.createTreeViewItem(this.relationTreeView, null);
                 this.waitingForItem.setText(<Loader/>);
                 this.relationTreeView.addRoot(this.waitingForItem);
@@ -340,7 +357,7 @@ class Connections extends React.Component {
             }
             if(item.relations.related) {
                 this.fetch(item, Constants.RELATION_RELATED);
-            }
+            }*/
         }
     }
 

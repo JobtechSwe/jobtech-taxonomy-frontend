@@ -124,7 +124,7 @@ class Rest {
             //onSuccessCallback(data);
             onSuccessCallback(data.data.concepts);
         };
-        var query = "concepts(type: \"" + type + "\", version: \"next\") { id type preferredLabel:preferred_label deprecated }";        
+        var query = "concepts(type: \"" + type + "\", version: \"next\") { id type preferredLabel:preferred_label deprecated }";
         this.getGraphQL(query, onSuccess, onError);
         //this.get("/private/concepts?type=" + type, onSuccess, onError);
     }
@@ -133,7 +133,15 @@ class Rest {
         var onSuccess = (data) => {
             onSuccessCallback(data.data.concepts);
         };
-        var query = "concepts(type: \"" + type + "\", version: \"next\") { id type preferredLabel:preferred_label deprecated " + extraField + " }";        
+        var query = "concepts(type: \"" + type + "\", version: \"next\") { id type preferredLabel:preferred_label deprecated " + extraField + " }"; 
+        this.getGraphQL(query, onSuccess, onError);
+    }
+
+    getConceptExtraField(id, extraField, onSuccessCallback, onError) {
+        var onSuccess = (data) => {
+            onSuccessCallback(data.data.concepts);
+        };
+        var query = "concepts(id: \"" + id + "\", version: \"next\") { id type preferredLabel:preferred_label definition deprecated " + extraField + " broader { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } narrower { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } related { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } }";
         this.getGraphQL(query, onSuccess, onError);
     }
 
@@ -141,7 +149,7 @@ class Rest {
         var onSuccess = (data) => {
             onSuccessCallback(data.data.concepts);
         };
-        var query = "concepts(type: \"skill-headline\", version: \"next\") { id type preferredLabel:preferred_label skills:narrower(type: \"skill\") { id type preferredLabel:preferred_label deprecated }}";        
+        var query = "concepts(type: \"skill-headline\", version: \"next\") { id type preferredLabel:preferred_label skills:narrower(type: \"skill\") { id type preferredLabel:preferred_label deprecated }}";
         this.getGraphQL(query, onSuccess, onError);
     }
 

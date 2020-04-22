@@ -30,6 +30,7 @@ class Constants {
         this.CONCEPT_ISCO_LEVEL_1 = "isco-level-1";
         this.CONCEPT_ISCO_LEVEL_4 = "isco-level-4";
         this.CONCEPT_LANGUAGE = "language";
+        this.CONCEPT_MUNICIPALITY = "municipality";
         this.CONCEPT_OCCUPATION_NAME = "occupation-name";
         this.CONCEPT_OCCUPATION_COLLECTION = "occupation-collection",
         this.CONCEPT_OCCUPATION_FIELD = "occupation-field",
