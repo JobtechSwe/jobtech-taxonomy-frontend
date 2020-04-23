@@ -174,37 +174,55 @@ class Content3 extends React.Component {
         return this.state.enabledTypes[type] == true;
     }
 
-    getRelations(id, type, x, y) {
-        Rest.getAllConceptRelations(id, type, (data) => {
-            var nodes = [];
-            var edges = [];
-            for(var i=0; i<data.length; ++i) {
-                var p = data[i];
-                if(this.isEnabled(p.type)) {
-                    p.title = Localization.get("db_" + p.type) + "<br \>" + p.preferredLabel;
-                    p.group = "notFetched";                    
-                    p.x = x;
-                    p.y = y;
-                    if(!this.findNodeById(p.id)) {
-                        nodes.push(p);
-                        edges.push({
-                            from: id,
-                            to: p.id,
-                        });
-                    }
+    showRelations(item, type, x, y) {
+        var nodes = [];
+        var edges = [];
+        for(var i=0; i<item[type].length; ++i) {
+            var p = item[type][i];
+            if(this.isEnabled(p.type)) {
+                p.title = Localization.get("db_" + p.type) + "<br \>" + p.preferredLabel;
+                p.group = "notFetched";                    
+                p.x = x;
+                p.y = y;
+                if(!this.findNodeById(p.id)) {
+                    nodes.push(p);
+                    edges.push({
+                        from: item.id,
+                        to: p.id,
+                    });
                 }
-            }   
-            this.nodes.add(nodes);
-            this.edges.add(edges);
-            this.state.data.nodes.push(...nodes);
-            this.state.data.edges.push(...edges);
-            this.setState({data: this.state.data});
-        }, (status) => {
-            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta relationer");
-        });
+            }
+        }   
+        this.nodes.add(nodes);
+        this.edges.add(edges);
+        this.state.data.nodes.push(...nodes);
+        this.state.data.edges.push(...edges);
+        this.setState({data: this.state.data});
     }
 
-    updateRelations(item, x, y) {        
+    getRelations(item, type, x, y) {
+        if(item[type] == undefined) {
+            Util.getConcept(item.id, item.type, (data) => {                
+                item.broader = data[0].broader;
+                item.narrower = data[0].narrower;
+                item.related = data[0].related;
+                console.log(item, data);
+                this.showRelations(item, type, x, y);
+                if(type === Constants.RELATION_BROADER) {
+                    this.showRelations(item, Constants.RELATION_NARROWER);
+                }
+            }, (status) => {
+                App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
+            });
+        } else {
+            this.showRelations(item, type, x, y);
+            if(type === Constants.RELATION_BROADER) {
+                this.showRelations(item, Constants.RELATION_NARROWER);
+            }
+        }
+    }
+
+    updateRelations(item, x, y) {
         if(!item) {
             console.log("Nothing selected");
             return;
@@ -212,6 +230,7 @@ class Content3 extends React.Component {
         if(item.fetchedRelations) {
             return;
         }
+
         item.fetchedRelations = true;
         item.label = item.preferredLabel;
         item.title = Localization.get("db_" + item.type);
@@ -220,16 +239,9 @@ class Content3 extends React.Component {
         item.y = undefined;
         this.nodes.update([item]);
         if(this.state.workmode == 0) {
-            if(item.relations.broader > 0) {
-                this.getRelations(item.id, Constants.RELATION_BROADER, x, y);
-            }
-            if(item.relations.narrower > 0) {
-                this.getRelations(item.id, Constants.RELATION_NARROWER, x, y);
-            }
+            this.getRelations(item, Constants.RELATION_BROADER, x, y);
         } else {
-            if(item.relations.related > 0) {
-                this.getRelations(item.id, Constants.RELATION_RELATED, x, y);
-            }
+            this.getRelations(item, Constants.RELATION_RELATED, x, y);
         }
     }
 
