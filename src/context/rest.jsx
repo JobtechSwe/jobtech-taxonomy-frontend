@@ -153,6 +153,22 @@ class Rest {
         this.getGraphQL(query, onSuccess, onError);
     }
 
+    getOccupationNamesWithBroaderTypes(onSuccessCallback, onError) {
+        var onSuccess = (data) => {
+            onSuccessCallback(data.data.concepts);
+        };
+        var query = "concepts(type: \"occupation-name\") { broader { type } id type preferredLabel:preferred_label }";
+        this.getGraphQL(query, onSuccess, onError);
+    }
+
+    getSkillsWithBroaderHedlinesRelatedSsyks(onSuccessCallback, onError) {
+        var onSuccess = (data) => {
+            onSuccessCallback(data.data.concepts);
+        };
+        var query = "concepts(type: \"skill\") { broader(type: \"skill-headline\") { type } id type preferredLabel:preferred_label related(type: \"ssyk-level-4\") { type } }";
+        this.getGraphQL(query, onSuccess, onError);
+    }
+
     getConceptsRange(type, offset, limit, onSuccess, onError) {
         this.get("/main/concepts?type=" + type + "&offset=" + offset + "&limit=" + limit, onSuccess, onError);
     }

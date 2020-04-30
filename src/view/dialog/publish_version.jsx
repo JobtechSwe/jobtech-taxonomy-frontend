@@ -32,39 +32,16 @@ class PublishVersion extends React.Component {
 
     componentDidMount() {
         //fetch data needed for check
-        Rest.getConcepts("occupation-name",  (data) => {
-            this.setState({occupationNames: data}, () => {this.performChecks()});
+        Rest.getOccupationNamesWithBroaderTypes((data) => {
+            this.setState({occupationNames: data}, () => {this.performChecks()});            
         }, (status) => {
             App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
         });
-        Rest.getConcepts("skill",  (data) => {
+        
+        Rest.getSkillsWithBroaderHedlinesRelatedSsyks((data) => {
             this.setState({skills: data}, () => {this.performChecks()});
         }, (status) => {
             App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
-        });
-
-        Rest.getGraph(Constants.RELATION_BROADER, "occupation-name", "ssyk-level-4", (data) => {
-            this.setState({occupationToSsyk: data}, () => {this.performChecks()});
-        }, (status) => {
-            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta relationer");
-        });
-
-        Rest.getGraph(Constants.RELATION_BROADER, "occupation-name", "isco-level-4", (data) => {
-            this.setState({occupationToIsco: data}, () => {this.performChecks()});
-        }, (status) => {
-            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta relationer");
-        });
-
-        Rest.getGraph(Constants.RELATION_BROADER, "skill", "skill-headline", (data) => {
-            this.setState({skillToHeadline: data}, () => {this.performChecks()});
-        }, (status) => {
-            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta relationer");
-        });
-
-        Rest.getGraph(Constants.RELATION_RELATED, "skill", "ssyk-level-4", (data) => {
-            this.setState({skillToSsyk: data}, () => {this.performChecks()});
-        }, (status) => {
-            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta relationer");
         });
     }
 
@@ -72,15 +49,63 @@ class PublishVersion extends React.Component {
         return edges.find(e => e.source === id || e.target === id) != undefined;
     }
 
-    checkConcepts(concepts, edges, checkNumber) {
+    checkConcepts(occupationNames, skills) {
         var result = [];
-        for(var i=0; i<concepts.length; ++i) {
-            var item = concepts[i];
-            var isDeprecated = item.deprecated ? item.deprecated : false;
-            if(!isDeprecated && !this.hasEdge(item.id, edges)) {
+        //occupation to ssyk = 0
+        //occupation to isco = 1
+        for(var i=0; i<occupationNames.length; ++i) {
+            var item = occupationNames[i];
+            var ssyk = false;
+            var isco = false;
+            for(var j=0; j<item.broader.length; ++j) {
+                if(Constants.CONCEPT_SSYK_LEVEL_4 === item.broader[j].type) {
+                    ssyk = true;
+                }                
+                if(Constants.CONCEPT_ISCO_LEVEL_4 === item.broader[j].type) {
+                    isco = true;
+                }                
+            }
+            if(!ssyk) {
                 result.push({
                     item: item,
-                    error: checkNumber,
+                    error: 0,
+                });
+            }
+            if(!isco) {
+                result.push({
+                    item: item,
+                    error: 1,
+                });
+            }
+        }
+        //occupation to ssyk = 2
+        //occupation to skillHeadline = 3
+        for(var i=0; i<skills.length; ++i) {
+            var item = skills[i];
+            var ssyk = false;
+            var headline = false;
+            for(var j=0; j<item.related.length; ++j) {
+                if(Constants.CONCEPT_SSYK_LEVEL_4 === item.related[j].type) {
+                    ssyk = true;
+                    break;
+                }                
+            }
+            for(var j=0; j<item.broader.length; ++j) {
+                if(Constants.CONCEPT_SKILL_HEADLINE === item.broader[j].type) {
+                    headline = true;
+                    break;
+                }                
+            }
+            if(!ssyk) {
+                result.push({
+                    item: item,
+                    error: 2,
+                });
+            }
+            if(!headline) {
+                result.push({
+                    item: item,
+                    error: 3,
                 });
             }
         }
@@ -89,11 +114,7 @@ class PublishVersion extends React.Component {
 
     performChecks() {
         if(this.doneFetchingData()) {
-            var res = [];
-            res.push(...this.checkConcepts(this.state.occupationNames, this.state.occupationToSsyk.graph.edges, 0));
-            res.push(...this.checkConcepts(this.state.occupationNames, this.state.occupationToIsco.graph.edges, 1));
-            res.push(...this.checkConcepts(this.state.skills, this.state.skillToHeadline.graph.edges, 2));
-            res.push(...this.checkConcepts(this.state.skills, this.state.skillToSsyk.graph.edges, 3));
+            var res = this.checkConcepts(this.state.occupationNames, this.state.skills);            
             this.setState({
                 result: this.sortData(res),
                 okToPublish: res.length == 0
@@ -102,12 +123,7 @@ class PublishVersion extends React.Component {
     }
 
     doneFetchingData() {
-        return this.state.occupationNames && 
-                this.state.skills &&
-                this.state.occupationToSsyk &&
-                this.state.occupationToIsco &&
-                this.state.skillToHeadline &&
-                this.state.skillToSsyk;
+        return this.state.occupationNames && this.state.skills;
     }
 
     sortData(data) {       
