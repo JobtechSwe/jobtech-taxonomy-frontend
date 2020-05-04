@@ -117,7 +117,7 @@ class ItemHistory extends React.Component {
         var key = 0;
         if(item.concept) {
             info.push(this.renderInfoItem(Localization.get("name"), item.concept["concept/preferredLabel"], key++));
-            info.push(this.renderInfoItem(Localization.get("definition"), item.concept["concept/definition"], key++));
+            info.push(this.renderInfoItem(Localization.get("description"), item.concept["concept/definition"], key++));
             info.push(this.renderInfoItem(Localization.get("id"), item.concept["concept/id"], key++));
             info.push(this.renderInfoItem(Localization.get("type"), Localization.get("db_" + item.concept["concept/type"]), key++));
             if(item["event-type"] === "CREATED") {
@@ -148,6 +148,9 @@ class ItemHistory extends React.Component {
                 info.push(this.renderInfoItem(Localization.get("id"), this.selected.id, key++));
             }
             //info.push(this.renderInfoItem("Typ", Localization.get("db_" + item.type), key++));
+            info.push(this.renderInfoItem(Localization.get("from_name"), item.relation.source["concept/preferredLabel"], key++));
+            info.push(this.renderInfoItem(Localization.get("from_id"), item.relation.source["concept/id"], key++));
+            info.push(this.renderInfoItem(Localization.get("from_type"), item.relation.source["concept/type"], key++));
             info.push(this.renderInfoItem(Localization.get("to_name"), item.relation.target["concept/preferredLabel"], key++));
             info.push(this.renderInfoItem(Localization.get("to_id"), item.relation.target["concept/id"], key++));
             info.push(this.renderInfoItem(Localization.get("to_type"), item.relation.target["concept/type"], key++));
