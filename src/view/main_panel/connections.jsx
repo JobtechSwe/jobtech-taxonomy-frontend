@@ -114,7 +114,7 @@ class Connections extends React.Component {
                     type = Constants.RELATION_BROADER;
                 }
                 App.addSaveRequest();
-                Rest.deleteRelation(type, conceptId, targetId, (response) => {
+                Rest.deleteRelation(type, conceptId, targetId, "", (response) => {
                     App.removeSaveRequest();
                 }, (status) => {
                     App.showError(Util.getHttpMessage(status) + " : " + data.preferredLabel);
@@ -122,7 +122,7 @@ class Connections extends React.Component {
                 });
             } else {
                 App.addSaveRequest();
-                Rest.postAddRelation(conceptId, targetId, data.relationType, data.note, data.substitutability, (response) => {
+                Rest.postAddRelation(conceptId, targetId, data.relationType, data.note, data.substitutability, "", (response) => {
                     App.removeSaveRequest();
                 }, (status) => {
                     App.showError(Util.getHttpMessage(status) + " : " + data.preferredLabel);

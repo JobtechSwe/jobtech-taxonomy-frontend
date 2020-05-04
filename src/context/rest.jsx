@@ -268,8 +268,8 @@ class Rest {
         this.get("/private/changes?after-version=" + fromVersion, onSuccess, onError);
     }
 
-    deleteConcept(id, onSuccess, onError) {
-        this.delete("/private/delete-concept?id=" + id, onSuccess, onError);
+    deleteConcept(id, comment, onSuccess, onError) {
+        this.delete("/private/delete-concept?id=" + id + "&comment=" + encodeURIComponent(comment), onSuccess, onError);
     }
 
     getGraph(relationType, sourceType, targetType, onSuccess, onError) {
@@ -297,28 +297,28 @@ class Rest {
         this.get("/private/graph?edge-relation-type=" + relationType + "&source-concept-type=" + sourceType + "&target-concept-type=" + targetType, onSuccessCallback, onError)
     }
 
-    patchConcept(id, args, onSuccess, onError) {
-        this.patch("/private/accumulate-concept?id=" + id + args, onSuccess, onError);
+    patchConcept(id, comment, args, onSuccess, onError) {
+        this.patch("/private/accumulate-concept?id=" + id + "&comment=" + encodeURIComponent(comment) + args, onSuccess, onError);
     }
 
-    postConcept(type, preferredLabel, definition, onSuccess, onError) {
-        this.post("/private/concept?type=" + type + "&definition=" + definition + "&preferred-label=" + preferredLabel, onSuccess, onError);
+    postConcept(type, comment, preferredLabel, definition, onSuccess, onError) {
+        this.post("/private/concept?type=" + type + "&comment=" + encodeURIComponent(comment) + "&definition=" + definition + "&preferred-label=" + preferredLabel, onSuccess, onError);
     }
 
-    postReplaceConcept(oldId, newId, onSuccess, onError) {
-        this.post("/private/replace-concept?old-concept-id=" + oldId + "&new-concept-id=" + newId, onSuccess, onError);
+    postReplaceConcept(oldId, newId, comment, onSuccess, onError) {
+        this.post("/private/replace-concept?old-concept-id=" + oldId + "&new-concept-id=" + newId + "&comment=" + encodeURIComponent(comment), onSuccess, onError);
     }
 
-    postAddRelation(conceptId, relationId, relationType, substitutability, onSuccess, onError) {
-        var query = "concept-1=" + conceptId + "&concept-2=" + relationId + "&relation-type=" + relationType;
+    postAddRelation(conceptId, relationId, relationType, substitutability, comment, onSuccess, onError) {
+        var query = "concept-1=" + conceptId + "&concept-2=" + relationId + "&relation-type=" + relationType + "&comment=" + encodeURIComponent(comment);
         if(substitutability) {
             query += "&substitutability-percentage=" + substitutability;
         }
         this.post("/private/relation?" + query, onSuccess, onError);
     }
 
-    deleteRelation(relationType, sourceId, targetId, onSuccess, onError) {
-        this.delete("/private/delete-relation?relation-type=" + relationType + "&concept-1=" + sourceId + "&concept-2=" + targetId, onSuccess, onError);
+    deleteRelation(relationType, sourceId, targetId, comment, onSuccess, onError) {
+        this.delete("/private/delete-relation?relation-type=" + relationType + "&concept-1=" + sourceId + "&concept-2=" + targetId + "&comment=" + encodeURIComponent(comment), onSuccess, onError);
     }
 }
 

@@ -24,13 +24,12 @@ class EditConceptDeprecate extends React.Component {
     }
 
     onSave(message, callback) {
-        // TODO: handle message
         var item = this.props.item;
         App.addSaveRequest();
         if(this.state.shouldReference) {
             App.addSaveRequest();
         }
-        Rest.deleteConcept(item.id, () => {
+        Rest.deleteConcept(item.id, message, () => {
             item.deprecated = true;
             if(App.removeSaveRequest()) {
                 callback();
@@ -40,7 +39,7 @@ class EditConceptDeprecate extends React.Component {
             App.removeSaveRequest();
         });
         if(this.state.shouldReference) {
-            Rest.postReplaceConcept(this.props.item.id, this.state.selected.id, () => {
+            Rest.postReplaceConcept(this.props.item.id, this.state.selected.id, message, () => {
                 this.props.item["replaced-by"] = [this.state.selected];
                 if(App.removeSaveRequest()) {
                     callback();

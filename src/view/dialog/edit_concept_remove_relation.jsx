@@ -28,51 +28,51 @@ class EditConceptRemoveRelation extends React.Component {
         var item = this.props.item;
         this.waitingFor = 0;
         this.waitingForItem = null;
-		if(item.relations.broader + item.relations.narrower + item.relations.related) {
+		/*if(item.relations.broader + item.relations.narrower + item.relations.related) {
 			this.waitingForItem = ControlUtil.createTreeViewItem(this.relationTreeView, null);
 			this.waitingForItem.setText(<Loader/>);
 			this.relationTreeView.addRoot(this.waitingForItem);
-		}
-		if(item.relations.broader) {
+		}*/
+		if(item.broader) {
 			this.fetch(item, Constants.RELATION_BROADER);
 		}
-		if(item.relations.narrower) {
+		if(item.narrower) {
 			this.fetch(item, Constants.RELATION_NARROWER);
 		}
-		if(item.relations.related) {
+		if(item.related) {
 			this.fetch(item, Constants.RELATION_RELATED);
 		}
     }
 
     onSave(message, callback) {
-        // TODO: handle message
         var item = this.props.item;
 		var conceptId = item.id;
-		var relationCounter = {};
-		relationCounter[Constants.RELATION_BROADER] = 0;
-		relationCounter[Constants.RELATION_NARROWER] = 0;
-		relationCounter[Constants.RELATION_RELATED] = 0;
 		for(var i=0; i<this.selected.length; ++i) {
 			var element = this.selected[i];
 			App.addSaveRequest();
 			var targetId = element.id;
 			var type = element.relationType;
-			relationCounter[type]++;
 			if(type == Constants.RELATION_NARROWER) {
 				var tmp = conceptId;
 				conceptId = targetId;
 				targetId = tmp;
 				type = Constants.RELATION_BROADER;
 			}
-			Rest.deleteRelation(type, conceptId, targetId, (response) => {
+			Rest.deleteRelation(type, conceptId, targetId, message, (response) => {
 				if(App.removeSaveRequest()) {
-					item.relations.broader -= relationCounter[Constants.RELATION_BROADER];
-					item.relations.narrower -= relationCounter[Constants.RELATION_NARROWER];
-					item.relations.related -= relationCounter[Constants.RELATION_RELATED];
+                    item.narrower = item.narrower.filter((item) => {
+                        return item.id != targetId;
+                    });
+                    item.broader = item.narrower.filter((item) => {
+                        return item.id != targetId;
+                    });
+                    item.related = item.narrower.filter((item) => {
+                        return item.id != targetId;
+                    });
 					callback();
 				}
 			}, (status) => {
-				App.showError(Util.getHttpMessage(status) + " : " + data.preferredLabel);
+				App.showError(Util.getHttpMessage(status) + " : " + item.preferredLabel);
 				App.removeSaveRequest();
 			});
 		}

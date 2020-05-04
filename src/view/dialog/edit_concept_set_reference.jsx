@@ -43,7 +43,7 @@ class EditConceptSetReference extends React.Component {
     onSave(message, callback) {
         // TODO: handle message
         App.addSaveRequest();
-        Rest.postReplaceConcept(this.props.item.id, this.state.selected.id, () => {
+        Rest.postReplaceConcept(this.props.item.id, this.state.selected.id, message, () => {
             this.props.item["replaced-by"] = [this.state.selected];
             App.removeSaveRequest();
             callback();

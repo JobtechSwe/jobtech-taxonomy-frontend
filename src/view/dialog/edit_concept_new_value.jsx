@@ -34,12 +34,12 @@ class EditConceptNewValue extends React.Component {
         };
     }
 
-    onSaveRelation(callback, from, to, type, substitutability) {
+    onSaveRelation(callback, from, to, type, substitutability, message) {
         if(type != "substitutability" || (substitutability && substitutability.trim().length == 0)) {
             substitutability = null;
         }
         App.addSaveRequest();
-        Rest.postAddRelation(from.id, to.id, type, substitutability, (data) => {
+        Rest.postAddRelation(from.id, to.id, type, substitutability, message, (data) => {
             if(App.removeSaveRequest()) {
                 EventDispatcher.fire(Constants.EVENT_NEW_CONCEPT, {
                     concept: this.concept,
@@ -54,20 +54,20 @@ class EditConceptNewValue extends React.Component {
     }
 
     onSave(message, callback) {
-        // TODO: handle message and quality
+        // TODO: handle quality
         // this.qualityContext.quality
         var state = this.state;
         App.addSaveRequest();
-        Rest.postConcept(state.type, state.name.trim(), encodeURIComponent(state.definition), (data) => {
+        Rest.postConcept(state.type, message, state.name.trim(), encodeURIComponent(state.definition), (data) => {
             CacheManager.invalidateCachedTypeList(data.concept.type);
             this.concept = data.concept;
             if(state.parent) {
                 // add relation between new concept and its selected parent
-                this.onSaveRelation(callback, data.concept, state.parent, "broader", null);
+                this.onSaveRelation(callback, data.concept, state.parent, "broader", null, message);
             }
             if(this.props.item) {
                 // add relation between new concept and source concept
-                this.onSaveRelation(callback, data.concept, this.props.item, state.relationType, state.substitutability);
+                this.onSaveRelation(callback, data.concept, this.props.item, state.relationType, state.substitutability, message);
             }
             if(App.removeSaveRequest()) {
                 EventDispatcher.fire(Constants.EVENT_NEW_CONCEPT, {

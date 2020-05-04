@@ -20,10 +20,9 @@ class EditConceptName extends React.Component {
     }
 
     onSave(message, callback) {
-        // TODO: handle message
         var item = this.props.item;
         App.addSaveRequest();
-        Rest.patchConcept(item.id, "&preferred-label=" + this.state.value.trim(), () => {
+        Rest.patchConcept(item.id, message, "&preferred-label=" + this.state.value.trim(), () => {
             this.props.item.preferredLabel = this.state.value.trim();
             App.removeSaveRequest();
             callback();

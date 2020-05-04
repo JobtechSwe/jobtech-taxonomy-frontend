@@ -61,7 +61,6 @@ class EditConceptAddRelation extends React.Component {
     }
 
     onSave(message, callback) {
-        // TODO: handle message
         var state = this.state;
         var sub = state.substitutability.trim();
         if(sub.length == 0) {
@@ -71,7 +70,8 @@ class EditConceptAddRelation extends React.Component {
         Rest.postAddRelation(this.props.item.id, 
                              state.selected.id, 
                              state.type,
-                             state.type == "substitutability" ? sub : null, 
+                             state.type == "substitutability" ? sub : null,
+                             message,
                              () => {
             
             App.removeSaveRequest();
@@ -107,7 +107,7 @@ class EditConceptAddRelation extends React.Component {
         if(showChildren) {
             node.setForceShowButton(false);
         } else {
-            node.setForceShowButton(element.relations.narrower > 0);
+            node.setForceShowButton(element.narrower != null && element.narrower.length > 0);
             node.onExpandClicked = (item, show) => {
                 if(!item.data.loaded) {
                     var loader = ControlUtil.createTreeViewItem(this.queryTreeView);

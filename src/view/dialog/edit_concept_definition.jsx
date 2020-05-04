@@ -19,10 +19,9 @@ class EditConceptDefinition extends React.Component {
     }
 
     onSave(message, callback) {
-        // TODO: handle message
         var item = this.props.item;
         App.addSaveRequest();
-        Rest.patchConcept(item.id, "&definition=" + encodeURIComponent(this.state.value), () => {
+        Rest.patchConcept(item.id, message, "&definition=" + encodeURIComponent(this.state.value), () => {
             this.props.item.definition = this.state.value;
             App.removeSaveRequest();
             callback();

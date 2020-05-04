@@ -73,7 +73,7 @@ class Description extends React.Component {
             args += "&" + prop + "=" + changes[prop]; 
         }
         App.addSaveRequest();
-        Rest.patchConcept(this.props.item.id, args, (data) => {
+        Rest.patchConcept(this.props.item.id, "", args, (data) => {
             App.removeSaveRequest();
         }, (status) => {
             App.showError(Util.getHttpMessage(status) + " : sparning misslyckades");
@@ -100,7 +100,7 @@ class Description extends React.Component {
     }
 
     onDeprecateYesClicked() {
-        Rest.deleteConcept(this.props.item.id, () => {
+        Rest.deleteConcept(this.props.item.id, "", () => {
             this.props.item.deprecated = true;
             // reselect the item, so the gui is refreshed
             EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, this.props.item);

@@ -137,7 +137,8 @@ class CreateConcept extends React.Component {
 		var type = this.state.type.trim();
 		var name = this.state.name.trim();
 		var description = this.state.description.trim();
-		Rest.postConcept(type, name, encodeURIComponent(description), (data) => {
+		var note = this.state.note.trim();
+		Rest.postConcept(type, note, name, encodeURIComponent(description), (data) => {
 			if(this.state.skillGroup) {
 				// we created a skill, need to add relation to its owning group
 				this.saveSkillOwnerRelation(data.concept);
@@ -153,7 +154,8 @@ class CreateConcept extends React.Component {
 		var ownerId = this.props.conceptId;
 		var relationType = this.state.relationType;
 		var substitutability = relationType === "substitutability" ? this.state.substitutability : null;
-		Rest.postAddRelation(ownerId, concept.id, relationType, substitutability, (data) => {
+		var note = this.state.note;
+		Rest.postAddRelation(ownerId, concept.id, relationType, substitutability, note, (data) => {
 			this.props.callback(concept);
 			EventDispatcher.fire(Constants.EVENT_HIDE_SAVE_INDICATOR);
 			EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
@@ -166,7 +168,7 @@ class CreateConcept extends React.Component {
 	saveSkillOwnerRelation(concept) {
 		var ownerId = this.state.skillGroup;
 		var note = "Automatiskt genererad koppling för ny kompetens";
-		Rest.postAddRelation(ownerId, concept.id, "broader", null, (data) => {
+		Rest.postAddRelation(ownerId, concept.id, "broader", null, note, (data) => {
 		
 		}, (status) => {
 			App.showError(Util.getHttpMessage(status) + " : misslyckades att skapa koppling mellan kompetense och dess grupp");
