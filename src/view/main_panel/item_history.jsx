@@ -127,7 +127,6 @@ class ItemHistory extends React.Component {
                 info.push(this.renderInfoItem(Localization.get("action"), "[åtgärd]", key++));
                 info.push(this.renderInfoItem("Hävisad till", "[hänvisad_till]", key++));
             }
-            info.push(this.renderInfoItem(Localization.get("note"), item.comment, key++));
         }
         if(item.changes) {
             if(this.selected) {
@@ -140,7 +139,6 @@ class ItemHistory extends React.Component {
                 info.push(this.renderInfoItem(Localization.get("from"), change["old-value"], key++));
                 info.push(this.renderInfoItem(Localization.get("to"), change["new-value"], key++));
             }
-            info.push(this.renderInfoItem(Localization.get("note"), item.comment, key++));
         }
         if(item.relation) {
             if(this.selected) {
@@ -155,8 +153,8 @@ class ItemHistory extends React.Component {
             info.push(this.renderInfoItem(Localization.get("to_type"), item.relation.target["concept/type"], key++));
             info.push(this.renderInfoItem(Localization.get("relation_type"), item.relation["relation-type"], key++));
             // TODO: info.push(this.renderInfoItem(Localization.get("relation_weight"), "[relationsvikt]", key++));
-            info.push(this.renderInfoItem(Localization.get("note"), item.comment, key++));
         }
+        info.push(this.renderInfoItem(Localization.get("note"), item.comment, key++));
         return info;
     }
 
