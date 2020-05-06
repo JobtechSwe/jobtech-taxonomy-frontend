@@ -205,8 +205,7 @@ class Content3 extends React.Component {
             Util.getConcept(item.id, item.type, (data) => {                
                 item.broader = data[0].broader;
                 item.narrower = data[0].narrower;
-                item.related = data[0].related;
-                console.log(item, data);
+                item.related = data[0].related;                
                 this.showRelations(item, type, x, y);
                 if(type === Constants.RELATION_BROADER) {
                     this.showRelations(item, Constants.RELATION_NARROWER);

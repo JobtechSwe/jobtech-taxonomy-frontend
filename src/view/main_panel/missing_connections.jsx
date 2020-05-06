@@ -191,7 +191,6 @@ class MissingConnections extends React.Component {
     
     onItemSelected1(item) {
         this.selected1 = item;
-        console.log(item);
     }
 
     onItemSelected2(item) {

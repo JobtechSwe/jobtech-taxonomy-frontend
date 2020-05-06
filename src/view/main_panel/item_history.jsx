@@ -112,7 +112,6 @@ class ItemHistory extends React.Component {
     }
 
     renderHistoryShowItem(item) {
-        console.log(item);
         var info = [];
         var key = 0;
         if(item.concept) {
@@ -179,6 +178,7 @@ class ItemHistory extends React.Component {
     }
 
     renderItem(item, simple) {
+        var comment = "";
         var event = Localization.get(item.event);
         if(item.relation) {
             if(item.event == "CREATED") {
@@ -197,9 +197,10 @@ class ItemHistory extends React.Component {
             } else if(item.relation) {
                 event += " " + Localization.get("against") + " " + item.relation.target["concept/preferredLabel"];
             }
+            comment = item.comment;
         }
         return (
-            <div className="item_history_item">
+            <div className="item_history_item" title={comment}>
                 <div>
                     {new Date(item.date).toLocaleString()}
                 </div>
