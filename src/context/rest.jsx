@@ -141,7 +141,7 @@ class Rest {
         var onSuccess = (data) => {
             onSuccessCallback(data.data.concepts);
         };
-        var query = "concepts(id: \"" + id + "\", include_deprecated: true, version: \"next\") { id type preferredLabel:preferred_label definition deprecated " + extraField + " broader(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } narrower(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } related(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } }";
+        var query = "concepts(id: \"" + id + "\", include_deprecated: true, version: \"next\") { id type preferredLabel:preferred_label definition deprecated " + extraField + " broader(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } narrower(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } related(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } replaced_by(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } }";
         this.getGraphQL(query, onSuccess, onError);
     }
 

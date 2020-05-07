@@ -30,7 +30,7 @@ class Deprecated extends React.Component {
     }
 
     init(props) {
-        var references = props.item["replaced-by"];
+        var references = props.item["replaced_by"];
         if(references && references.length > 0) {
             this.setState({reference: references[0]});
         }

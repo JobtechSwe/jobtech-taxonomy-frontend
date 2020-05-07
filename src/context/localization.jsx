@@ -74,6 +74,7 @@ class Localization {
                 "occupation-name": "Yrkesbenämning",
                 "occupation-field": "Yrkesområde",
 
+                info: "Info",
                 competense: "Kompetens",
                 connections: "Relationer",
                 connection: "Relation",

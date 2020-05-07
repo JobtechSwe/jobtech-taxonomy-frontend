@@ -273,7 +273,7 @@ class Content1 extends React.Component {
             var connectionsContext = ControlUtil.createGroupContext();
             components.push(
                 <Group 
-                    text="Info"
+                    text={Localization.get("info")}
                     context={infoContext}
                     css={css}
                     key={key++}>
