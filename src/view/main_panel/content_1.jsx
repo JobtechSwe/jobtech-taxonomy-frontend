@@ -65,7 +65,7 @@ class Content1 extends React.Component {
                 var result = [];
                 if(relations) {
                     for(var i=0; i<relations.length; ++i) {
-                        var concept = relations[i].concept;
+                        var concept = relations[i];
                         var slot = result.find((x) => {
                             return x.type == concept.type;
                         });
@@ -81,13 +81,14 @@ class Content1 extends React.Component {
                 }
                 return result;
             };
-            Util.getFullyPopulatedConcept(item.id, item.type, (concept) => {                
+            Util.getFullyPopulatedConcept(item.id, item.type, (concept) => {             
+                console.log("concept", concept);   
                 // extract special title
                 var specialTitle = null;
                 if(concept.type.startsWith("ssyk")) {
-                    specialTitle = "SSYK " + concept["ssyk-code-2012"];
+                    specialTitle = "SSYK " + concept.ssyk;
                 } else if(concept.type.startsWith("isco")) {
-                    specialTitle = "ISCO " + concept["isco-code-08"];
+                    specialTitle = "ISCO " + concept.isco;
                 }
                 // find last change
                 var lastChange = null;
@@ -101,12 +102,12 @@ class Content1 extends React.Component {
 
                 if(concept.type == "ssyk-level-4") {
                     // broader relations
-                    var broaderRelations = splitRelationTypes(concept.broader_list);
+                    var broaderRelations = splitRelationTypes(concept.broader);
                     for(var i=0; i<broaderRelations.length; ++i) {
                         var collection = broaderRelations[i];
                         context.addRow(Localization.get("db_" + collection.type), { bold: true });
                         for(var j=0; j<collection.items.length; ++j) {
-                            context.addRow(collection.items[j].concept.preferredLabel);
+                            context.addRow(collection.items[j].preferredLabel);
                         }
                         context.addRow();
                     }
@@ -132,8 +133,8 @@ class Content1 extends React.Component {
                 context.addRow();
 
                 if(concept.type == "ssyk-level-4") {
-                    var relations = splitRelationTypes(concept.narrower_list);
-                    relations = relations.concat(splitRelationTypes(concept.related_list));
+                    var relations = splitRelationTypes(concept.narrower);
+                    relations = relations.concat(splitRelationTypes(concept.related));
                     // find skill-headline and occupation-name
                     var skills = relations.find((x) => {
                         return x.type == "skill-headline";
@@ -172,7 +173,7 @@ class Content1 extends React.Component {
                             }
                         }
                         if(name) {
-                            rows[nextNameIndex++].left = { text: name.concept.preferredLabel };
+                            rows[nextNameIndex++].left = { text: name.preferredLabel };
                         }
                     }
                     // add rows
@@ -180,9 +181,9 @@ class Content1 extends React.Component {
                         context.addLeftRight(rows[i].left, rows[i].right);
                     }
                 } else {
-                    var relations = splitRelationTypes(concept.broader_list);
-                    relations = relations.concat(splitRelationTypes(concept.narrower_list));
-                    relations = relations.concat(splitRelationTypes(concept.related_list));
+                    var relations = splitRelationTypes(concept.broader);
+                    relations = relations.concat(splitRelationTypes(concept.narrower));
+                    relations = relations.concat(splitRelationTypes(concept.related));
                     for(var i=0; i<relations.length; ++i) {
                         var collection = relations[i];
                         if(collection.type == 'skill-headline' && concept.type == 'skill-headline') {
@@ -197,14 +198,14 @@ class Content1 extends React.Component {
                         if(collection.type == 'skill-headline') {
                             for(var j=0; j<collection.items.length; ++j) {
                                 var skillHeadline = collection.items[j];
-                                context.addRow(skillHeadline.concept.preferredLabel, { bold: true });
+                                context.addRow(skillHeadline.preferredLabel, { bold: true });
                                 for(var k=0; k<skillHeadline.children.length; ++k) {
                                     context.addRow(skillHeadline.children[k].preferredLabel, { indent: 1 });
                                 }
                             }
                         } else {
                             for(var j=0; j<collection.items.length; ++j) {
-                                context.addRow(collection.items[j].concept.preferredLabel);
+                                context.addRow(collection.items[j].preferredLabel);
                             }
                         }
                         context.addRow();

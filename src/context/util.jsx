@@ -184,7 +184,7 @@ class Util {
         Rest.getConceptExtraField(id, this.getExtraFieldForType(type), onSuccess, onError);        
     }
 
-    getFullyPopulatedConceptParameterized(id, type, includeRelations, includeHistory, includeFields, onSuccess, onError) {
+    getFullyPopulatedConceptParameterized(id, type, includeRelations, includeHistory, onSuccess, onError) {
         var success = (concepts) => {
             var onFetchComplete = (context) => {
                 if(--context.depth == 0) {
@@ -195,54 +195,6 @@ class Util {
                 if(--context.depth == 0) {
                     onError(status);
                 }
-            };
-            var fetchRelations = (context, type) => {
-                context.depth++;
-                Rest.getAllConceptRelations(context.concept.id, type, (data) => {
-                    var result = [];
-                    var findConcept = (id) => {
-                        return result.find((e) => {
-                            return e.concept.id == id;
-                        });
-                    };
-                    var fetchParent = async (child, parentType) => {
-                        context.depth++;
-                        Rest.getAllConceptRelations(child.id, Constants.RELATION_BROADER, (parents) => {
-                            for(var i=0; i<parents.length; ++i) {
-                                if(parentType && parents[i].type != parentType) {
-                                    continue;
-                                }
-                                var p = findConcept(parents[i]);
-                                if(p == null) {
-                                    p = {
-                                        concept: parents[i],
-                                        children: [],
-                                    };
-                                    result.push(p);
-                                } 
-                                p.children.push(child);
-                            }
-                            onFetchComplete(context);
-                        }, (status) => {
-                            onFetchError(context, status);
-                        });
-                    };
-                    for(var i=0; i<data.length; ++i) {
-                        var connection = {
-                            concept: data[i],
-                            children: [],
-                        };
-                        if(data[i].type == "skill" && context.concept.type != "skill-headline") {
-                            fetchParent(data[i], "skill-headline");
-                        } else {
-                            result.push(connection);
-                        }
-                    }
-                    context.concept[type + "_list"] = result;
-                    onFetchComplete(context);
-                }, (status) => { 
-                    onFetchError(context, status);
-                });
             };
             var fetchLocalHistory = (context) => {
                 var processData = (data) => {
@@ -277,27 +229,9 @@ class Util {
                 depth: 0,
             };
             context.depth++;
-            if(includeRelations) {
-                // get all relations
-                if(context.concept.relations.broader) {
-                    fetchRelations(context, Constants.RELATION_BROADER);
-                }
-                if(context.concept.relations.narrower) {
-                    fetchRelations(context, Constants.RELATION_NARROWER);
-                }
-                if(context.concept.relations.related) {
-                    fetchRelations(context, Constants.RELATION_RELATED);
-                }
-            }
             // get local history
             if(includeHistory) {
                 fetchLocalHistory(context);
-            }
-            // get special fields
-            if(includeFields) {
-                if(context.concept["ssyk-code-2012"] && context.concept["ssyk-code-2012"].length > 3) {
-                    // TODO: get all isco4 codes
-                }
             }
             onFetchComplete(context);
         }
@@ -305,7 +239,7 @@ class Util {
     }
 
     getFullyPopulatedConcept(id, type, onSuccess, onError) {
-        return this.getFullyPopulatedConceptParameterized(id, type, true, true, true, onSuccess, onError);
+        return this.getFullyPopulatedConceptParameterized(id, type, true, true, onSuccess, onError);
     }
 
 }
