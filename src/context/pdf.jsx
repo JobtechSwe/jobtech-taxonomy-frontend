@@ -99,7 +99,7 @@ class Pdf {
             var header = headers[i];       
             doc.setDrawColor(0);
             doc.setFillColor(200, 200, 200);
-            doc.rect(tmpX, tmpY, header.width, padding * 2 + headers.maxHeight * dim.h, "FD")
+            doc.rect(tmpX, tmpY, header.width, padding * 2 + headers.maxHeight * dim.h, "FD");
             if(Array.isArray(header.text)) {
                 for(var j=0; j<header.text.length; ++j) {
                     doc.text(header.text[j], tmpX + padding, tmpY + padding + dim2.h + dim.h * j);
@@ -121,7 +121,7 @@ class Pdf {
             }
             for(var j=0; j<row.cells.length; ++j) {
                 var cell = row.cells[j];
-                doc.rect(tmpX, tmpY, cell.width, padding * 2 + row.maxHeight * dim.h)
+                doc.rect(tmpX, tmpY, cell.width, padding * 2 + row.maxHeight * dim.h);
                 if(Array.isArray(cell.text)) {
                     for(var k=0; k<cell.text.length; ++k) {
                         doc.text(cell.text[k], tmpX + padding, tmpY + padding + dim2.h + dim.h * k);

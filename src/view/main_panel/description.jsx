@@ -31,9 +31,6 @@ class Description extends React.Component {
     }
 
     init(props) {
-        if(props.groupContext) {
-            props.groupContext.onLockChanged = this.onGroupLockedChanged.bind(this);
-        }
         this.setState({
             preferredLabel: Util.getObjectValue(props.item, "preferredLabel", ""),
             definition: Util.getObjectValue(props.item, "definition", ""),
@@ -53,84 +50,6 @@ class Description extends React.Component {
                 }
             }
         });
-    }
-
-    onGroupLockedChanged(isLocked) {
-        this.setState({isLocked: isLocked});
-    }
-
-    onUndoLabel(value) {
-        this.setState({preferredLabel: value});
-    }
-
-    onUndoDefinition(value) {
-        this.setState({definition: value});
-    }
-
-    onSave(changes) {
-        var args = "";
-        for (var prop in changes) {
-            args += "&" + prop + "=" + changes[prop]; 
-        }
-        App.addSaveRequest();
-        Rest.patchConcept(this.props.item.id, "", args, (data) => {
-            App.removeSaveRequest();
-        }, (status) => {
-            App.showError(Util.getHttpMessage(status) + " : sparning misslyckades");
-            App.removeSaveRequest();
-        });
-    }
-
-    createEditRequest(id, value, undoCallback) {
-        var request = App.createEditRequest(id);
-        request.newValue = value;
-        request.oldValue = this.state[id];
-        request.objectId = this.props.item.id;
-        request.groupId = "description";
-        request.undoCallback = undoCallback;
-        request.saveCallback = this.onSave.bind(this);
-        return request;
-    }
-
-    onDeprecateClicked() {
-        EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
-            title: Localization.get("deprecate"),
-            content: this.renderDeprecateDialog(),
-        });
-    }
-
-    onDeprecateYesClicked() {
-        Rest.deleteConcept(this.props.item.id, "", () => {
-            this.props.item.deprecated = true;
-            // reselect the item, so the gui is refreshed
-            EventDispatcher.fire(Constants.EVENT_SIDEPANEL_ITEM_SELECTED, this.props.item);
-            EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
-        }, () => {
-            App.showError(Util.getHttpMessage(status) + " : Avaktualisering misslyckades");
-            EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
-        });
-    }
-    
-    onDeprecateAbortClicked() {
-        EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
-    }
-
-    renderDeprecateDialog() {
-        return (
-            <div className="dialog_content">
-                <div>
-                    {Localization.get("dialog_deprecate")} "{this.state.preferredLabel}"?
-                </div>
-                <div className="dialog_content_buttons">
-                    <Button 
-                        text={Localization.get("yes")}
-                        onClick={this.onDeprecateYesClicked.bind(this)}/>
-                    <Button 
-                        text={Localization.get("abort")}
-                        onClick={this.onDeprecateAbortClicked.bind(this)}/>
-                </div>
-            </div>
-        );
     }
 
     renderSpecialValue(elements, key, text) {
@@ -217,15 +136,6 @@ class Description extends React.Component {
     }
 
     render() {
-        /*
-            <div>
-                <Button 
-                    css="deprecate_button"
-                    isEnabled={!this.state.isLocked}
-                    text={Localization.get("deprecate")}
-                    onClick={this.onDeprecateClicked.bind(this)}/>
-            </div>
-        */
         return (
             <div className="description">
                 {this.renderNameAndMisc()}
