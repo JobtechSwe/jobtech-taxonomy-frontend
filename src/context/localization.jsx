@@ -70,6 +70,7 @@ class Localization {
                 CREATED: "Skapad",
                 UPDATED: "Uppdaterad",
                 DEPRECATED: "Avaktualiserad",
+                COMMENTED: "Anteckning",
                 /* regular words */          
                 "occupation-name": "Yrkesbenämning",
                 "occupation-field": "Yrkesområde",
@@ -82,6 +83,7 @@ class Localization {
                 quality_control: "Kvalitetssäkring",
                 add_connection: "Lägg till relation",
                 remove_connection: "Ta bort relation",
+                add_comment: "Manuell daganteckning",
                 edit_type: "Välj typ av ändring",
                 name: "Namn",
                 description: "Definition",

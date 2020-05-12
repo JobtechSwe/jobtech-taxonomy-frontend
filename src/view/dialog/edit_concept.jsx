@@ -31,6 +31,7 @@ class EditConcept extends React.Component {
         this.EDIT_TYPE_ADD_RELATION = "add_connection";
         this.EDIT_TYPE_REMOVE_RELATION = "remove_connection";
         this.EDIT_TYPE_NEW_VALUE = "new_value";
+        this.EDIT_TYPE_ADD_COMMENT = "add_comment";
         this.state = {
             type: this.EDIT_TYPE_NONE,
             isSaveEnabledEditState: false,
@@ -47,6 +48,16 @@ class EditConcept extends React.Component {
             setEnableSave: (enabled) => { this.setState({isSaveEnabledReasonState: enabled})},
             onSave: null,
         };
+    }
+
+    saveManualDaynote(message, callback) {
+        Rest.postDayNote(this.props.item.id, message, () => {
+            App.removeSaveRequest();
+            callback();
+        }, (status) => {
+            App.showError(Util.getHttpMessage(status) + " : misslyckades spara manuell daganteckning");
+            App.removeSaveRequest();
+        });
     }
 
     onTypeSelected(e) {
@@ -73,11 +84,20 @@ class EditConcept extends React.Component {
                 this.props.onItemUpdated();
                 EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
             });
+        } else if(this.state.type == this.EDIT_TYPE_ADD_COMMENT) {
+            this.saveManualDaynote(this.reasonContext.message, () => {
+                this.props.onItemUpdated();
+                EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
+            });
         }
     }
 
     isSaveEnabled() {
-        return this.state.isSaveEnabledEditState && this.state.isSaveEnabledReasonState;
+        if(this.state.type == this.EDIT_TYPE_ADD_COMMENT) {
+            return this.state.isSaveEnabledReasonState;
+        } else {
+            return this.state.isSaveEnabledEditState && this.state.isSaveEnabledReasonState;
+        }
     }
 
     renderTypeSelection() {
@@ -98,6 +118,7 @@ class EditConcept extends React.Component {
                 {renderOption(this.EDIT_TYPE_REMOVE_RELATION)}
                 {renderOption(isDeprecated ? this.EDIT_TYPE_REFERENCED_TO : this.EDIT_TYPE_DEPRICATE)}
                 {renderOption(this.EDIT_TYPE_NEW_VALUE)}
+                {renderOption(this.EDIT_TYPE_ADD_COMMENT)}
             </select>
         );
     }
@@ -153,6 +174,8 @@ class EditConcept extends React.Component {
                 return ( <EditConceptSetReference item={this.props.item} editContext={this.editContext}/> );
             } else if(type == this.EDIT_TYPE_NEW_VALUE) {
                 return ( <EditConceptNewValue item={this.props.item} editContext={this.editContext}/> );
+            } else if(type == this.EDIT_TYPE_ADD_COMMENT) {
+                null;
             }
             return null;
         };

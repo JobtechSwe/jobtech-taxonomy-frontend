@@ -320,6 +320,10 @@ class Rest {
     deleteRelation(relationType, sourceId, targetId, comment, onSuccess, onError) {
         this.delete("/private/delete-relation?relation-type=" + relationType + "&concept-1=" + sourceId + "&concept-2=" + targetId + "&comment=" + encodeURIComponent(comment), onSuccess, onError);
     }
+
+    postDayNote(conceptId, comment, onSuccess, onError) {
+        this.post("/private/concept/automatic-daynotes/?id=" + conceptId + "&comment=" + encodeURIComponent(comment), onSuccess, onError);
+    }
 }
 
 export default new Rest;
