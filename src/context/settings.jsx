@@ -35,6 +35,7 @@ class Settings {
                 "occupation-collection",
                 "occupation-field",
                 "occupation-name",
+                "occupation-experience-year",
                 "region",
                 "skill",
                 "skill-headline",

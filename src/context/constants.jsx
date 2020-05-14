@@ -32,6 +32,7 @@ class Constants {
         this.CONCEPT_LANGUAGE = "language";
         this.CONCEPT_MUNICIPALITY = "municipality";
         this.CONCEPT_OCCUPATION_NAME = "occupation-name";
+        this.CONCEPT_OCCUPATION_EXPERIENCE_YEAR = "occupation-experience-year";
         this.CONCEPT_OCCUPATION_COLLECTION = "occupation-collection",
         this.CONCEPT_OCCUPATION_FIELD = "occupation-field",
         this.CONCEPT_REGION = "region";
@@ -73,6 +74,7 @@ class Constants {
         this.EVENT_VERSION_ITEM_SELECTED = "EVENT_VERSION_ITEM_SELECTED";
         this.EVENT_VERSION_ITEM_CONTENT_INFO = "EVENT_VERSION_ITEM_CONTENT_INFO";
         this.EVENT_NEW_CONCEPT = "EVENT_NEW_CONCEPT";
+        this.EVENT_SEACH_CHANGES = "EVENT_SEACH_CHANGES";
         // id's
         this.ID_NAVBAR = "ID_NAVBAR";
         this.ID_SIDEPANEL_CONTAINER = "ID_SIDEPANEL_CONTAINER";

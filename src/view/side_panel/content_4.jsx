@@ -24,6 +24,7 @@ class Content4 extends React.Component {
         this.TYPE_OCCUPATION_COLLECTION = "occupation-collection";
         this.TYPE_OCCUPATION_FIELD = "occupation-field";
         this.TYPE_OCCUPATION_NAME = "occupation-name";
+        this.TYPE_OCCUPAITON_EXPERIENCE_YEAR = "occupation-experience-year";
         this.TYPE_REGION = "region";
         this.TYPE_SKILL = "skill";
         this.TYPE_SNI_1 = "sni-level-1";
@@ -62,6 +63,7 @@ class Content4 extends React.Component {
         options.push({value: this.TYPE_OCCUPATION_COLLECTION, text: Localization.get("db_occupation-collection")});
         options.push({value: this.TYPE_OCCUPATION_FIELD, text: Localization.get("db_occupation-field")});
         options.push({value: this.TYPE_OCCUPATION_NAME, text: Localization.get("db_occupation-name")});
+        options.push({valur: this.TYPE_OCCUPAITON_EXPERIENCE_YEAR, text: Localization.get("db_occupation-experience-year")});
         options.push({value: this.TYPE_REGION, text: Localization.get("db_region")});
         options.push({value: this.TYPE_SKILL, text: Localization.get("db_skill")});
         options.push({value: this.TYPE_SNI_1, text: Localization.get("db_sni-level-1")});
@@ -104,7 +106,6 @@ class Content4 extends React.Component {
             title: Localization.get("search"),
             content: <SearchChanges/>,
         });
-        //EventDispatcher.fire(Constants.EVENT_SIDEPANEL_TIME_PERIOD_SELECTED, this.getSelectedPeriod()); 
     }
 
 

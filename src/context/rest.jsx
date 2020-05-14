@@ -91,24 +91,34 @@ class Rest {
 
     getConceptDayNotes(id, from, to, onSuccess, onError) {
         var query = "";
-        if(from) {
-            query = "&from-timestamp=" + from.toISOString();            
+        if(id == null) {
+            query = "from-timestamp=" + from.toISOString() + "&to-timestamp=" + to.toISOString();            
+        } else {
+            query = "id=" + id;
+            if(from) {
+                query += "&from-timestamp=" + from.toISOString();            
+            }
+            if(to) {
+                query += "&to-timestamp=" + to.toISOString();            
+            }
         }
-        if(to) {
-            query += "&to-timestamp=" + to.toISOString();            
-        }
-        this.get("/private/concept/automatic-daynotes/?id=" + id + query, onSuccess, onError);
+        this.get("/private/concept/automatic-daynotes/?" + query, onSuccess, onError);
     }
 
     getRelationDayNotes(id, from, to , onSuccess, onError) {
         var query = "";
-        if(from) {
-            query = "&from-timestamp=" + from.toISOString();            
+        if(id == null) {
+            query = "from-timestamp=" + from.toISOString() + "&to-timestamp=" + to.toISOString();            
+        } else {
+            query = "id=" + id;
+            if(from) {
+                query += "&from-timestamp=" + from.toISOString();            
+            }
+            if(to) {
+                query += "&to-timestamp=" + to.toISOString();            
+            }
         }
-        if(to) {
-            query += "&to-timestamp=" + to.toISOString();            
-        }
-        this.get("/private/relation/automatic-daynotes/?id=" + id + query, onSuccess, onError);
+        this.get("/private/relation/automatic-daynotes/?" + query, onSuccess, onError);
     }
 
     getConcepts(type, onSuccessCallback, onError) {

@@ -48,6 +48,7 @@ class EditConceptAddRelation extends React.Component {
             "occupation-collection",
             "occupation-field",
             "occupation-name",
+            "occupation-experience-year",
             "region",
             "skill-headline",
             "sni-level-1",

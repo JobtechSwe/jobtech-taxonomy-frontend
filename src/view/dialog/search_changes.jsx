@@ -69,8 +69,14 @@ class SearchChanges extends React.Component {
         EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
     }
 
-    onSearchClicked() {
-        console.log("Search", this.state.fromDate, this.state.toDate, this.state.actions, this.state.relations, this.state.types);
+    onSearchClicked() {        
+        EventDispatcher.fire(Constants.EVENT_SEACH_CHANGES, {
+            fromDate: this.state.fromDate, 
+            toDate: this.state.toDate, 
+            actions: this.state.actions, 
+            relations: this.state.relations, 
+            types: this.state.types
+        });
         EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
     }
 

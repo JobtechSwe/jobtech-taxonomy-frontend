@@ -32,6 +32,7 @@ class ConceptsSearch extends React.Component {
         this.TYPE_OCCUPATION_COLLECTION = "occupation-collection";
         this.TYPE_OCCUPATION_FIELD = "occupation-field";
         this.TYPE_OCCUPATION_NAME = "occupation-name";
+        this.TYPE_OCCUPATION_EXPERIENCE_YEAR = "occupation-experience-year";
         this.TYPE_REGION = "region";
         this.TYPE_SKILL = "skill";
         this.TYPE_SKILL_HEADLINE = "skill-headline";
@@ -128,6 +129,7 @@ class ConceptsSearch extends React.Component {
         this.addOption(options, this.TYPE_OCCUPATION_COLLECTION);
         this.addOption(options, this.TYPE_OCCUPATION_FIELD);
         this.addOption(options, this.TYPE_OCCUPATION_NAME);
+        this.addOption(options, this.TYPE_OCCUPATION_EXPERIENCE_YEAR);
         this.addOption(options, this.TYPE_REGION);
         this.addOption(options, this.TYPE_SKILL);
         this.addOption(options, this.TYPE_SNI_1);
