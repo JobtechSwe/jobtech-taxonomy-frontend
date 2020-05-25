@@ -1,30 +1,39 @@
 import React from 'react';
-import Button from './../../control/button.jsx';
 import Label from './../../control/label.jsx';
 import App from './../../context/app.jsx';
-import EventDispatcher from './../../context/event_dispatcher.jsx';
 import Localization from './../../context/localization.jsx';
-import Constants from './../../context/constants.jsx';
+import Rest from './../../context/rest.jsx';
 
 class EditConceptQuality extends React.Component { 
 
     constructor(props) {
         super(props);
+        var value = this.props.item.quality_level == null ? "undefined" : this.props.item.quality_level;
         this.state = {
-            value: "1",
+            value: value,
             isChanged: false,
 		};
         this.props.editContext.onSave = this.onSave.bind(this);
-		this.props.editContext.setEnableSave(true);
     }
 
     onSave(message, callback) {
-        // TODO: impl
-        callback();
+        var item = this.props.item;
+        var value = this.state.value === "undefined" ? "" : this.state.value;
+        App.addSaveRequest();
+        Rest.patchConcept(item.id, message, "&quality-level=" + value.trim(), () => {
+            this.props.item.preferredLabel = this.state.value.trim();
+            App.removeSaveRequest();
+            callback();
+        }, (status) => {
+            App.showError(Util.getHttpMessage(status) + " : misslyckades uppdatera kvalitetssäkring");
+            App.removeSaveRequest();
+        });
     }
 
     onValueChanged(e) {
-		this.props.editContext.quality = e.target.value;
+        console.log("value changed", e.target.value);
+        this.props.editContext.quality = e.target.value;
+        this.props.editContext.setEnableSave(true);
         this.setState({
 			value: e.target.value,
 			isChanged: true,

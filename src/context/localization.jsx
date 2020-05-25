@@ -53,6 +53,7 @@ class Localization {
                 "concept/preferredLabel": "Namn",
                 "concept/type": "Värdeförråd",
                 "concept/sort-order": "Sorteringsordning",
+                "concept/quality-level": "Kvalitetssäkring",
                 "concept.external-database.ams-taxonomy-67/id": "Externt id",
                 "concept.external-standard/ssyk-code-2012": "SSYK 2012",
                 "concept.external-standard/nuts-level-3-code-2013": "NUTS nivå 3",

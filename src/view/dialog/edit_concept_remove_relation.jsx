@@ -67,10 +67,10 @@ class EditConceptRemoveRelation extends React.Component {
                     item.narrower = item.narrower.filter((item) => {
                         return item.id != targetId;
                     });
-                    item.broader = item.narrower.filter((item) => {
+                    item.broader = item.broader.filter((item) => {
                         return item.id != targetId;
                     });
-                    item.related = item.narrower.filter((item) => {
+                    item.related = item.related.filter((item) => {
                         return item.id != targetId;
                     });
 					callback();

@@ -18,6 +18,7 @@ class Description extends React.Component {
             isLocked: true,
             preferredLabel: Util.getObjectValue(props.item, "preferredLabel", ""),
             definition: Util.getObjectValue(props.item, "definition", ""),
+            qualityLevel: Util.getObjectValue(props.item, "quality_level", ""),
             iscoCodes: [],
         };
     }
@@ -34,6 +35,7 @@ class Description extends React.Component {
         this.setState({
             preferredLabel: Util.getObjectValue(props.item, "preferredLabel", ""),
             definition: Util.getObjectValue(props.item, "definition", ""),
+            qualityLevel: Util.getObjectValue(props.item, "quality_level", ""),
             iscoCodes: [],
         }, () => {
             if(props.item["ssyk"] && props.item["ssyk"].length > 3) {
@@ -109,7 +111,7 @@ class Description extends React.Component {
                     type="text" 
                     className="rounded"
                     disabled="disabled"
-                    value={""}/>
+                    value={this.state.qualityLevel}/>
             </div>
         );
         this.renderSpecialValue(elements, "id", "ID");

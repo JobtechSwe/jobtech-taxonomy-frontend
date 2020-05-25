@@ -43,8 +43,20 @@ class Content1 extends React.Component {
 
     onItemSaved() {
         CacheManager.invalidateCachedRelations(this.state.item.id);
-        CacheManager.updateTypeListItem(this.state.item);
-        this.onSideItemSelected(this.state.item);
+        Util.getConcept(this.state.item.id, this.state.item.type, (data) => {
+            // merge item
+            for(var member in data[0]) {
+                if(this.state.item[member] == null) {
+                    this.state.item[member] = data[0][member];
+                }
+            }
+            this.state.item.broader = data[0].broader;
+            this.state.item.narrower = data[0].narrower;
+            this.state.item.related = data[0].related;
+            this.onSideItemSelected(this.state.item);
+        }, (status) => {
+            App.showError(Util.getHttpMessage(status) + " : misslyckades hämta concept");
+        });
     }
 
     onExportClicked() {
@@ -117,7 +129,7 @@ class Content1 extends React.Component {
                     if(values[i].id == 0) {
                         // quality control
                         context.addRow(Localization.get("quality_control"), { bold: true });
-                        context.addRow();
+                        context.addRow(concept.quality_level);
                         context.addRow();
                     } else if(values[i].id == 1) {
                         // database id

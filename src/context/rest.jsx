@@ -134,7 +134,8 @@ class Rest {
             //onSuccessCallback(data);
             onSuccessCallback(data.data.concepts);
         };
-        var query = "concepts(type: \"" + type + "\", include_deprecated: true, version: \"next\") { id type preferredLabel:preferred_label deprecated }";
+        var query = "concepts(type: \"" + type + "\", include_deprecated: true, version: \"next\") " 
+            + "{ id type preferredLabel:preferred_label deprecated }";
         this.getGraphQL(query, onSuccess, onError);
         //this.get("/private/concepts?type=" + type, onSuccess, onError);
     }
@@ -143,7 +144,8 @@ class Rest {
         var onSuccess = (data) => {
             onSuccessCallback(data.data.concepts);
         };
-        var query = "concepts(type: \"" + type + "\", include_deprecated: true, version: \"next\") { id type preferredLabel:preferred_label deprecated " + extraField + " }"; 
+        var query = "concepts(type: \"" + type + "\", include_deprecated: true, version: \"next\")"
+            + " { id type preferredLabel:preferred_label deprecated " + extraField + " }"; 
         this.getGraphQL(query, onSuccess, onError);
     }
 
@@ -151,7 +153,13 @@ class Rest {
         var onSuccess = (data) => {
             onSuccessCallback(data.data.concepts);
         };
-        var query = "concepts(id: \"" + id + "\", include_deprecated: true, version: \"next\") { id type preferredLabel:preferred_label definition deprecated " + extraField + " broader(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } narrower(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } related(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } replaced_by(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 } }";
+        var query = "concepts(id: \"" + id + "\", include_deprecated: true, version: \"next\")"
+            + " { id type preferredLabel:preferred_label definition deprecated quality_level last_changed " + extraField
+                + " broader(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 }"
+                + " narrower(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 }"
+                + " related(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 }"
+                + " replaced_by(include_deprecated: true) { id type preferredLabel:preferred_label isco:isco_code_08 ssyk:ssyk_code_2012 }"
+            + " }";
         this.getGraphQL(query, onSuccess, onError);
     }
 
@@ -159,7 +167,10 @@ class Rest {
         var onSuccess = (data) => {
             onSuccessCallback(data.data.concepts);
         };
-        var query = "concepts(type: \"skill-headline\", include_deprecated: true, version: \"next\") { id type preferredLabel:preferred_label skills:narrower(type: \"skill\", include_deprecated: true) { id type preferredLabel:preferred_label deprecated }}";
+        var query = "concepts(type: \"skill-headline\", include_deprecated: true, version: \"next\")"
+            + " { id type preferredLabel:preferred_label" +
+                + " skills:narrower(type: \"skill\", include_deprecated: true) { id type preferredLabel:preferred_label deprecated }"
+            + " }";
         this.getGraphQL(query, onSuccess, onError);
     }
 
@@ -167,7 +178,8 @@ class Rest {
         var onSuccess = (data) => {
             onSuccessCallback(data.data.concepts);
         };
-        var query = "concepts(type: \"occupation-name\", include_deprecated: true) { broader(include_deprecated: true) { type } id type preferredLabel:preferred_label }";
+        var query = "concepts(type: \"occupation-name\", include_deprecated: true)"
+            + " { broader(include_deprecated: true) { type } id type preferredLabel:preferred_label }";
         this.getGraphQL(query, onSuccess, onError);
     }
 
@@ -175,7 +187,8 @@ class Rest {
         var onSuccess = (data) => {
             onSuccessCallback(data.data.concepts);
         };
-        var query = "concepts(type: \"skill\", include_deprecated: true) { broader(type: \"skill-headline\") { type } id type preferredLabel:preferred_label related(type: \"ssyk-level-4\") { type } }";
+        var query = "concepts(type: \"skill\", include_deprecated: true)"
+            + " { broader(type: \"skill-headline\") { type } id type preferredLabel:preferred_label related(type: \"ssyk-level-4\") { type } }";
         this.getGraphQL(query, onSuccess, onError);
     }
 

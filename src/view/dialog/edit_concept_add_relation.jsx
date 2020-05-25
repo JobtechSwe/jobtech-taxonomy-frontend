@@ -74,7 +74,6 @@ class EditConceptAddRelation extends React.Component {
                              state.type == "substitutability" ? sub : null,
                              message,
                              () => {
-            
             App.removeSaveRequest();
             callback();
         }, (status) => {
