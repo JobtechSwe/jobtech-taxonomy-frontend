@@ -19,6 +19,7 @@ class Description extends React.Component {
             preferredLabel: Util.getObjectValue(props.item, "preferredLabel", ""),
             definition: Util.getObjectValue(props.item, "definition", ""),
             qualityLevel: Util.getObjectValue(props.item, "quality_level", ""),
+            lastChanged: Util.getObjectValue(props.item, "last_changed", null),
             iscoCodes: [],
         };
     }
@@ -36,6 +37,7 @@ class Description extends React.Component {
             preferredLabel: Util.getObjectValue(props.item, "preferredLabel", ""),
             definition: Util.getObjectValue(props.item, "definition", ""),
             qualityLevel: Util.getObjectValue(props.item, "quality_level", ""),
+            lastChanged: Util.getObjectValue(props.item, "last_changed", null),
             iscoCodes: [],
         }, () => {
             if(props.item["ssyk"] && props.item["ssyk"].length > 3) {
@@ -137,6 +139,16 @@ class Description extends React.Component {
         );
     }
 
+    renderLastChanged() {
+        if(this.state.lastChanged != null) {
+            return (
+                <Label 
+                    text={Localization.get("last_changed") + new Date(this.state.lastChanged).toLocaleString()}
+                    css="description_last_changed"/>
+            );
+        }
+    }
+
     render() {
         return (
             <div className="description">
@@ -147,6 +159,7 @@ class Description extends React.Component {
                     className="rounded"
                     disabled="disabled"
                     value={this.state.definition}/>
+                {this.renderLastChanged()}
             </div>
         );
     }

@@ -201,6 +201,7 @@ class Localization {
                 relation_removed: "Relation borttagen",
                 relation_updated: "Relation uppdaterad",
                 relation_weight: "Relationsvikt",
+                last_changed: "Senast uppdaterad: ",
             },
         }
         // find active language

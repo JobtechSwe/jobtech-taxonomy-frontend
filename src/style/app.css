@@ -602,6 +602,11 @@ body {
     margin-left: 5px;
 }
 
+.description > .description_last_changed {
+    font-weight: normal;
+    font-size: 10pt;
+}
+
 .connections {    
     display: flex;
     flex-direction: column;
