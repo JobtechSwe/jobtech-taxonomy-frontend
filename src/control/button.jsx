@@ -5,7 +5,7 @@ class Button extends React.Component {
     
     constructor() {
         super();
-        this.css = "button no_select font hint_source";
+        this.css = "button no_select font";
     }
 
     onClick() {
@@ -18,12 +18,13 @@ class Button extends React.Component {
     render() {
         var isEnabled = this.props.isEnabled == null ? true : this.props.isEnabled;
         var css = Util.getStyle(this) + (isEnabled ? "" : " button_disabled");
+        var title = this.props.hint == null ? "" : this.props.hint;
         return (
             <div 
                 className={css}
+                title={title}
                 onMouseUp={this.onClick.bind(this)}>
                 <div>{this.props.text}</div>
-                {Util.renderHint(this)}
             </div>
         );
     }

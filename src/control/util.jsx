@@ -1,5 +1,4 @@
 import React from 'react';
-import Hint from './hint.jsx';
 import TreeViewItem from './tree_view_item.jsx';
 import ContextUtil from './../context/util.jsx';
 
@@ -186,14 +185,6 @@ class Util {
             // callbacks
             onLockChanged: null,
         };
-    }
-
-    renderHint(control) {
-        if(control.props.hint) {
-            return (
-                <Hint text={control.props.hint}/>
-            );
-        }
     }
 
     getStyle(control) {

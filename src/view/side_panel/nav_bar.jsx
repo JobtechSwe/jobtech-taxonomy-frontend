@@ -1,5 +1,4 @@
 import React from 'react';
-import Hint from './../../control/hint.jsx';
 import App from './../../context/app.jsx';
 import Util from './../../context/util.jsx';
 import Constants from './../../context/constants.jsx';
@@ -52,13 +51,13 @@ class NavBar extends React.Component {
     }
 
     renderButton(hint, icon, viewId) {
-        var css = this.state.selected == viewId ? "hint_source selected" : "hint_source";
+        var css = this.state.selected == viewId ? "selected" : "";
         return (
             <div
                 className={css} 
+                title={hint}
                 onPointerUp={this.onButtonClicked.bind(this, viewId)}>
-                <img src={icon}/>
-                <Hint text={hint}/>
+                <img src={icon}/>                
             </div>
         );
     }

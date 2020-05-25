@@ -5,14 +5,16 @@ class Label extends React.Component {
 
     constructor() {
         super();
-        this.css = "label font hint_source";
+        this.css = "label font";
     }
 
     render() {
+        var title = this.props.hint == null ? "" : this.props.hint;
         return (
-            <div className={Util.getStyle(this)}>
+            <div 
+                className={Util.getStyle(this)}
+                title={title}>
                 <div>{this.props.text}</div>
-                {Util.renderHint(this)}
             </div>
         );
     }
