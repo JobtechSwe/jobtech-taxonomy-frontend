@@ -28,11 +28,11 @@ class EditConceptRemoveRelation extends React.Component {
         var item = this.props.item;
         this.waitingFor = 0;
         this.waitingForItem = null;
-		/*if(item.relations.broader + item.relations.narrower + item.relations.related) {
+	    if(this.hasRelations(item)) {
 			this.waitingForItem = ControlUtil.createTreeViewItem(this.relationTreeView, null);
 			this.waitingForItem.setText(<Loader/>);
 			this.relationTreeView.addRoot(this.waitingForItem);
-		}*/
+		}
 		if(item.broader) {
 			this.fetch(item, Constants.RELATION_BROADER);
 		}
@@ -42,6 +42,10 @@ class EditConceptRemoveRelation extends React.Component {
 		if(item.related) {
 			this.fetch(item, Constants.RELATION_RELATED);
 		}
+    }
+
+    hasRelations(item) {        
+        return item.broader.length > 0 || item.narrower.length > 0 || item.related.length > 0;
     }
 
     onSave(message, callback) {
