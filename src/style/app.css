@@ -113,6 +113,10 @@ body {
     align-items: center;
 }
 
+.dialog_content_buttons > .button {
+    min-width: 50px;
+}
+
 .dialog_content_buttons > .button:nth-child(3) {
     margin-right: 0px;
 }
@@ -1348,4 +1352,14 @@ body {
 .publish_info_header {
     display: flex;
     justify-content: space-between;
+}
+
+.export_button_content {
+    display: flex;
+}
+
+.export_button_content > div:nth-child(1) {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
 }

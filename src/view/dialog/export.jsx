@@ -15,26 +15,8 @@ class Export extends React.Component {
         }
     }
 
-    getFinalValues() {
-        return this.state.values.filter((x) => {
-            return x.selected;
-        });
-    }
-
-    onSelectedChanged(element, e) {
-        element.selected = e.target.checked;
-        this.forceUpdate();
-    }
-
-    onSavePdfClicked() {
-        var values = this.getFinalValues();
-        if(this.props.onSavePdf) {
-            this.props.onSavePdf(values);
-        }
-    }
-
     onSaveExcelClicked() {
-        var values = this.getFinalValues();
+        var values = [];
         if(this.props.onSaveExcel) {
             EventDispatcher.fire(Constants.EVENT_SHOW_POPUP_INDICATOR, Localization.get("exporting") + "...");
             setTimeout(() => {
@@ -44,35 +26,16 @@ class Export extends React.Component {
     }
     
     render() {
-        var values = this.state.values.map((element, index) => {
-            var selected = element.selected == null ? false : element.selected;
-            return (
-                <div key={index}>                    
-                    <input 
-                        id={"checkbox" + index}
-                        type="checkbox" 
-                        checked={selected} 
-                        onChange={this.onSelectedChanged.bind(this, element)}/>
-                    <label htmlFor={"checkbox" + index}>{element.text}</label>
-                </div>
-            );
-        });
         return (
             <div className="dialog_content">
-                <div>{Localization.get("export_headline")}</div>
-                <List css="dialog_export_list">{values}</List>
                 <div className="dialog_content_buttons">
-                    <Button 
-                        isEnabled={this.props.onSavePdf ? true : false}
-                        onClick={this.onSavePdfClicked.bind(this)}
-                        text={Localization.get("export_pdf")}/>
                     <Button 
                         isEnabled={this.props.onSaveExcel ? true : false}
                         onClick={this.onSaveExcelClicked.bind(this)}
-                        text={Localization.get("export_excel")}/>
+                        text={Localization.get("yes")}/>
                     <Button 
                         onClick={() => EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY)}
-                        text={Localization.get("close")}/>
+                        text={Localization.get("no")}/>
                 </div>
             </div>
         );

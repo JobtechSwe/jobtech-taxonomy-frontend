@@ -257,7 +257,7 @@ class Referred extends React.Component {
                             text={Localization.get("visit_replaced_by")}/>
                         <Button                             
                             onClick={this.onExportClicked.bind(this)}
-                            text={Localization.get("export")}/>
+                            text={Util.renderExportButtonText()}/>
                     </div>
                 </div>               
             </Group>

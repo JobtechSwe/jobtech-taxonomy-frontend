@@ -29,9 +29,6 @@ class Content1 extends React.Component {
     }
 
     onExportClicked() {
-        
-        // TODO: open dialog
-        
         var getEdges = (id, edges) => {
             return edges.filter((e) => {
                 return e.source === id || e.target === id;
@@ -110,11 +107,9 @@ class Content1 extends React.Component {
                 });
             }
         };
-        // pdf
-        
         // event
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
-            title: Localization.get("export"),
+            title: Localization.get("export") + " " + Localization.get("db_" + this.type),
             content: <Export 
                         onSaveExcel={onSaveExcel}/>
         });
@@ -128,7 +123,7 @@ class Content1 extends React.Component {
                     text={Localization.get("new_value")}
                     onClick={this.onNewConceptClicked.bind(this)}/>
                 <Button 
-                    text={Localization.get("export")}
+                    text={Util.renderExportButtonText()}
                     onClick={this.onExportClicked.bind(this)}/>
             </div>
         );

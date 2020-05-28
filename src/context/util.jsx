@@ -1,5 +1,6 @@
 import React from 'react';
 import Constants from './constants.jsx';
+import Localization from './localization.jsx';
 import Rest from './rest.jsx';
 import CacheManager from './cache_manager.jsx';
 
@@ -240,6 +241,15 @@ class Util {
 
     getFullyPopulatedConcept(id, type, onSuccess, onError) {
         return this.getFullyPopulatedConceptParameterized(id, type, true, true, onSuccess, onError);
+    }
+
+    renderExportButtonText() {
+        return (
+            <div className="export_button_content">
+                <div>{Constants.ICON_SVG_EXCEL}</div>
+                <div>{Localization.get("export")}</div>
+            </div>
+        );
     }
 
 }

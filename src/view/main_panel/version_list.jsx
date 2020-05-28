@@ -271,8 +271,10 @@ class VersionList extends React.Component {
             width: 90,
         });
 
+        var title = Localization.get("version") + " - " + (this.state.item.version == -1 ? Localization.get("not_published") : this.state.item.version);
+
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
-            title: Localization.get("export"),
+            title: Localization.get("export") + " " + title,
             content: <Export 
                         values={values}
                         onSaveExcel={onSaveExcel}
@@ -484,7 +486,7 @@ class VersionList extends React.Component {
                     {this.renderPublishButton()}
                     <Button                             
                         onClick={this.onSaveClicked.bind(this)}
-                        text={Localization.get("export")}/>
+                        text={Util.renderExportButtonText()}/>
                 </div>
             </div>
         );

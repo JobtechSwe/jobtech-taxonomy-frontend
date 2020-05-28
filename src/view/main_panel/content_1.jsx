@@ -228,11 +228,9 @@ class Content1 extends React.Component {
                 EventDispatcher.fire(Constants.EVENT_HIDE_POPUP_INDICATOR);
             });
         };
-        // pdf
-
         // event
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
-            title: Localization.get("export"),
+            title: Localization.get("export") + " " + this.state.item.preferredLabel,
             content: <Export 
                         values={values}
                         onSaveExcel={onSaveExcel}/>
@@ -260,7 +258,7 @@ class Content1 extends React.Component {
                     className="main_content_1_buttons"
                     key={key++}>
                     <Button
-                        text={Localization.get("export")}
+                        text={Util.renderExportButtonText()}
                         onClick={this.onExportClicked.bind(this)}/>
                     <Button
                         text={Localization.get("edit")}

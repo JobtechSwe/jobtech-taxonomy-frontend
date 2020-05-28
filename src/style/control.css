@@ -32,12 +32,20 @@ input.rounded:focus {
     box-shadow: 0px 0px 3px #3399ff;
 }
 
+input.rounded:disabled {
+    background: #ebebe4;
+}
+
 textarea.rounded {
     border-radius: 5px;
     padding: 4px 5px;
     border-style: solid;
     border-width: 1px;
     border-color: rgb(169, 169, 169);
+}
+
+textarea.rounded:disabled {
+    background: #ebebe4;
 }
 
 textarea.rounded:focus {
@@ -77,12 +85,12 @@ select.rounded:focus {
     padding: 2px;
     padding-left: 5px;
     padding-right: 5px;
-    border: 2px solid #555;
+    border: 1px solid #bbb;
     border-radius: 5px;
     align-items: center;
     justify-content: center;
-    color: #fff;
-    background: #386479;
+    color: #000;
+    background: #dedede;
     font-size: 12pt;
     cursor: pointer;
     box-sizing: border-box;
@@ -90,8 +98,7 @@ select.rounded:focus {
 }
 
 .button:hover {
-    color: #fff;
-    background: #94a1b9;
+    background: #e9e9e9;
 }
 
 .button:active {
@@ -106,13 +113,13 @@ select.rounded:focus {
 }
 
 .button_disabled:hover {
-    color: #fff;
-    background: #386479;
+    color: #000;
+    background: #dedede;
 }
 
 .button_disabled:active {
-    color: #fff;
-    background: #386479;
+    color: #000;
+    background: #dedede;
 }
 
 .button_round {
