@@ -9,8 +9,6 @@ import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Util from '../../context/util.jsx';
-import AddConnection from './../dialog/add_connection.jsx';
-import CreateConcept from './../dialog/create_concept.jsx';
 import CacheManager from '../../context/cache_manager.jsx';
 
 class Connections extends React.Component { 

@@ -1248,6 +1248,115 @@ body {
     flex-grow: 1;
 }
 
+.search_result {
+    min-height: 450px;
+    padding: 10px;
+    padding-top: 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.search_result_buttons {
+    display: flex;
+}
+
+.search_result_header {
+    padding-left: 5px;
+}
+
+.search_result_header > div:hover {
+    color: #fff;
+}
+
+.search_result_header > div:hover > i {
+    border-color: #fff;
+}
+
+.search_result_header > div {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.search_result_concept_item {
+    display: flex;
+    flex-direction: row;
+}
+
+.search_result_concept_item > div {
+    padding-right: 10px;
+    overflow-wrap: break-word;
+}
+
+.search_result_concept_item > div:nth-child(1) {
+    width: 100px;
+}
+
+.search_result_concept_item > div:nth-child(2) {
+    width: 100px;
+}
+
+.search_result_concept_item > div:nth-child(3) {
+    width: 200px;
+}
+
+.search_result_concept_item > div:nth-child(4) {
+    width: 200px;
+}
+
+.search_result_concept_item > div:nth-child(5) {
+    width: 200px;
+}
+
+.search_result_concept_item > div:nth-child(6) {
+    width: 140px;
+}
+
+.search_result_concept_item > div:nth-child(7) {
+    min-width: 100px;
+}
+
+.search_result_relation_item {
+    display: flex;
+    flex-direction: row;
+}
+
+.search_result_relation_item > div {
+    padding-right: 10px;
+    overflow-wrap: break-word;
+}
+
+.search_result_relation_item > div:nth-child(1) {
+    width: 100px;
+}
+
+.search_result_relation_item > div:nth-child(2) {
+    width: 150px;
+}
+
+.search_result_relation_item > div:nth-child(3) {
+    width: 200px;
+}
+
+.search_result_relation_item > div:nth-child(4) {
+    width: 200px;
+}
+
+.search_result_relation_item > div:nth-child(5) {
+    width: 150px;
+}
+
+.search_result_relation_item > div:nth-child(6) {
+    width: 150px;
+}
+
+.search_result_relation_item > div:nth-child(7) {
+    width: 100px;
+}
+
+.search_result_relation_item > div:nth-child(8) {
+    min-width: 140px;
+}
+
 .dialog_export_list {
     min-width: 200px;
     min-height: 200px;

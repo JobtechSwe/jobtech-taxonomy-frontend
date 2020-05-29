@@ -121,7 +121,7 @@ class ItemHistory extends React.Component {
             info.push(this.renderInfoItem(Localization.get("type"), Localization.get("db_" + item.concept["concept/type"]), key++));
             if(item["event-type"] === "CREATED") {
                 //not deprecated
-                info.push(this.renderInfoItem("Kvalitetsnivå", "[kvalitetsnivå]", key++));
+                info.push(this.renderInfoItem("Kvalitetsnivå", item.concept["concept/quality-level"], key++));
             } else {
                 //deprecated
                 info.push(this.renderInfoItem(Localization.get("action"), "[åtgärd]", key++));

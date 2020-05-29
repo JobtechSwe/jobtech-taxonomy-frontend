@@ -83,7 +83,7 @@ class Content4 extends React.Component {
         components.push(
             <Label
                 css="main_content_title" 
-                text={Localization.get("search_result")} 
+                text={Localization.get("search")} 
                 key={key++}
             />
         );

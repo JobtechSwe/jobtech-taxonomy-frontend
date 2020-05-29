@@ -324,8 +324,8 @@ class Rest {
         this.patch("/private/accumulate-concept?id=" + id + "&comment=" + encodeURIComponent(comment) + args, onSuccess, onError);
     }
 
-    postConcept(type, comment, preferredLabel, definition, onSuccess, onError) {
-        this.post("/private/concept?type=" + type + "&comment=" + encodeURIComponent(comment) + "&definition=" + definition + "&preferred-label=" + preferredLabel, onSuccess, onError);
+    postConcept(type, comment, preferredLabel, definition, qualityLevel, onSuccess, onError) {
+        this.post("/private/concept?type=" + type + "&comment=" + encodeURIComponent(comment) + "&definition=" + definition + "&preferred-label=" + preferredLabel + "&quality-level=" + qualityLevel, onSuccess, onError);
     }
 
     postReplaceConcept(oldId, newId, comment, onSuccess, onError) {

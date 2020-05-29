@@ -9,14 +9,13 @@ class SearchChangesDate extends React.Component {
 
     constructor(props) {
         super(props);
+        //"DIVERTED",
+        //"MOVED",
         this.actions = [
             "CREATED",
             "UPDATED",
-            "DIVERTED",
-            "MOVED",
             "DEPRECATED",
-            "QUALITY_LEVEL",
-            "MANUAL_NOTE",
+            "COMMENTED",
         ];
         this.relations = [
             Constants.RELATION_NARROWER,
