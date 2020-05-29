@@ -8,7 +8,10 @@ class EditConceptQuality extends React.Component {
 
     constructor(props) {
         super(props);
-        var value = this.props.item.quality_level == null ? "undefined" : this.props.item.quality_level;
+        var value = "undefined"
+        if(this.props.item != null && this.props.item.quality_level != null) {
+             value = this.props.item.quality_level;
+        }
         this.state = {
             value: value,
             isChanged: false,
@@ -31,7 +34,6 @@ class EditConceptQuality extends React.Component {
     }
 
     onValueChanged(e) {
-        console.log("value changed", e.target.value);
         this.props.editContext.quality = e.target.value;
         this.props.editContext.setEnableSave(true);
         this.setState({

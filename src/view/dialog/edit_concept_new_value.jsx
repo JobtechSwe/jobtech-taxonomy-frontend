@@ -31,6 +31,7 @@ class EditConceptNewValue extends React.Component {
         this.qualityContext = {
             setEnableSave: (enabled) => {},
             onSave: null,
+            quality: "",
         };
     }
 
@@ -58,7 +59,7 @@ class EditConceptNewValue extends React.Component {
         // this.qualityContext.quality
         var state = this.state;
         App.addSaveRequest();
-        Rest.postConcept(state.type, message, state.name.trim(), encodeURIComponent(state.definition), (data) => {
+        Rest.postConcept(state.type, message, state.name.trim(), encodeURIComponent(state.definition), this.qualityContext.quality, (data) => {
             CacheManager.invalidateCachedTypeList(data.concept.type);
             this.concept = data.concept;
             if(state.parent) {
