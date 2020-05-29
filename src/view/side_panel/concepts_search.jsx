@@ -226,20 +226,24 @@ class ConceptsSearch extends React.Component {
         if(this.preSelectId) {
             var item = this.queryTreeView.findChild((item) => {
                 return item.data.id == this.preSelectId;
-            });
+            });            
             if(item) {
+                this.preSelectId = null;
                 this.queryTreeView.setSelected(item, true);
                 if(isFetchingSkill && item.parent) {
                     item.parent.setExpanded(true);
                 }
                 this.setState({scrollTarget: item});
+            } else if(this.queryTreeView.roots.length == 0) {
+                //Try again when we have data
+            } else {
+                this.preSelectId = null;
             }
         } else if(this.autoselectFirst) {
             if(this.queryTreeView.roots.length > 0) {
                 this.queryTreeView.setSelected(this.queryTreeView.roots[0], true);
             }
         }
-        this.preSelectId = null;
         this.autoselectFirst = false;
     }
 
