@@ -168,7 +168,7 @@ class Rest {
             onSuccessCallback(data.data.concepts);
         };
         var query = "concepts(type: \"skill-headline\", include_deprecated: true, version: \"next\")"
-            + " { id type preferredLabel:preferred_label" +
+            + " { id type preferredLabel:preferred_label"
                 + " skills:narrower(type: \"skill\", include_deprecated: true) { id type preferredLabel:preferred_label deprecated }"
             + " }";
         this.getGraphQL(query, onSuccess, onError);
