@@ -102,23 +102,34 @@ class EditConcept extends React.Component {
 
     renderTypeSelection() {
         var isDeprecated = this.props.item.deprecated != null ? this.props.item.deprecated : false;
-        var renderOption = (value) => {
-            return ( <option value={value}>{Localization.get(value)}</option> );
-        };
+        var options = [
+            this.EDIT_TYPE_NAME,
+            this.EDIT_TYPE_DESCRIPTION,
+            this.EDIT_TYPE_QUALITY,
+            this.EDIT_TYPE_ADD_RELATION,
+            this.EDIT_TYPE_REMOVE_RELATION,
+            isDeprecated ? this.EDIT_TYPE_REFERENCED_TO : this.EDIT_TYPE_DEPRICATE,
+            this.EDIT_TYPE_NEW_VALUE,
+            this.EDIT_TYPE_ADD_COMMENT,
+        ];
+        var itemType = this.props.item.type;
+        if(itemType != Constants.CONCEPT_OCCUPATION_NAME && itemType != Constants.CONCEPT_SKILL) {
+            options.splice(2, 1);
+        }
+        options = options.map((value, index) => {
+            return ( 
+                <option key={index} value={value}>
+                    {Localization.get(value)}
+                </option> 
+            );
+        });
         return (
             <select
                 className="rounded"
                 value={this.state.type}
                 onChange={this.onTypeSelected.bind(this)}>
                 <option value={this.EDIT_TYPE_NONE}>--</option>
-                {renderOption(this.EDIT_TYPE_NAME)}
-                {renderOption(this.EDIT_TYPE_DESCRIPTION)}
-                {renderOption(this.EDIT_TYPE_QUALITY)}
-                {renderOption(this.EDIT_TYPE_ADD_RELATION)}
-                {renderOption(this.EDIT_TYPE_REMOVE_RELATION)}
-                {renderOption(isDeprecated ? this.EDIT_TYPE_REFERENCED_TO : this.EDIT_TYPE_DEPRICATE)}
-                {renderOption(this.EDIT_TYPE_NEW_VALUE)}
-                {renderOption(this.EDIT_TYPE_ADD_COMMENT)}
+                {options}
             </select>
         );
     }

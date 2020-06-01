@@ -16,6 +16,7 @@ class Description extends React.Component {
         super(props);
         this.state = {
             isLocked: true,
+            type: null,
             preferredLabel: Util.getObjectValue(props.item, "preferredLabel", ""),
             definition: Util.getObjectValue(props.item, "definition", ""),
             qualityLevel: Util.getObjectValue(props.item, "quality_level", ""),
@@ -34,6 +35,7 @@ class Description extends React.Component {
 
     init(props) {
         this.setState({
+            type: props.item.type,
             preferredLabel: Util.getObjectValue(props.item, "preferredLabel", ""),
             definition: Util.getObjectValue(props.item, "definition", ""),
             qualityLevel: Util.getObjectValue(props.item, "quality_level", ""),
@@ -106,16 +108,18 @@ class Description extends React.Component {
                     value={this.state.preferredLabel}/>
             </div>
         );
-        elements.push(
-            <div key="quality-key" className="description_quality_value">
-                <Label text={Localization.get("quality_control")}/>
-                <input 
-                    type="text" 
-                    className="rounded"
-                    disabled="disabled"
-                    value={this.state.qualityLevel}/>
-            </div>
-        );
+        if(this.state.type == Constants.CONCEPT_OCCUPATION_NAME || this.state.type == Constants.CONCEPT_SKILL) {
+            elements.push(
+                <div key="quality-key" className="description_quality_value">
+                    <Label text={Localization.get("quality_control")}/>
+                    <input 
+                        type="text" 
+                        className="rounded"
+                        disabled="disabled"
+                        value={this.state.qualityLevel}/>
+                </div>
+            );
+        }
         this.renderSpecialValue(elements, "id", "ID");
         this.renderSpecialValue(elements, "ssyk", "SSYK");
         this.renderSpecialValue(elements, "isco", "ISCO");
