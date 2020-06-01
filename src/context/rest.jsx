@@ -76,6 +76,37 @@ class Rest {
         http.send();
     }
 
+    getPromise(func) {
+		return new Promise((resolve, reject) => {
+			var http = new XMLHttpRequest();
+			http.onerror = () => {
+				reject(http.status);
+			}
+			http.onload = () => {
+				if(http.status >= 200 && http.status < 300) {
+					try {
+						var response = http.response.split("\"taxonomy/").join("\"");
+						response = response.split("preferred-label").join("preferredLabel");
+						response = JSON.parse(response);
+						resolve(response);
+					} catch(err) {
+						console.log("Exception", err);
+					}
+				} else {
+					reject(http.status);
+				}
+			}
+			http.open("GET", Constants.REST_IP + func, true);
+			http.setRequestHeader("api-key", Constants.REST_API_KEY);
+			http.setRequestHeader("Accept", "application/json");
+			http.send();
+		});
+	}
+
+    getVersionsPromis() {
+		return this.getPromise("/main/versions");
+    }
+
     getGraphQL(query, onSuccess, onError) {
         var encodedQuery = encodeURIComponent("query MyQuery { " + query + " }");      
         this.get("/graphql?query=" + encodedQuery, onSuccess, onError);

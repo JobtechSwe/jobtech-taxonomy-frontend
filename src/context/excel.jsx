@@ -7,12 +7,102 @@ class Excel {
 
     constructor() {
     }
+    
+    createSimple(sheetName, version, columns) {
+		var workbook = new ExcelLib.Workbook();
+		// add image resources
+		var logoId = workbook.addImage({
+			base64: Constants.ICON_AF_EXPORT_B64,
+			extension: 'png',
+        });
+        // setup sheet
+        var sheet = workbook.addWorksheet(sheetName);
+		// colums
+		sheet.getColumn(1).width = 5;
+		for(var i=0; i<columns.length; ++i) {
+			sheet.getColumn(i + 2).width = columns[i].width;
+		}
+		sheet.getColumn(columns.length + 2).width = 5;
 
-    create(sheetName, title, subTitle, lastChanged) {
+		sheet.addRow([]).height = 40;
+        sheet.addRow([]).height = 24;
+        sheet.addRow([]).height = 12;
+        sheet.addRow([]).height = 12;
+        sheet.addRow([]).height = 12;
+        sheet.addRow([]).height = 12;
+        sheet.addRow([]).height = 100; 
+		sheet.addRow([]).height = 30;
+		// disclaimer
+        sheet.mergeCells('B2:E2');
+		var disclaimerCell = sheet.getCell('B2');
+		disclaimerCell.value = "Observera att datat uppdateras kontinuerligt. Den här filen ger en bild över nuvarande version.";
+        disclaimerCell.alignment = { 
+            vertical: 'top',
+        };
+		disclaimerCell.font = {
+			name: 'Arial',
+			size: 10,
+			italic: true,
+		};
+		// insert image
+		sheet.addImage(logoId, {
+			tl: { col: 1.0, row: 2.5 },
+			ext: { width: 410, height: 50 }
+		});
+		// print date
+        var dateCell = sheet.getCell('E4');
+        dateCell.value = "Utskriftsdatum: " + new Date().toLocaleDateString();
+		dateCell.alignment = { horizontal: 'right' };
+		dateCell.font = {
+			name: 'Arial',
+			size: 10,
+		};
+		// version
+		var versionCell = sheet.getCell('E5');
+        versionCell.value = "Version: " + version;
+		versionCell.alignment = { horizontal: 'right' };
+		versionCell.font = {
+			name: 'Arial',
+			size: 10,
+		};
+		// headers
+		for(var i=0; i<columns.length; ++i) {
+			var header = sheet.getRow(8).getCell(i + 2);
+			header.font = {
+				name: 'Arial',
+				size: 18,
+				bold: true,
+			};
+			header.value = columns[i].text;
+		}
+		return {
+			workbook: workbook,
+			sheet: sheet,
+			// create a binary blob and download it as a file
+			download: (filename) => {
+				workbook.xlsx.writeBuffer().then((buffer) => {
+					var blob = new Blob([buffer], { type: "excel/xlsx" });
+					var link = document.createElement('a');
+					link.href = window.URL.createObjectURL(blob);
+					link.download = filename;
+					link.click();
+				});
+			},
+			addRow: (values) => {
+				sheet.addRow(values);
+				/*var row = sheet.addRow([]);
+				for(var i=0; i<values.length; ++i) {
+					row.getCell(i + 1).value = values[i];
+				}*/
+			},
+		};
+	}
+
+    create(sheetName, title, version, subTitle, lastChanged) {
         var workbook = new ExcelLib.Workbook();
         // add image resources
         var logoId = workbook.addImage({
-            base64: Constants.ICON_AF_EXPORT,
+			base64: Constants.ICON_AF_EXPORT_B64,
             extension: 'png',
         });
         // setup sheet
@@ -36,29 +126,54 @@ class Excel {
 			};
 		});*/
         // header
-        sheet.addRow([]).height = 40;
-        sheet.addRow([]).height = 10;
-        sheet.addRow([]).height = 15;
-        sheet.addRow([]).height = 35;
+		sheet.addRow([]).height = 40;
+        sheet.addRow([]).height = 24;
+        sheet.addRow([]).height = 12;
+        sheet.addRow([]).height = 12;
+        sheet.addRow([]).height = 12;
+        sheet.addRow([]).height = 12;
         sheet.addRow([]).height = 100;  
         sheet.addRow([]).height = 35;   // headline
         sheet.addRow([]).height = 5;
         sheet.addRow([]).height = 14;   // sub headline
         sheet.addRow([]).height = 14;   // last change text
-        sheet.addRow([]).height = 10;
+		sheet.addRow([]).height = 10;
+		// disclaimer
+        sheet.mergeCells('B2:H2');
+		var disclaimerCell = sheet.getCell('B2');
+		disclaimerCell.value = "Observera att datat uppdateras kontinuerligt. Den här filen ger en bild över nuvarande version.";
+        disclaimerCell.alignment = { 
+            vertical: 'top',
+        };
+		disclaimerCell.font = {
+			name: 'Arial',
+			size: 10,
+			italic: true,
+		};
         // insert image
-        sheet.addImage(logoId, 'B2:C4');
+		sheet.addImage(logoId, {
+			tl: { col: 1.0, row: 2.5 },
+			ext: { width: 410, height: 50 }
+		});
         // print date
-        var dateCell = sheet.getCell('H3');
+        var dateCell = sheet.getCell('H4');
         dateCell.value = "Utskriftsdatum: " + new Date().toLocaleDateString();
 		dateCell.alignment = { horizontal: 'right' };
 		dateCell.font = {
 			name: 'Arial',
 			size: 10,
 		};
+		// version
+		var versionCell = sheet.getCell('H5');
+        versionCell.value = "Version: " + version;
+		versionCell.alignment = { horizontal: 'right' };
+		versionCell.font = {
+			name: 'Arial',
+			size: 10,
+		};
         // title
-        sheet.mergeCells('B6:H6');
-        var headline = sheet.getCell('B6');
+        sheet.mergeCells('B8:H8');
+        var headline = sheet.getCell('B8');
         headline.value = title;
         headline.alignment = { 
             vertical: 'middle',
@@ -70,8 +185,8 @@ class Excel {
             bold: true,
         };
 		if(subTitle) {
-			sheet.mergeCells('B8:H8');
-			headline = sheet.getCell('B8');
+			sheet.mergeCells('B10:H10');
+			headline = sheet.getCell('B10');
 			headline.value = subTitle;
 			headline.alignment = { 
 				vertical: 'middle',
@@ -83,8 +198,8 @@ class Excel {
 			};
 		}
 		if(lastChanged) {
-			sheet.mergeCells('B9:H9');
-			headline = sheet.getCell('B9');
+			sheet.mergeCells('B11:H11');
+			headline = sheet.getCell('B11');
 			headline.value = "Senast ändrad: " + lastChanged;
 			headline.alignment = { 
 				vertical: 'middle',
@@ -208,7 +323,7 @@ class Excel {
 					}
 				}
 			},
-			addGroupRow: (title, number, text) => {
+			addGroupRow: (title, number, text, bold) => {
 				var row = sheet.addRow([]);
 				sheet.mergeCells('C' + row._number + ':D' + row._number +'');
 				if(title) {
@@ -217,6 +332,7 @@ class Excel {
 					cell.font = {
 						name: 'Arial',
 						size: 10,
+						bold: bold == null ? false : bold,
 					};
 				}
 				if(number) {

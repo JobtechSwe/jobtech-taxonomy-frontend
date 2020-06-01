@@ -21,6 +21,7 @@ class Export extends React.Component {
             EventDispatcher.fire(Constants.EVENT_SHOW_POPUP_INDICATOR, Localization.get("exporting") + "...");
             setTimeout(() => {
                 this.props.onSaveExcel(values);
+                EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
             }, 500);
         }
     }

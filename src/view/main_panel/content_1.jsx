@@ -20,6 +20,7 @@ import EditConcept from '../dialog/edit_concept.jsx';
 import Export from '../dialog/export.jsx';
 import Util from '../../context/util.jsx';
 import Excel from '../../context/excel.jsx';
+import Rest from '../../context/rest.jsx';
 
 class Content1 extends React.Component { 
 
@@ -93,8 +94,7 @@ class Content1 extends React.Component {
                 }
                 return result;
             };
-            Util.getFullyPopulatedConcept(item.id, item.type, (concept) => {             
-                console.log("concept", concept);   
+            Util.getFullyPopulatedConcept(item.id, item.type, async (concept) => {
                 // extract special title
                 var specialTitle = null;
                 if(concept.type.startsWith("ssyk")) {
@@ -107,8 +107,10 @@ class Content1 extends React.Component {
                 if(concept.local_history && concept.local_history.length) {
                     lastChange = concept.local_history[0].date.toLocaleString();
                 }
+                var version = await Rest.getVersionsPromis();
+                version = version[version.length - 1].version;
                 // setup excel writer
-                var context = Excel.create(concept.preferredLabel, concept.preferredLabel, specialTitle, lastChange);
+                var context = Excel.create(concept.preferredLabel, concept.preferredLabel, version, specialTitle, lastChange);
                 
                 context.addRow();
 

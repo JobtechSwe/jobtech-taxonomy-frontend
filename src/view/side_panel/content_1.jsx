@@ -46,12 +46,14 @@ class Content1 extends React.Component {
                 }) != null;
             });
         };
-        var downloadGraphRelations = (fieldType, data, concepts) => {
+        var downloadGraphRelations = async (fieldType, data, concepts) => {
             var fields = getNodesOfType(fieldType, data.nodes);
             Util.sortByKey(fields, "preferredLabel", true);
+            var version = await Rest.getVersionsPromis();
+            version = version[version.length - 1].version;
             // setup excel
             var name = Localization.get("db_" + this.type);
-            var context = Excel.create(name, name);
+            var context = Excel.create(name, name, version);
             context.addRow();
             // insert data
             for(var i=0; i<fields.length; ++i) {
@@ -90,11 +92,13 @@ class Content1 extends React.Component {
             } else if(this.type == Constants.CONCEPT_SKILL) {
                 exportSsykRelations(Constants.RELATION_NARROWER, Constants.CONCEPT_SKILL);
             } else {
-                Rest.getConcepts(this.type, (data) => {
+                Rest.getConcepts(this.type, async (data) => {
                     Util.sortByKey(data, "preferredLabel", true);
+                    var version = await Rest.getVersionsPromis();
+                    version = version[version.length - 1].version;
                     // setup excel
                     var name = Localization.get("db_" + this.type);
-                    var context = Excel.create(name, name);
+                    var context = Excel.create(name, name, version);
                     context.addRow();
                     // insert data
                     for(var i=0; i<data.length; ++i) {
