@@ -10,6 +10,8 @@ import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Localization from '../../context/localization.jsx';
 import Rest from '../../context/rest.jsx';
 import localization from '../../context/localization.jsx';
+import Excel from '../../context/excel.jsx';
+import Export from '../dialog/export.jsx';
 
 class SearchResult extends React.Component { 
 
@@ -199,6 +201,53 @@ class SearchResult extends React.Component {
         return Util.sortByCmp(data, cmp, this.sortDesc);
     }
 
+    getColumnsFor(item) {
+        var cols = [];
+        if(item.changes) {
+            // typ, åtgärd, namn, från, till, datum, kvalitetsnivå, anteckning
+            cols.push(item.type == null ? "" : Localization.get("db_" + item.type));
+            cols.push(Localization.get(item["event-type"]) + " " + localization.get(item.changes[0]["attribute"]));
+            cols.push(item.preferredLabel == null ? "" : item.preferredLabel);
+            cols.push(item.changes[0]["old-value"]);
+            cols.push(item.changes[0]["new-value"]);
+            cols.push(new Date(item.timestamp).toLocaleString());
+            cols.push("");
+            cols.push(item.comment);
+        } else if(item.concept) {
+            // typ, åtgärd, namn, från, till, datum, kvalitetsnivå, anteckning
+            cols.push(Localization.get("db_" + item.concept["concept/type"]));
+            cols.push(Localization.get(item["event-type"]));
+            cols.push(item.concept["concept/preferredLabel"]);
+            cols.push("");
+            cols.push(item.concept["concept/definition"]);
+            cols.push(new Date(item.timestamp).toLocaleString());
+            cols.push(item.concept["concept/quality-level"]);
+            cols.push(item.comment);
+        } else if(item.relation) {
+            // relation, from label, to label, from type, to type, vikt, datum, anteckning
+            cols.push(Localization.get(item["event-type"]));
+            cols.push(Localization.get(item.relation["relation-type"]));
+            cols.push(item.relation.source["concept/preferredLabel"]);
+            cols.push(item.relation.target["concept/preferredLabel"]);
+            cols.push(Localization.get("db_" + item.relation.source["concept/type"]));
+            cols.push(Localization.get("db_" + item.relation.target["concept/type"]));
+            cols.push("");
+            cols.push(new Date(item.timestamp).toLocaleString());
+            cols.push(item.comment);
+        } else {
+            // typ, åtgärd, namn, från, till, datum, kvalitetsnivå, anteckning
+            cols.push(Localization.get("db_" + item.type));
+            cols.push(Localization.get(item["event-type"]));
+            cols.push(item.preferredLabel);
+            cols.push("");
+            cols.push("");
+            cols.push(new Date(item.timestamp).toLocaleString());
+            cols.push(item.quality_level);
+            cols.push(item.comment);
+        }        
+        return cols;
+    }
+
     onSortClicked(sortBy) {
         if(this.state.selected != null) {
             EventDispatcher.fire(this.SEARCH_RESULT_LIST_EVENT_ID);
@@ -235,7 +284,82 @@ class SearchResult extends React.Component {
     }
 
     onSaveClicked() {
-        //TODO
+        var onSaveExcel = () => {
+            var columns = [];
+            if(this.state.searchFor.actions.length > 0) {
+                columns = [{
+                        text: Localization.get("type"),
+                        width: 20,
+                    }, {
+                        text: Localization.get("action"),
+                        width: 20,
+                    }, {
+                        text: Localization.get("name"),
+                        width: 35,
+                    }, {
+                        text: Localization.get("from"),
+                        width: 35,
+                    }, {
+                        text: Localization.get("to"),
+                        width: 35,
+                    }, {
+                        text: Localization.get("date"),
+                        width: 20,
+                    }, {
+                        text: Localization.get("quality_level_short"),
+                        width: 10,
+                    }, {
+                        text: Localization.get("note"),
+                        width: 35,
+                    }];
+            } else {
+                columns = [{
+                        text: Localization.get("action"),
+                        width: 20,
+                    }, {
+                        text: Localization.get("relation_type"),
+                        width: 20,
+                    }, {
+                        text: Localization.get("from_name"),
+                        width: 35,
+                    }, {
+                        text: Localization.get("to_name"),
+                        width: 35,
+                    }, {
+                        text: Localization.get("from_type"),
+                        width: 35,
+                    }, {
+                        text: Localization.get("to_type"),
+                        width: 35,
+                    }, {
+                        text: Localization.get("weight"),
+                        width: 20,
+                    }, {
+                        text: Localization.get("date"),
+                        width: 20,
+                    }, {
+                        text: Localization.get("note"),
+                        width: 35,
+                    }];
+            }
+            var context = Excel.createSimple(this.state.searchFor.fromDate.toLocaleString() + " - " + this.state.searchFor.toDate.toLocaleString(), "latest", columns);
+            for(var i=0; i<this.state.data.length; ++i) {
+                var row = this.getColumnsFor(this.state.data[i]);
+                row.unshift("");
+                context.addRow(row);
+            }
+            context.download(Localization.get("search_result") + ".xlsx");
+            EventDispatcher.fire(Constants.EVENT_HIDE_POPUP_INDICATOR);
+        };
+
+        // event
+        var values = [];
+        EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
+            title: Localization.get("export") + " " + Localization.get("search_result"),
+            content: <Export 
+                        values={values}
+                        onSaveExcel={onSaveExcel}/>
+        });        
     }
 
     onItemSelected(item) {
@@ -247,48 +371,11 @@ class SearchResult extends React.Component {
     renderItem(item) {
         var key = 0;
         var cols = [];
-        var css = "search_result_concept_item";
-        if(item.concept) {
-            // typ, åtgärd, namn, från, till, datum, kvalitetsnivå, anteckning
-            cols.push(<div key={key++}>{Localization.get("db_" + item.concept["concept/type"])}</div>);
-            cols.push(<div key={key++}>{Localization.get(item["event-type"])}</div>);
-            cols.push(<div key={key++}>{item.concept["concept/preferredLabel"]}</div>);
-            cols.push(<div key={key++}>{}</div>);
-            cols.push(<div key={key++}>{item.concept["concept/definition"]}</div>);
-            cols.push(<div key={key++}>{new Date(item.timestamp).toLocaleString()}</div>);
-            cols.push(<div key={key++}>{item.concept["concept/quality-level"]}</div>);
-        }
-        else if(item.changes) {
-            // typ, åtgärd, namn, från, till, datum, kvalitetsnivå, anteckning
-            cols.push(<div key={key++}>{item.type == null ? "" : Localization.get("db_" + item.type)}</div>);
-            cols.push(<div key={key++}>{Localization.get(item["event-type"]) + " " + localization.get(item.changes[0]["attribute"])}</div>);
-            cols.push(<div key={key++}>{item.preferredLabel == null ? "" : item.preferredLabel}</div>);
-            cols.push(<div key={key++}>{item.changes[0]["old-value"]}</div>);
-            cols.push(<div key={key++}>{item.changes[0]["new-value"]}</div>);
-            cols.push(<div key={key++}>{new Date(item.timestamp).toLocaleString()}</div>);
-            cols.push(<div key={key++}>{}</div>);
-        }
-        else if(item.relation) {
-            // relation, from label, to label, from type, to type, vikt, datum, anteckning
-            cols.push(<div key={key++}>{Localization.get(item["event-type"])}</div>);
-            cols.push(<div key={key++}>{Localization.get(item.relation["relation-type"])}</div>);
-            cols.push(<div key={key++}>{item.relation.source["concept/preferredLabel"]}</div>);
-            cols.push(<div key={key++}>{item.relation.target["concept/preferredLabel"]}</div>);
-            cols.push(<div key={key++}>{Localization.get("db_" + item.relation.source["concept/type"])}</div>);
-            cols.push(<div key={key++}>{Localization.get("db_" + item.relation.target["concept/type"])}</div>);
-            cols.push(<div key={key++}>{}</div>);
-            cols.push(<div key={key++}>{new Date(item.timestamp).toLocaleString()}</div>);
-            css = "search_result_relation_item";
-        } else {
-            cols.push(<div key={key++}>{Localization.get("db_" + item.type)}</div>);
-            cols.push(<div key={key++}>{Localization.get(item["event-type"])}</div>);
-            cols.push(<div key={key++}>{item.preferredLabel}</div>);
-            cols.push(<div key={key++}>{}</div>);
-            cols.push(<div key={key++}>{}</div>);
-            cols.push(<div key={key++}>{new Date(item.timestamp).toLocaleString()}</div>);
-            cols.push(<div key={key++}>{item.quality_level}</div>);
+        var css = item.relation ? "search_result_relation_item" : "search_result_concept_item";
+        var itemData = this.getColumnsFor(item);
+        for(var i=0; i<itemData.length - 1; ++i) {
+            cols.push(<div key={key++}>{itemData[i]}</div>);
         }        
-        
         return (
             <div
                 className={css}
@@ -422,7 +509,7 @@ class SearchResult extends React.Component {
                         text={Localization.get("visit")}
                         onClick={this.onVisitClicked.bind(this)}/>
                     <Button 
-                        isEnabled={false}
+                        isEnabled={this.state.data.length > 0}
                         text={Util.renderExportButtonText()}
                         onClick={this.onSaveClicked.bind(this)}/>
                 </div>

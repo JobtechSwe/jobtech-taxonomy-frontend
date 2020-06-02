@@ -203,6 +203,7 @@ class Localization {
                 relation_updated: "Relation uppdaterad",
                 relation_weight: "Relationsvikt",
                 last_changed: "Senast uppdaterad: ",
+                weight: "Vikt",
             },
         }
         // find active language
