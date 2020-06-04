@@ -24,7 +24,7 @@ class EditConceptQuality extends React.Component {
         var value = this.state.value === "undefined" ? "" : this.state.value;
         App.addSaveRequest();
         Rest.patchConcept(item.id, message, "&quality-level=" + value.trim(), () => {
-            this.props.item.preferredLabel = this.state.value.trim();
+            this.props.item.qualityLevel = value.trim();
             App.removeSaveRequest();
             callback();
         }, (status) => {

@@ -106,6 +106,10 @@ class Rest {
     getVersionsPromis() {
 		return this.getPromise("/main/versions");
     }
+    
+    getGraphQlPromise(query) {
+		return this.getPromise("/graphql?query=" + encodeURIComponent("query MyQuery { " + query + " }"));
+    }
 
     getGraphQL(query, onSuccess, onError) {
         var encodedQuery = encodeURIComponent("query MyQuery { " + query + " }");      

@@ -20,8 +20,10 @@ class EditConceptAddRelation extends React.Component {
             substitutability: "0",
             type: "broader",
             loadingRoots: true,
+            filter: "",
         };
         this.props.editContext.onSave = this.onSave.bind(this);
+        this.items = [];
         // variables
         this.queryTreeView = ControlUtil.createTreeView();
         this.queryTreeView.onItemSelected = this.onQueryItemSelected.bind(this);
@@ -55,10 +57,78 @@ class EditConceptAddRelation extends React.Component {
             "wage-type",
             "worktime-extent",
         ];
-        //"skill"
-        this.fetchRoot(0, 6);
-        this.fetchRoot(7, 12);
-        this.fetchRoot(13, this.roots.length - 1);
+        this.fetchData();
+    }
+
+    async fetchConcepts(type) {
+        var query = 
+            "concepts(type: \"" + type + "\", version: \"next\") { " + 
+                "id type preferredLabel:preferred_label label:preferred_label ssyk_code_2012 isco_code_08 " + 
+            "}";
+        return Rest.getGraphQlPromise(query);
+    }
+
+    async fetchData() {
+        var data = [];
+        for(var i=0; i<this.roots.length; ++i) {
+            data.push(this.fetchConcepts(this.roots[i]));
+        }
+        for(var i=0; i<data.length; ++i) {
+            data[i] = await data[i];
+            data[i] = {
+                visible: true,
+                type: this.roots[i],
+                preferredLabel: Localization.get("db_" + this.roots[i]),
+                children: data[i].data.concepts,
+            };
+            // setup children
+            var key = null;
+            if(data[i].type.startsWith("ssyk")) {
+                key = "ssyk_code_2012";
+            } else if(data[i].type.startsWith("isco")) {
+                key = "isco_code_08";
+            }
+            for(var k=0; k<data[i].children.length; ++k) {
+                var child = data[i].children[k];
+                child.visible = true;
+                if(key) {
+                    child.label = child[key] + " - " + child.label;
+                }
+            }
+            ContextUtil.sortByKey(data[i].children, "label", true);
+        }
+        ContextUtil.sortByKey(data, "preferredLabel", true);
+        this.items = data;
+        this.setupTreeView(this.items);
+        this.setState({loadingRoots: false});
+    }
+
+    setupTreeView(data) {
+        // clear previous content
+        this.queryTreeView.clear();
+        this.queryTreeView.shouldUpdateState = false;
+        // add roots
+        for(var i=0; i<data.length; ++i) {
+            var root = data[i];
+            if(!root.visible) {
+                continue;
+            }
+            var rootNode = ControlUtil.createTreeViewItem(this.queryTreeView, root);
+            rootNode.setText(root.preferredLabel);
+            // setup children
+            for(var k=0; k<root.children.length; ++k) {
+                if(!root.children[k].visible) {
+                    continue;
+                }
+                var childNode = ControlUtil.createTreeViewItem(this.queryTreeView, root.children[k]);
+                childNode.setText(root.children[k].label);
+                rootNode.addChild(childNode);
+            }
+            // add node to tree
+            this.queryTreeView.addRoot(rootNode);
+        }
+        this.queryTreeView.shouldUpdateState = true;
+        this.queryTreeView.invalidate();
     }
 
     onSave(message, callback) {
@@ -100,65 +170,28 @@ class EditConceptAddRelation extends React.Component {
         this.setState({substitutability: e.target.value});
     }
 
-    createNode(element, showChildren) {
-        var node = ControlUtil.createTreeViewItem(this.queryTreeView, element);
-        node.data.loaded = false;
-        node.setText(element.preferredLabel);
-        if(showChildren) {
-            node.setForceShowButton(false);
-        } else {
-            node.setForceShowButton(element.narrower != null && element.narrower.length > 0);
-            node.onExpandClicked = (item, show) => {
-                if(!item.data.loaded) {
-                    var loader = ControlUtil.createTreeViewItem(this.queryTreeView);
-                    loader.setText(<Loader/>);
-                    item.addChild(loader);
-                    this.fetchItem(item, item.data.id);
-                }
-            };
-        }
-        return node;
-    }
-    
-    fetchRoot(offset, index) {
-        Rest.getConcepts(this.roots[index], (data) => {
-            // setup root
-            var root = ControlUtil.createTreeViewItem(this.queryTreeView, {type: this.roots[index]});
-            root.data.loaded = true;
-            root.setText(Localization.get("db_" + this.roots[index]));
-            // add initial children
-            for(var i=0; i<data.length; ++i) {
-                if(data[i].deprecated == null || !data[i].deprecated) {
-                    root.addChild(this.createNode(data[i], this.roots[index].startsWith("ssyk")));
-                }
-            }
-            root.sortChildren();
-            this.queryTreeView.addRoot(root);
-            ContextUtil.sortByKey(this.queryTreeView.roots, "text", true);
-            this.rootIndex++;
-            if(--index - offset >= 0) {
-                this.fetchRoot(offset, index);
-            } else if(this.rootIndex == this.roots.length) {
-                this.setState({loadingRoots: false});
-            }
-        }, () => {
-            App.showError(ContextUtil.getHttpMessage(status) + " : misslyckades hämta concept");
-        });
+    onFilterChanged(e) {
+        this.setState({filter: e.target.value});
     }
 
-    fetchItem(item, id) {
-        Rest.getAllConceptRelations(id, "narrower", (data) => {
-            item.data.loaded = true;
-            for(var i=0; i<data.length; ++i) {
-                if(data[i].deprecated == null || !data[i].deprecated) {
-                    item.addChild(this.createNode(data[i], false));
+    onFilterClicked() {
+        var filter = this.state.filter.trim();
+        var filterChildren = (children) => {
+            var found = false;
+            for(var i=0; i<children.length; ++i) {
+                var child = children[i];
+                child.visible = false;
+                if(child.label.toLowerCase().indexOf(filter) != -1) {
+                    child.visible = true;
+                    found = true;
                 }
             }
-            item.removeChild(item.children[0]);
-            item.sortChildren();
-        }, () => {
-            App.showError(ContextUtil.getHttpMessage(status) + " : misslyckades hämta relationer");
-        });
+            return found;
+        };
+        for(var i=0; i<this.items.length; ++i) {
+            this.items[i].visible = filterChildren(this.items[i].children);
+        }
+        this.setupTreeView(this.items);
     }
 
     renderLoader() {
@@ -174,7 +207,17 @@ class EditConceptAddRelation extends React.Component {
             <div className="edit_concept_value_group">
                 <Label 
                     css="edit_concept_value_title"
-                    text="Markera det begrepp som den nya relationen ska gå till"/>
+                    text={Localization.get("edit_concept_relation_text")}/>
+                <div className="edit_concept_row">
+                    <input 
+                        type="text"
+                        className="rounded"
+                        value={this.state.filter}
+                        onChange={this.onFilterChanged.bind(this)}/>
+                    <Button 
+                        text={Localization.get("filter")}
+                        onClick={this.onFilterClicked.bind(this)}/>
+                </div>
                 <TreeView 
                     css="add_connection_tree"
                     context={this.queryTreeView}>
@@ -190,7 +233,7 @@ class EditConceptAddRelation extends React.Component {
             if(type && type != this.state.type) {
                 return (
                     <div className="edit_concept_error_text font">
-                        Den rekommenderade relationstypen är "{type}"
+                        {Localization.get("edit_concept_recommended_relation")} "{type}"
                     </div>
                 );
                 
