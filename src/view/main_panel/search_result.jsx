@@ -44,16 +44,33 @@ class SearchResult extends React.Component {
     }
 
     componentDidMount() {
-        this.searchFor(this.props.search);
+        if(this.props.search.data) {
+            //use saved search
+            this.setState({
+                searchFor: this.props.search.searchFor,
+                data: this.props.search.data,
+            });
+        } else {
+            this.searchFor(this.props.search);
+        }
     }
 
     UNSAFE_componentWillReceiveProps(props) {
-        this.searchFor(props.search);
+        if(this.props.search.data) {
+            //use saved search
+            this.setState({
+                searchFor: this.props.search.searchFor,
+                data: this.props.search.data,
+            });
+        } else {
+            this.searchFor(props.search);
+        }
     }
 
     searchFor(searchFor) {
         this.sortBy= this.SORT_EVENT_DATE;
         this.sortDesc= false;
+        EventDispatcher.fire(Constants.EVENT_SAVE_SEARCH_RESULT, null);
         this.setState({
             searchFor: searchFor,
             searching: true,
@@ -264,7 +281,11 @@ class SearchResult extends React.Component {
 
     onVisitClicked() {
         if(this.state.selected != null) {
-            
+            EventDispatcher.fire(Constants.EVENT_SAVE_SEARCH_RESULT, {
+                searchFor: this.state.searchFor, 
+                data: this.state.data,
+            });
+
             EventDispatcher.fire(Constants.ID_NAVBAR, Constants.WORK_MODE_1);
             setTimeout(() => {
                 //this.state.selected["changed-concept"]

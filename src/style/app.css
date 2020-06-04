@@ -50,6 +50,32 @@ body {
     animation: error_enter 300ms ease-in;
 }
 
+.app_saved_search_content {
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    background: #eee;
+    border-radius: 50%;
+    border: 1px solid #999;
+    box-shadow: 0px 0px 10px #0009;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+}
+
+.app_saved_search_content:hover {
+    background: #fff;
+}
+
+.app_saved_search_content > img {
+    width: 32px;
+    height: 32px;
+}
+
 .save_indicator_content {
     position: absolute;
     width: 100%;

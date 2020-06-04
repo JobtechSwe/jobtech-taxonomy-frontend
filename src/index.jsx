@@ -7,6 +7,8 @@ import Constants from './context/constants.jsx';
 import Util from './context/util.jsx';
 import Localization from './context/localization.jsx';
 import DialogWindow from './control/dialog_window.jsx';
+import Button from './control/button.jsx';
+import Label from './control/label.jsx';
 import SidePanel from './view/side_panel/side_panel.jsx';
 import MainPanel from './view/main_panel/main_panel.jsx';
 
@@ -21,6 +23,7 @@ class Index extends React.Component {
             popupText: Localization.get("saving") + "...",
             overlay: null,
             errors: [],
+            savedSearchResult: null,
         };
         // callbacks
         this.boundShowPopupIndicator = this.onShowPopup.bind(this);
@@ -30,6 +33,7 @@ class Index extends React.Component {
         this.boundShowOverlayWindow = this.onShowOverlayWindow.bind(this);
         this.boundHideOverlayWindow = this.onHideOverlayWindow.bind(this);
         this.boundAddError = this.onAddError.bind(this);
+        this.boundSaveSearchResult = this.onSaveSearchResult.bind(this);
     }
 
     componentDidMount() {
@@ -41,6 +45,11 @@ class Index extends React.Component {
         EventDispatcher.add(this.boundShowOverlayWindow, Constants.EVENT_SHOW_OVERLAY);
         EventDispatcher.add(this.boundHideOverlayWindow, Constants.EVENT_HIDE_OVERLAY);
         EventDispatcher.add(this.boundAddError, Constants.EVENT_SHOW_ERROR);
+        EventDispatcher.add(this.boundSaveSearchResult, Constants.EVENT_SAVE_SEARCH_RESULT);
+    }
+
+    onSaveSearchResult(searchResult) {
+        this.setState({savedSearchResult: searchResult});
     }
 
     onAddError(message) {
@@ -101,6 +110,27 @@ class Index extends React.Component {
         this.setState({overlay: null});
     }
 
+    onVisitSearchResult() {
+        EventDispatcher.fire(Constants.ID_NAVBAR, Constants.WORK_MODE_4);
+        setTimeout(() => {
+            EventDispatcher.fire(Constants.EVENT_SEACH_CHANGES, this.state.savedSearchResult);
+            this.setState({savedSearchResult: null});
+        }, 500);
+    }
+
+    renderSavedSearchResult() {        
+        if(this.state.savedSearchResult) {
+            return (
+                <div 
+                    className="app_saved_search_content"
+                    title={Localization.get("visit_latest_search")}
+                    onPointerUp={this.onVisitSearchResult.bind(this)}>
+                    <img src={Constants.ICON_SEARCH}/>
+                </div>
+            );
+        }
+    }
+
     renderErrors() {
         if(this.state.errors.length) {
             var items = this.state.errors.map((element, i) => {
@@ -157,6 +187,7 @@ class Index extends React.Component {
                     <SidePanel/>
                     <MainPanel/>
                 </div>
+                {this.renderSavedSearchResult()}
                 {this.renderErrors()}
                 <div id="overlay_window">
                     {this.renderOverlay()}

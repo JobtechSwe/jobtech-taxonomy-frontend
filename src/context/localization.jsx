@@ -206,6 +206,7 @@ class Localization {
                 weight: "Vikt",
                 edit_concept_relation_text: "Markera det begrepp som den nya relationen ska gå till",
                 edit_concept_recommended_relation: "Den rekommenderade relationstypen är",
+                visit_latest_search: "Visa senaste sökresultat",
             },
         }
         // find active language
