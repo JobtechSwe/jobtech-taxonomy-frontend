@@ -106,16 +106,15 @@ class EditConceptDeprecate extends React.Component {
     }
 
     onFilterChanged(e) {
-        this.setState({filter: e.target.value});
-    }
-
-    onFilterClicked() {
-        var filter = this.state.filter.trim();
+        var filter = e.target.value.trim().toLowerCase();
         var items = this.state.items;
         for(var i=0; i<items.length; ++i) {
             items[i].visible = items[i].label.toLowerCase().indexOf(filter) != -1;
         }
-        this.setState({items: items});
+        this.setState({
+            filter: e.target.value,
+            items: items,
+        });
     }
 
     renderDeprecate() {
@@ -183,9 +182,7 @@ class EditConceptDeprecate extends React.Component {
                             className="rounded"
                             value={this.state.filter}
                             onChange={this.onFilterChanged.bind(this)}/>
-                        <Button 
-                            text={Localization.get("filter")}
-                            onClick={this.onFilterClicked.bind(this)}/>
+                        <div className="edit_concept_text">{Localization.get("filter")}</div>
                     </div>
                     <List css="deprecated_reference_list">
                         {items}

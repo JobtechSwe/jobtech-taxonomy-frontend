@@ -59,6 +59,7 @@ class ConceptsSearch extends React.Component {
             loadingData: false,
             showDeprecated: false,
             scrollTarget: null,
+            filter: "",
         };
 
         this.autoselectFirst = true;
@@ -184,7 +185,7 @@ class ConceptsSearch extends React.Component {
     }
 
     populateTreeSkill(data) {
-        var query = this.searchReference.value.toLowerCase();
+        var query = this.state.filter.toLowerCase();
         this.queryTreeView.shouldUpdateState = false;
         for(var i=0; i<data.length; ++i) {
             var element = data[i];
@@ -229,6 +230,14 @@ class ConceptsSearch extends React.Component {
         this.queryTreeView.invalidate();
     }
 
+    onFilterChanged(e) {
+        this.setState({filter: e.target.value}, () => {
+            if(this.state.queryType != this.TYPE_SEARCH) {
+                this.filterAndPopulate(this.state.filter);
+            }
+        });
+    }
+
     onFetchComplete(isFetchingSkill) {
         if(this.preSelectId) {
             var item = this.queryTreeView.findChild((item) => {
@@ -263,7 +272,7 @@ class ConceptsSearch extends React.Component {
         Rest.getConceptsSkillsAndHedlines((data) => {
             this.state.data.skills = data;            
             this.prepareData(this.state.data.skills);
-            this.filterAndPopulate(this.searchReference.value);
+            this.filterAndPopulate(this.state.filter);
             this.onFetchComplete(true);
             this.setState({loadingData: false});
         }, (status) => {
@@ -276,7 +285,7 @@ class ConceptsSearch extends React.Component {
             this.state.data.push(...data);
             this.prepareData(this.state.data);
             this.sortData(this.state.data);
-            this.filterAndPopulate(this.searchReference.value);
+            this.filterAndPopulate(this.state.filter);
             this.onFetchComplete(false);
             this.setState({loadingData: false});
             //console.log("load time: " + (new Date().getTime() - this.loadStartTime) + " ms");
@@ -416,12 +425,12 @@ class ConceptsSearch extends React.Component {
             this.setState({
                 showDeprecated: item.deprecated ? true : false,
             }, () => {
-                this.searchReference.value = "";
+                this.state.filter = "";
                 this.expandedItem = null;
                 this.preSelectId = item.id;
                 var type = item.type == this.TYPE_SKILL_HEADLINE ? this.TYPE_SKILL : item.type;
                 if(type == this.state.queryType) {
-                    this.filterAndPopulate(this.searchReference.value);
+                    this.filterAndPopulate(this.state.filter);
                     this.onFetchComplete(type == this.TYPE_SKILL);
                 } else {
                     this.setState({
@@ -497,10 +506,10 @@ class ConceptsSearch extends React.Component {
     }
 
     onTypeChanged(e) {
-        this.searchReference.value = "";
         this.expandedItem = null;
         this.setState({
             queryType: e.target.value,
+            filter: "",
         }, () => {
             this.search();
         });
@@ -511,15 +520,15 @@ class ConceptsSearch extends React.Component {
 
     onSearchClicked() {
         if(this.state.queryType == this.TYPE_SEARCH) {
-            this.search(this.searchReference.value);
+            this.search(this.state.filter);
         } else {
-            this.filterAndPopulate(this.searchReference.value);
+            this.filterAndPopulate(this.state.filter);
         }
     }
 
     onShowDeprecatedChanged(e) {
         this.setState({showDeprecated: e.target.checked}, () => {
-            this.filterAndPopulate(this.searchReference.value);
+            this.filterAndPopulate(this.state.filter);
         });
     }
 
@@ -555,15 +564,18 @@ class ConceptsSearch extends React.Component {
     }
 
     renderSearch() {
+        var element = 
+            this.state.queryType == this.TYPE_SEARCH ? 
+                <Button text={Localization.get("search")} onClick={this.onSearchClicked.bind(this)}/> :
+                <div className="font edit_concept_text">{Localization.get("filter")}</div>;
         return(
             <div className="sub_panel_search">
                 <input 
                     type="text"
                     className="rounded"
-                    ref={(x) => this.searchReference = x}/>
-                <Button 
-                    text={Localization.get(this.state.queryType == this.TYPE_SEARCH ? "search" : "filter")}
-                    onClick={this.onSearchClicked.bind(this)}/>
+                    value={this.state.filter}
+                    onChange={this.onFilterChanged.bind(this)}/>
+                {element}
             </div>
         );
     }

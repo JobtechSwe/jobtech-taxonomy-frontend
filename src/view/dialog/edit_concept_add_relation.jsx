@@ -199,11 +199,7 @@ class EditConceptAddRelation extends React.Component {
     }
 
     onFilterChanged(e) {
-        this.setState({filter: e.target.value});
-    }
-
-    onFilterClicked() {
-        var filter = this.state.filter.trim().toLowerCase();
+        var filter = e.target.value.trim().toLowerCase();
         var filterChildren = (children) => {
             var found = false;
             for(var i=0; i<children.length; ++i) {
@@ -231,6 +227,7 @@ class EditConceptAddRelation extends React.Component {
             this.items[i].visible = filterChildren(this.items[i].children);
         }
         this.setupTreeView(this.items);
+        this.setState({filter: e.target.value});
     }
 
     renderLoader() {
@@ -253,9 +250,7 @@ class EditConceptAddRelation extends React.Component {
                         className="rounded"
                         value={this.state.filter}
                         onChange={this.onFilterChanged.bind(this)}/>
-                    <Button 
-                        text={Localization.get("filter")}
-                        onClick={this.onFilterClicked.bind(this)}/>
+                    <div className="edit_concept_text">{Localization.get("filter")}</div>
                 </div>
                 <TreeView 
                     css="add_connection_tree"

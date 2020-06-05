@@ -771,6 +771,12 @@ body {
     display: flex;
 }
 
+.edit_concept_text {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+}
+
 .edit_concept_value_title {
     background: #bbc4c7;
     color: #000;
