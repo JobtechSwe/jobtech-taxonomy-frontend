@@ -184,6 +184,7 @@ class ConceptsSearch extends React.Component {
     }
 
     populateTreeSkill(data) {
+        var query = this.searchReference.value.toLowerCase();
         this.queryTreeView.shouldUpdateState = false;
         for(var i=0; i<data.length; ++i) {
             var element = data[i];
@@ -193,6 +194,12 @@ class ConceptsSearch extends React.Component {
             if(element.skills) {
                 for(var j=0; j<element.skills.length; ++j) {
                     var skill = element.skills[j];
+                    if(skill.label.toLowerCase().indexOf(query) == -1) {
+                        continue;
+                    }
+                    if(skill.deprecated != this.state.showDeprecated) {
+                        continue;
+                    }
                     var child = ControlUtil.createTreeViewItem(this.queryTreeView, skill);
                     child.setText(skill.label);
                     root.addChild(child);
@@ -334,15 +341,17 @@ class ConceptsSearch extends React.Component {
             if(this.state.queryType == this.TYPE_SKILL) {
                 var data = this.state.data.skills.filter((item) => {
                     var isDeprecated = item.deprecated ? item.deprecated : false;
+                    var hasValidChild = item.skills.find((child) => {
+                        return this.state.showDeprecated == child.deprecated && child.label.toLowerCase().indexOf(q) >= 0;
+                    });
+                    if(hasValidChild) {
+                        return true;
+                    }
                     if(this.state.showDeprecated != isDeprecated) {
                         return false;
                     }
                     return item.label.toLowerCase().indexOf(q) >= 0;
                 });
-                //TODO filter every skill
-                //for(var i=0; i<data.length; ++i) {
-                    
-                //}
                 this.sortData(data);
                 this.populateTreeSkill(data);
             } else {
@@ -360,7 +369,10 @@ class ConceptsSearch extends React.Component {
             if(this.state.queryType == this.TYPE_SKILL) { 
                 var data = this.state.data.skills.filter((item, i) => {
                     var isDeprecated = item.deprecated ? item.deprecated : false;
-                    return this.state.showDeprecated == isDeprecated;
+                    var hasValidChild = item.skills.find((child) => {
+                        return this.state.showDeprecated == child.deprecated;
+                    });
+                    return hasValidChild || this.state.showDeprecated == isDeprecated;
                 });
                 this.sortData(data);
                 this.populateTreeSkill(data);
