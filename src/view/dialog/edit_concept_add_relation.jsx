@@ -65,6 +65,15 @@ class EditConceptAddRelation extends React.Component {
             "concepts(type: \"" + type + "\", version: \"next\") { " + 
                 "id type preferredLabel:preferred_label label:preferred_label ssyk_code_2012 isco_code_08 " + 
             "}";
+        if(type == "skill-headline") {
+            query = 
+                "concepts(type: \"" + type + "\", version: \"next\") { " + 
+                    "id type preferredLabel:preferred_label label:preferred_label " + 
+                    "skills:narrower(type: \"skill\") { " +
+                        "id type preferredLabel:preferred_label label:preferred_label " + 
+                    "} " +
+                "}";
+        }
         return Rest.getGraphQlPromise(query);
     }
 
@@ -78,7 +87,7 @@ class EditConceptAddRelation extends React.Component {
             data[i] = {
                 visible: true,
                 type: this.roots[i],
-                preferredLabel: Localization.get("db_" + this.roots[i]),
+                preferredLabel: Localization.get("db_" + (this.roots[i] == "skill-headline" ? "skill" : this.roots[i])),
                 children: data[i].data.concepts,
             };
             // setup children
@@ -93,6 +102,12 @@ class EditConceptAddRelation extends React.Component {
                 child.visible = true;
                 if(key) {
                     child.label = child[key] + " - " + child.label;
+                }
+                if(child.skills) {
+                    for(var j=0; j<child.skills.length; ++j) {
+                        child.skills[j].visible = true;
+                    }
+                    ContextUtil.sortByKey(child.skills, "label", true);
                 }
             }
             ContextUtil.sortByKey(data[i].children, "label", true);
@@ -122,6 +137,19 @@ class EditConceptAddRelation extends React.Component {
                 }
                 var childNode = ControlUtil.createTreeViewItem(this.queryTreeView, root.children[k]);
                 childNode.setText(root.children[k].label);
+
+                if(root.children[k].skills) {
+                    var headline = root.children[k];
+                    for(var j=0; j<headline.skills.length; ++j) {
+                        if(!headline.skills[j].visible) {
+                            continue;
+                        }
+                        var skillNode = ControlUtil.createTreeViewItem(this.queryTreeView, headline.skills[j]);
+                        skillNode.setText(headline.skills[j].label);
+                        childNode.addChild(skillNode);
+                    }
+                }
+
                 rootNode.addChild(childNode);
             }
             // add node to tree
@@ -175,7 +203,7 @@ class EditConceptAddRelation extends React.Component {
     }
 
     onFilterClicked() {
-        var filter = this.state.filter.trim();
+        var filter = this.state.filter.trim().toLowerCase();
         var filterChildren = (children) => {
             var found = false;
             for(var i=0; i<children.length; ++i) {
@@ -184,6 +212,17 @@ class EditConceptAddRelation extends React.Component {
                 if(child.label.toLowerCase().indexOf(filter) != -1) {
                     child.visible = true;
                     found = true;
+                }
+                if(child.skills) {
+                    for(var k=0; k<child.skills.length; ++k) {
+                        var skill = child.skills[k];
+                        skill.visible = false;
+                        if(skill.label.toLowerCase().indexOf(filter) != -1) {
+                            child.visible = true;
+                            skill.visible = true;
+                            found = true;
+                        }
+                    }
                 }
             }
             return found;
