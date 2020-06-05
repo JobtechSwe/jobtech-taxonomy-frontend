@@ -62,88 +62,6 @@ class Connections extends React.Component {
         });
     }
 
-    findSkillHeadline(root, id) {
-        if(root) {
-            return root.children.find((e) => {
-                return e.data.id == id;
-            });
-        }
-        return null;
-    }
-
-    fetchSkillHeadline(item) {
-        var root = this.findRootFor("skill-headline");
-        if(!root) {
-            root = ControlUtil.createTreeViewItem(this.relationTreeView, {type: "skill-headline"});
-            root.setText(Localization.get("db_skill-headline"));
-            root.setExpanded(true);
-            this.relationTreeView.addRoot(root);
-        }
-        this.waitingFor++;
-        Rest.getAllConceptRelations(item.data.id, Constants.RELATION_BROADER, (data) => {
-            for(var i=0; i<data.length; ++i) {
-                if(data[i].type != "skill-headline") {
-                    continue;
-                }
-                var headline = this.findSkillHeadline(root, data[i].id);
-                if(headline == null) {
-                    headline = ControlUtil.createTreeViewItem(this.relationTreeView, data[i]);
-                    headline.setText(data[i].preferredLabel);
-                    root.addChild(headline);
-                }
-                headline.addChild(item);
-                Util.sortByKey(headline.children, "text", true);
-            }
-            if(--this.waitingFor <= 0) {
-                Util.sortByKey(this.relationTreeView.roots, "text", true);
-                this.hideLoader();
-            }
-        }, () => {
-            if(--this.waitingFor <= 0) {
-                this.hideLoader();
-            }
-            App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta concept av typ '" + type + "'");
-        }); 
-    }
-
-    /*fetch(item, type) {
-        this.waitingFor++;
-        Rest.getAllConceptRelations(item.id, type, (data) => {
-            var container = this.relations.find((e) => {
-                return e.type == type;
-            });
-            if(container == null) {
-                container = {
-                    type: type,
-                    ids: [],
-                };
-                this.relations.push(container);
-            }
-            for(var i=0; i<data.length; ++i) {
-                if(data[i].type == "skill" && item.type != "skill-headline") {
-                    var child = ControlUtil.createTreeViewItem(this.relationTreeView, data[i]);
-                    child.setText(data[i].preferredLabel);
-                    this.fetchSkillHeadline(child);
-                } else {
-                    this.addRelationToTree(data[i]);  
-                }
-                container.ids.push(data[i].id);
-            }
-            for(var i=0; i<this.relationTreeView.roots.length; ++i) {
-                this.relationTreeView.roots[i].sortChildren();
-            }
-            if(--this.waitingFor <= 0) {
-                Util.sortByKey(this.relationTreeView.roots, "text", true);
-                this.hideLoader();
-            }
-        }, (status) => {
-            if(--this.waitingFor <= 0) {
-                this.hideLoader();
-            }
-            App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta concept av typ '" + type + "'");
-        });
-    }*/
-
     hideLoader() {
         if(this.waitingForItem) {
             this.relationTreeView.removeRoot(this.waitingForItem);
@@ -151,29 +69,27 @@ class Connections extends React.Component {
         }
     }
 
-    setupRelationsFor(item) {      
+    async setupRelationsFor(item) {      
         this.relationTreeView.clear();
         this.waitingFor = 0;
         this.waitingForItem = null;
         if(item) {
             this.relationTreeView.shouldUpdateState = false;
-
             if(item.narrower) {
                 for(var i=0; i<item.narrower.length; ++i) {
-                    this.addRelationToTree(item.narrower[i]);
+                    await this.addRelationToTree(item.narrower[i]);
                 }
             }
             if(item.broader) {
                 for(var i=0; i<item.broader.length; ++i) {
-                    this.addRelationToTree(item.broader[i]);
+                    await this.addRelationToTree(item.broader[i]);
                 }
             }
             if(item.related) {
                 for(var i=0; i<item.related.length; ++i) {
-                    this.addRelationToTree(item.related[i]);
+                    await this.addRelationToTree(item.related[i]);
                 }
             }
-
             //sort
             for(var i=0; i<this.relationTreeView.roots.length; ++i) {
                 var root = this.relationTreeView.roots[i];
@@ -185,20 +101,55 @@ class Connections extends React.Component {
         }
     }
 
-    addRelationToTree(element) {
+    async addRelationToTree(element) {
         var root = this.findRootFor(element.type);
         if(!root) {
             root = ControlUtil.createTreeViewItem(this.relationTreeView, element);
             root.setText(Localization.get("db_" + element.type));
             this.relationTreeView.addRoot(root);
             root.setExpanded(true);
+        } 
+        if(element.type == Constants.CONCEPT_SKILL) {
+            // check children of root for actuall root
+            for(var i=0; i<root.children.length; ++i) {
+                var child = root.children[i];
+                if(child.data.narrower) {
+                    var result = child.data.narrower.find((e) => {
+                        return e.id == element.id;
+                    });
+                    if(result) {
+                        root = child;
+                        break;
+                    }
+                }
+            }
+            if(root.data.type == Constants.CONCEPT_SKILL) {
+                // invalid root found, fetch real root
+                var query = 
+                    "concepts(id: \"" + element.id + "\", version: \"next\") { " + 
+                        "broader(type: \"skill-headline\") { " + 
+                            "id type preferredLabel:preferred_label " + 
+                            "narrower(type: \"skill\") { "+
+                                "id " +
+                            "} " +
+                        "} " +
+                    "}";
+                var data = await Rest.getGraphQlPromise(query);
+                if(data.data.concepts.length > 0) {
+                    data = data.data.concepts[0].broader[0];
+                    var headline = ControlUtil.createTreeViewItem(this.relationTreeView, data);
+                    headline.setText(data.preferredLabel);
+                    headline.setExpanded(true);
+                    root.addChild(headline);
+                    root = headline;
+                }
+            }
         }
         var child = ControlUtil.createTreeViewItem(this.relationTreeView, element);
         var text = element.preferredLabel;
         if(element.isco) {
             text = element.isco + " - " + text;
-        }
-        else if(element.ssyk) {
+        } else if(element.ssyk) {
             text = element.ssyk + " - " + text;
         }
         child.setText(text);
