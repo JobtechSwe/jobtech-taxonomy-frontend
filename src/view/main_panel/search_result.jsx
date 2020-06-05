@@ -165,8 +165,13 @@ class SearchResult extends React.Component {
     }
 
     filterRelationData(data) {
+        //filter relation types
         var result = data.filter((item) => {
             return this.state.searchFor.relations.indexOf(item.relation["relation-type"]) >= 0;
+        });
+        //filter concept types
+        result = result.filter((item) => {
+            return this.state.searchFor.types.indexOf(item.relation.source["concept/type"]) >= 0 || this.state.searchFor.types.indexOf(item.relation.target["concept/type"]) >= 0;
         });
         return result;
     }
@@ -188,7 +193,7 @@ class SearchResult extends React.Component {
                 cmp = (a) => {return a.changes ? a.changes[0]["old-value"] : "";};
                 break;
             case this.SORT_EVENT_NEW:
-                cmp = (a) => {return a.changes ? a.changes[0]["new-value"] : (a.concept ? a.concept["concept/definition"] : "");};
+                cmp = (a) => {return a.changes ? a.changes[0]["new-value"] : "";};
                 break;
             case this.SORT_EVENT_DATE:
                 cmp = (a) => {return a.timestamp;};
@@ -236,7 +241,7 @@ class SearchResult extends React.Component {
             cols.push(Localization.get(item["event-type"]));
             cols.push(item.concept["concept/preferredLabel"]);
             cols.push("");
-            cols.push(item.concept["concept/definition"]);
+            cols.push("");
             cols.push(new Date(item.timestamp).toLocaleString());
             cols.push(item.concept["concept/quality-level"]);
             cols.push(item.comment);

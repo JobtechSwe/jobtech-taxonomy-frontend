@@ -101,7 +101,6 @@ class SearchChanges extends React.Component {
             if(step == 0) {
                 return ( 
                     <SearchChangesDate 
-                        onSearchClicked={this.onSearchClicked.bind(this)}
                         onNextClicked={this.onNextClicked.bind(this)}
                         onCloseClicked={this.onCloseClicked.bind(this)}
                         onSetFromDate={this.onSetFromDate.bind(this)}

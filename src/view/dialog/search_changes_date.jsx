@@ -148,25 +148,12 @@ class SearchChangesDate extends React.Component {
     }
 
     renderNextButton() {
-        if("actions" === this.state.searchMode) {
-            return(
-                <Button 
-                    isEnabled={this.state.actions.length > 0}                        
-                    onClick={this.props.onNextClicked}
-                    text={Localization.get("next")}/>
-            );
-        }
-    }
-
-    renderSearchButton() {
-        if("relations" === this.state.searchMode) {
-            return(
-                <Button 
-                    isEnabled={this.state.relations.length > 0}
-                    onClick={this.props.onSearchClicked}
-                    text={Localization.get("search")}/>
-            );
-        }
+        return(
+            <Button 
+                isEnabled={this.state.actions.length > 0 || this.state.relations.length > 0}                        
+                onClick={this.props.onNextClicked}
+                text={Localization.get("next")}/>
+        );
     }
 
     render() {
@@ -219,7 +206,6 @@ class SearchChangesDate extends React.Component {
                         onClick={this.props.onCloseClicked}
                         text={Localization.get("close")}/>
                     {this.renderNextButton()}
-                    {this.renderSearchButton()}
                 </div>
             </div>
         );
