@@ -1,5 +1,4 @@
 import React from 'react';
-import XLSX from 'xlsx';
 import Button from '../../control/button.jsx';
 import Group from '../../control/group.jsx';
 import List from '../../control/list.jsx';
@@ -8,6 +7,7 @@ import SortArrow from '../../control/sort_arrow.jsx';
 import Constants from '../../context/constants.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Rest from '../../context/rest.jsx';
+import Excel from './../../context/excel.jsx';
 import Localization from '../../context/localization.jsx';
 import Util from '../../context/util.jsx';
 import Export from '../dialog/export.jsx';
@@ -108,58 +108,37 @@ class Referred extends React.Component {
 
     onExportClicked() {
         var onSaveExcel = (values) => {
-            var data = this.state.data.map((item) => {
-                var ret = {};
-                for(var i=0; i<values.length; ++i) {
-                    ret[values[i].text] = values[i].get(item);
-                }
-                return ret;            
-            }); 
-            var width = [];
-            for(var i=0; i<values.length; ++i) {
-                var key = values[i].text;
-                var maxWidth = Math.max(...(data.map((item) => {
-                    return item[key] != null ? item[key].length : 0;
-                })));
-                width.push({width: maxWidth});
+            var columns = [{
+                text: Localization.get("concept") + " - " + Localization.get("type"),
+                width: 25,
+            }, {
+                text: Localization.get("concept") + " - " + Localization.get("name"),
+                width: 40,
+            }, {
+                text: Localization.get("replaced_by_concept") + " - " + Localization.get("type"),
+                width: 25,
+            }, {
+                text: Localization.get("replaced_by_concept") + " - " + Localization.get("name"),
+                width: 40,
+            }];
+
+            var context = Excel.createSimple(Localization.get("referred"), "Next", columns)
+            for(var i=0; i<this.state.data.length; ++i) {
+                var item = this.state.data[i];
+                var row = [
+                    "", 
+                    Localization.get("db_" + item.type),
+                    item.preferredLabel,
+                    Localization.get("db_" + item["replaced-by"][0].type),
+                    item["replaced-by"][0].preferredLabel
+                ];
+                context.addRow(row);
             }
-            var worksheet = XLSX.utils.json_to_sheet(data);            
-            worksheet['!cols'] = width;
-            var new_workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(new_workbook, worksheet, Localization.get("referred"));
-            XLSX.writeFile(new_workbook, Localization.get("referred") + ".xlsx");
+            context.download(Localization.get("referred") + ".xlsx");
             EventDispatcher.fire(Constants.EVENT_HIDE_POPUP_INDICATOR);
         }        
 
         var values = [];
-        values.push({
-            text: Localization.get("concept") + " - " + Localization.get("type"),
-            get: (item) => {
-                return Localization.get("db_" + item.type);
-            },
-            selected: true
-        });
-        values.push({
-            text: Localization.get("concept") + " - " + Localization.get("name"),
-            get: (item) => {
-                return item.preferredLabel;
-            },
-            selected: true
-        });
-        values.push({
-            text: Localization.get("replaced_by_concept") + " - " + Localization.get("type"),
-            get: (item) => {
-                return Localization.get("db_" + item["replaced-by"][0].type);
-            },
-            selected: true
-        });
-        values.push({
-            text: Localization.get("replaced_by_concept") + " - " + Localization.get("name"),
-            get: (item) => {
-                return item["replaced-by"][0].preferredLabel;
-            },
-            selected: true
-        });
 
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
             title: Localization.get("export"),

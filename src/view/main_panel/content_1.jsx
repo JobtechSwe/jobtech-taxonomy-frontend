@@ -1,5 +1,4 @@
 import React from 'react';
-import XLSX from 'xlsx';
 import ControlUtil from '../../control/util.jsx';
 import Label from '../../control/label.jsx';
 import Button from '../../control/button.jsx';

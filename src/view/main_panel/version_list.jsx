@@ -1,5 +1,4 @@
 import React from 'react';
-import XLSX from 'xlsx';
 import Button from '../../control/button.jsx';
 import Label from '../../control/label.jsx';
 import List from '../../control/list.jsx';
@@ -11,11 +10,9 @@ import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Util from '../../context/util.jsx';
 import Excel from '../../context/excel.jsx';
-import Pdf from '../../context/pdf.jsx';
 import App from '../../context/app.jsx';
 import Export from '../dialog/export.jsx';
 import PublishVersion from '../dialog/publish_version.jsx';
-import pdf from '../../context/pdf.jsx';
 
 class VersionList extends React.Component { 
 
@@ -201,75 +198,34 @@ class VersionList extends React.Component {
                 }
                 return ret;            
             }); 
-            var width = [];
-            for(var i=0; i<values.length; ++i) {
-                var key = values[i].text;
-                var maxWidth = Math.max(...(data.map((item) => {
-                    return item[key] != null ? item[key].length : 0;
-                })));
-                width.push({width: maxWidth});
+
+            var columns = [{
+                text: Localization.get("event"),
+                width: 30,
+            }, {
+                text: Localization.get("value_storage"),
+                width: 40,
+            }, {
+                text: Localization.get("name"),
+                width: 90,
+            }];
+
+            var context = Excel.createSimple("Version - " + this.state.item.version, "Next", columns)
+            for(var i=0; i<this.state.data.length; ++i) {
+                var item = this.state.data[i];
+                var row = [
+                    "", 
+                    Localization.get(item["event-type"]),
+                    Localization.get("db_" + item["changed-concept"].type),
+                    item["changed-concept"].preferredLabel
+                ];
+                context.addRow(row);
             }
-            var worksheet = XLSX.utils.json_to_sheet(data);            
-            worksheet['!cols'] = width;
-            var new_workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(new_workbook, worksheet, "Version - " + this.state.item.version);
-            XLSX.writeFile(new_workbook, "Version.xlsx");
+            context.download("Version" + ".xlsx");
             EventDispatcher.fire(Constants.EVENT_HIDE_POPUP_INDICATOR);
         };
 
-        var onSavePdf = (values) => {
-            var data = this.filterData().map((item) => {
-                var ret = {};
-                for(var i=0; i<values.length; ++i) {
-                    ret[values[i].text] = values[i].get(item);
-                }
-                return ret;            
-            }); 
-            var header = [];
-            for(var i=0; i<values.length; ++i) {
-                header.push({
-                    id: values[i].text,
-                    name: values[i].text,
-                    prompt: values[i].text,
-                    width: values[i].width, // mm
-                    align: "right",
-                    padding: 1,
-                });
-            }
-            
-            var title = Localization.get("version");
-            if(this.state.item) {
-                title += " - " + (this.state.item.version == -1 ? Localization.get("not_published") : this.state.item.version);
-            }
-
-            pdf.createTable("version", title, header, data);
-        };
-
         var values = [];
-        values.push({
-            text: Localization.get("event"),
-            get: (item) => {
-                return Localization.get(item["event-type"]);
-            },
-            selected: true,
-            width: 30,
-        });
-        values.push({
-            text: Localization.get("value_storage"),
-            get: (item) => {
-                return Localization.get("db_" + item["changed-concept"].type);
-            },
-            selected: true,
-            width: 40,
-        });
-        values.push({
-            text: Localization.get("name"),
-            get: (item) => {
-                return item["changed-concept"].preferredLabel;
-            },
-            selected: true,
-            width: 90,
-        });
 
         var title = Localization.get("version") + " - " + (this.state.item.version == -1 ? Localization.get("not_published") : this.state.item.version);
 
@@ -278,7 +234,6 @@ class VersionList extends React.Component {
             content: <Export 
                         values={values}
                         onSaveExcel={onSaveExcel}
-                        onSavePdf={onSavePdf}
                     />
         });
     }
