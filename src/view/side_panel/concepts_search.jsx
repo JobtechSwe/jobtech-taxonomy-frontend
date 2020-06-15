@@ -567,13 +567,14 @@ class ConceptsSearch extends React.Component {
         var element = 
             this.state.queryType == this.TYPE_SEARCH ? 
                 <Button text={Localization.get("search")} onClick={this.onSearchClicked.bind(this)}/> :
-                <div className="font edit_concept_text">{Localization.get("filter")}</div>;
+                <div/>;
         return(
             <div className="sub_panel_search">
                 <input 
                     type="text"
                     className="rounded"
                     value={this.state.filter}
+                    placeholder={this.state.queryType == this.TYPE_SEARCH ? "" : Localization.get("filter")}
                     onChange={this.onFilterChanged.bind(this)}/>
                 {element}
             </div>

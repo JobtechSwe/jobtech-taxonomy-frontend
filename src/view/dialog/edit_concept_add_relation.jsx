@@ -249,8 +249,8 @@ class EditConceptAddRelation extends React.Component {
                         type="text"
                         className="rounded"
                         value={this.state.filter}
+                        placeholder={Localization.get("filter")}
                         onChange={this.onFilterChanged.bind(this)}/>
-                    <div className="edit_concept_text">{Localization.get("filter")}</div>
                 </div>
                 <TreeView 
                     css="add_connection_tree"

@@ -2,6 +2,7 @@ import React from 'react';
 import Button from './../../control/button.jsx';
 import Label from './../../control/label.jsx';
 import List from './../../control/list.jsx';
+import Loader from './../../control/loader.jsx';
 import App from './../../context/app.jsx';
 import Rest from './../../context/rest.jsx';
 import EventDispatcher from './../../context/event_dispatcher.jsx';
@@ -21,6 +22,7 @@ class EditConceptDeprecate extends React.Component {
             items: [],
             selected: null,
             filter: "",
+            isLoading: false,
         };
         this.props.editContext.onSave = this.onSave.bind(this);
     }
@@ -46,7 +48,10 @@ class EditConceptDeprecate extends React.Component {
             }
         }
         Util.sortByKey(data, "label", true);
-        this.setState({items: data});
+        this.setState({
+            items: data,
+            isLoading: false,
+        });
     }
 
     onSave(message, callback) {
@@ -90,6 +95,7 @@ class EditConceptDeprecate extends React.Component {
 
     onShouldReferenceChanged(e) {
         if(this.state.items.length == 0) {
+            this.setState({isLoading: true});
             this.fetchConcepts(this.props.item.type);
         }
         if(this.state.shouldReference) {
@@ -115,6 +121,12 @@ class EditConceptDeprecate extends React.Component {
             filter: e.target.value,
             items: items,
         });
+    }
+
+    renderLoader() {
+        if(this.state.isLoading) {
+            return( <Loader/> );
+        }
     }
 
     renderDeprecate() {
@@ -181,10 +193,11 @@ class EditConceptDeprecate extends React.Component {
                             type="text"
                             className="rounded"
                             value={this.state.filter}
+                            placeholder={Localization.get("filter")}
                             onChange={this.onFilterChanged.bind(this)}/>
-                        <div className="edit_concept_text">{Localization.get("filter")}</div>
                     </div>
                     <List css="deprecated_reference_list">
+                        {this.renderLoader()}
                         {items}
                     </List>
                 </div>
