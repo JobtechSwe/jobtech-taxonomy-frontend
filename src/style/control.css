@@ -397,3 +397,52 @@ i.down {
     transform: translateY(-25%) rotate(45deg);
     -webkit-transform: translateY(-25%) rotate(45deg);
 }
+
+.pager {
+    display: flex;
+    justify-content: center;
+}
+
+.pager_prev {
+    color: #000;
+    margin: 3px;
+}
+
+.pager_prev:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.pager_next {
+    color: #000;
+    margin: 3px;
+}
+
+.pager_next:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.pager_pages {
+    display: flex;
+}
+
+.pager_pages > div {
+    color: #000;
+    margin: 3px;
+}
+
+.pager_pages > div:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.pager_pages > .selected_page {
+    text-decoration: none;
+    font-weight: bold;
+    color: #000;
+}
+
+.pager_pages > .selected_page:hover {
+    cursor: unset;
+}

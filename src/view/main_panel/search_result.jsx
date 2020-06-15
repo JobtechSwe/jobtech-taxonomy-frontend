@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '../../control/button.jsx';
+import Pager from '../../control/pager.jsx';
 import List from '../../control/list.jsx';
 import Loader from '../../control/loader.jsx';
 import Group from '../../control/group.jsx';
@@ -9,7 +10,6 @@ import Constants from '../../context/constants.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Localization from '../../context/localization.jsx';
 import Rest from '../../context/rest.jsx';
-import localization from '../../context/localization.jsx';
 import Excel from '../../context/excel.jsx';
 import Export from '../dialog/export.jsx';
 
@@ -38,6 +38,7 @@ class SearchResult extends React.Component {
             tempData: [],
             conceptIds: null,
             selected: null,
+            range: null,
         };
         this.sortBy= this.SORT_EVENT_DATE;
         this.sortDesc= false;
@@ -270,6 +271,14 @@ class SearchResult extends React.Component {
         return cols;
     }
 
+    getPageData() {
+        if(this.state.data.length == 0 || this.state.range == null) {
+            return [];
+        }
+        var range = this.state.range;
+        return this.state.data.slice(range.start, range.end);
+    }
+
     onSortClicked(sortBy) {
         if(this.state.selected != null) {
             EventDispatcher.fire(this.SEARCH_RESULT_LIST_EVENT_ID);
@@ -392,6 +401,10 @@ class SearchResult extends React.Component {
         this.setState({
             selected: item,
         });
+    }
+
+    onNewRange(range) {
+        this.setState({range: range});
     }
 
     renderItem(item) {
@@ -524,11 +537,15 @@ class SearchResult extends React.Component {
                 {this.renderHeader()}
                  <List 
                     eventId={this.SEARCH_RESULT_LIST_EVENT_ID}
-                    data={this.state.data} 
+                    data={this.getPageData()} 
                     onItemSelected={this.onItemSelected.bind(this)}
                     dataRender={this.renderItem.bind(this)}>
                     {this.renderLoader()}
                 </List>
+                <Pager
+                    data={this.state.data}
+                    itemsPerPage={10}
+                    onNewRange={this.onNewRange.bind(this)}/>
                 <div className="search_result_buttons">
                     <Button 
                         isEnabled={this.state.selected != null}
