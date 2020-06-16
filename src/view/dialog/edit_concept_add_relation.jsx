@@ -306,8 +306,8 @@ class EditConceptAddRelation extends React.Component {
                         className="rounded"
                         value={this.state.substitutability}
                         onChange={this.onSubstituabilityChanged.bind(this)}>
-                        <option value="25">25%</option>
-                        <option value="75">75%</option>
+                        <option value="25">25 - Lågt släktskap</option>
+                        <option value="75">75 - Högt släktskap</option>
                     </select>
                 </div>
             );
