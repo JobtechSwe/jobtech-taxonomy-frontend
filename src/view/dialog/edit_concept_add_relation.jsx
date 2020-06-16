@@ -17,7 +17,7 @@ class EditConceptAddRelation extends React.Component {
         super(props);
         this.state = {
             selected: null,
-            substitutability: "0",
+            substitutability: "25",
             type: "broader",
             loadingRoots: true,
             filter: "",
@@ -302,10 +302,13 @@ class EditConceptAddRelation extends React.Component {
                     <Label 
                         css="edit_concept_value_title"
                         text="Ange utbyttbarhets sannolikhet"/>
-                    <input 
+                    <select 
                         className="rounded"
                         value={this.state.substitutability}
-                        onChange={this.onSubstituabilityChanged.bind(this)}/>
+                        onChange={this.onSubstituabilityChanged.bind(this)}>
+                        <option value="25">25%</option>
+                        <option value="75">75%</option>
+                    </select>
                 </div>
             );
         }
