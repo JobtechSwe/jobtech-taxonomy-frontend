@@ -191,6 +191,7 @@ class ConceptsSearch extends React.Component {
             var element = data[i];
             var root = ControlUtil.createTreeViewItem(this.queryTreeView, element);
             root.setText(element.label);
+            root.setExpanded(query.length > 1);
             this.queryTreeView.addRoot(root);
             if(element.skills) {
                 for(var j=0; j<element.skills.length; ++j) {
@@ -203,6 +204,7 @@ class ConceptsSearch extends React.Component {
                     }
                     var child = ControlUtil.createTreeViewItem(this.queryTreeView, skill);
                     child.setText(skill.label);
+                    child.setExpanded(query.length > 1);
                     root.addChild(child);
                 }
             }
