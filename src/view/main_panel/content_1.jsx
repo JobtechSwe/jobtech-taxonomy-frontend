@@ -126,19 +126,10 @@ class Content1 extends React.Component {
                     }
                 }
 
-                for(var i=0; i<values.length; ++i) {
-                    if(values[i].id == 0) {
-                        // quality control
-                        context.addRow(Localization.get("quality_control"), { bold: true });
-                        context.addRow(concept.quality_level);
-                        context.addRow();
-                    } else if(values[i].id == 1) {
-                        // database id
-                        context.addRow("Databas-ID", { bold: true });
-                        context.addRow(concept.id);
-                        context.addRow();
-                    }
-                }
+                // database id
+                context.addRow("Databas-ID", { bold: true });
+                context.addRow(concept.id);
+                context.addRow();
 
                 // definition
                 context.addRow(Localization.get("description"), { bold: true });

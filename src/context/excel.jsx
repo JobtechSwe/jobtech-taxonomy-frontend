@@ -210,9 +210,9 @@ class Excel {
 				size: 10,
 			};
 		}
-		sheet.pageSetup = {
-			fitToPage: true,
-		};
+		sheet.pageSetup.margins.left = 0.3;
+		sheet.pageSetup.margins.right = 0.3;
+		sheet.pageSetup.paperSize = 9;
 		return {
 			workbook: workbook,
 			sheet: sheet,

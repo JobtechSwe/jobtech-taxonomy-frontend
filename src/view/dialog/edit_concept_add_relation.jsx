@@ -114,11 +114,11 @@ class EditConceptAddRelation extends React.Component {
         }
         ContextUtil.sortByKey(data, "preferredLabel", true);
         this.items = data;
-        this.setupTreeView(this.items);
+        this.setupTreeView(this.items, false);
         this.setState({loadingRoots: false});
     }
 
-    setupTreeView(data) {
+    setupTreeView(data, shouldExpand) {
         // clear previous content
         this.queryTreeView.clear();
         this.queryTreeView.shouldUpdateState = false;
@@ -130,6 +130,7 @@ class EditConceptAddRelation extends React.Component {
             }
             var rootNode = ControlUtil.createTreeViewItem(this.queryTreeView, root);
             rootNode.setText(root.preferredLabel);
+            rootNode.setExpanded(shouldExpand);
             // setup children
             for(var k=0; k<root.children.length; ++k) {
                 if(!root.children[k].visible) {
@@ -137,6 +138,7 @@ class EditConceptAddRelation extends React.Component {
                 }
                 var childNode = ControlUtil.createTreeViewItem(this.queryTreeView, root.children[k]);
                 childNode.setText(root.children[k].label);
+                childNode.setExpanded(shouldExpand);
 
                 if(root.children[k].skills) {
                     var headline = root.children[k];
@@ -146,6 +148,7 @@ class EditConceptAddRelation extends React.Component {
                         }
                         var skillNode = ControlUtil.createTreeViewItem(this.queryTreeView, headline.skills[j]);
                         skillNode.setText(headline.skills[j].label);
+                        skillNode.setExpanded(shouldExpand);
                         childNode.addChild(skillNode);
                     }
                 }
@@ -226,7 +229,7 @@ class EditConceptAddRelation extends React.Component {
         for(var i=0; i<this.items.length; ++i) {
             this.items[i].visible = filterChildren(this.items[i].children);
         }
-        this.setupTreeView(this.items);
+        this.setupTreeView(this.items, filter.length > 1);
         this.setState({filter: e.target.value});
     }
 
@@ -301,12 +304,12 @@ class EditConceptAddRelation extends React.Component {
                 <div className="edit_concept_value_group">
                     <Label 
                         css="edit_concept_value_title"
-                        text="Ange utbyttbarhets sannolikhet"/>
+                        text="Ange värde"/>
                     <select 
                         className="rounded"
                         value={this.state.substitutability}
                         onChange={this.onSubstituabilityChanged.bind(this)}>
-                        <option value="25">25 - Lågt släktskap</option>
+                        <option value="25">25 - Lägre släktskap</option>
                         <option value="75">75 - Högt släktskap</option>
                     </select>
                 </div>
