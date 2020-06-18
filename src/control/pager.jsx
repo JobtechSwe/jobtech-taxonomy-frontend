@@ -24,6 +24,7 @@ class PagedList extends React.Component {
         var updated = false;
         if(props.data.length != this.state.data.length) {
             updated = true;
+            this.state.page = 1;
         }
         this.state.data = props.data;
         this.state.itemsPerPage = props.itemsPerPage;
