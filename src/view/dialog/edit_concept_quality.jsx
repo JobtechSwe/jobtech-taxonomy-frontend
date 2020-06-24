@@ -28,7 +28,7 @@ class EditConceptQuality extends React.Component {
             App.removeSaveRequest();
             callback();
         }, (status) => {
-            App.showError(Util.getHttpMessage(status) + " : misslyckades uppdatera kvalitetssäkring");
+            App.showError(Util.getHttpMessage(status) + " : misslyckades uppdatera kvalitetsnivå");
             App.removeSaveRequest();
         });
     }

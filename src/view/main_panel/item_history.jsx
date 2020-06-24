@@ -124,7 +124,7 @@ class ItemHistory extends React.Component {
                 info.push(this.renderInfoItem("Kvalitetsnivå", item.concept["concept/quality-level"], key++));
             } else {
                 //deprecated
-                info.push(this.renderInfoItem(Localization.get("action"), "[åtgärd]", key++));
+                info.push(this.renderInfoItem(Localization.get("action"), "[händelse]", key++));
                 info.push(this.renderInfoItem("Hävisad till", "[hänvisad_till]", key++));
             }
         }
