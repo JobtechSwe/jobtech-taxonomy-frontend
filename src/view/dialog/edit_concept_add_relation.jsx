@@ -56,6 +56,8 @@ class EditConceptAddRelation extends React.Component {
             "sni-level-1",
             "wage-type",
             "worktime-extent",
+            "unemployment-fund",
+            "unemployment-type",
         ];
         this.fetchData();
     }

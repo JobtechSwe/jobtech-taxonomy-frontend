@@ -63,6 +63,8 @@ class AddConnection extends React.Component {
             "sni-level-1",
             "wage-type",
             "worktime-extent",
+            "unemployment-fund",
+            "unemployment-type",
         ];
         //"skill"
         this.fetchRoot(0, 6);

@@ -39,6 +39,8 @@ class Content4 extends React.Component {
         this.TYPE_SUN_EDUCATION_LEVEL_3 = "sun-education-level-3";
         this.TYPE_WAGE_TYPE = "wage-type";
         this.TYPE_WORKTIME_EXTENT = "worktime-extent";
+        this.TYPE_UNEMPLOYMENT_FUND = "unemployment-fund";
+        this.TYPE_UNEMPLOYMENT_TYPE = "unemployment-type";
         this.options = this.populateOptions();        
         this.state = {
             queryType1: this.TYPE_SSYK,
@@ -78,6 +80,8 @@ class Content4 extends React.Component {
         options.push({value: this.TYPE_SUN_EDUCATION_LEVEL_3, text: Localization.get("db_sun-education-level-3")});
         options.push({value: this.TYPE_WAGE_TYPE, text: Localization.get("db_wage-type")});
         options.push({value: this.TYPE_WORKTIME_EXTENT, text: Localization.get("db_worktime-extent")});
+        options.push({value: this.TYPE_UNEMPLOYMENT_FUND, text: Localization.get("db_unemployment_fund")});
+        options.push({value: this.TYPE_UNEMPLOYMENT_TYPE, text: Localization.get("db_unemployment_type")});
         options.sort((a, b) => {
             if(a.text < b.text) {
                 return -1;

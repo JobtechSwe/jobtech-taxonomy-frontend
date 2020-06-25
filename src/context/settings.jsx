@@ -50,6 +50,8 @@ class Settings {
                 "sun-education-level-1",
                 "sun-education-level-2",
                 "sun-education-level-3",
+                "unemployment-fund",
+                "unemployment-type",
             ]
         };
     }

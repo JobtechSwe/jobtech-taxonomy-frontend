@@ -26,7 +26,6 @@ class Constants {
         this.CONCEPT_COUNTRY = "country";
         this.CONCEPT_DRIVING_LICENCE = "driving-licence";
         this.CONCEPT_EMPLOYMENT_DURATION = "employment-duration";
-        this.CONCEPT_ISCO_LEVEL_1 = "isco-level-1";
         this.CONCEPT_ISCO_LEVEL_4 = "isco-level-4";
         this.CONCEPT_LANGUAGE = "language";
         this.CONCEPT_MUNICIPALITY = "municipality";
@@ -50,6 +49,8 @@ class Constants {
         this.CONCEPT_SUN_EDUCATION_LEVEL_1 = "sun-education-level-1";
         this.CONCEPT_SUN_EDUCATION_LEVEL_2 = "sun-education-level-2";
         this.CONCEPT_SUN_EDUCATION_LEVEL_3 = "sun-education-level-3";
+        this.CONCEPT_UNEMPLOYMENT_FUND = "unemployment-fund";
+        this.CONCEPT_UNEMPLOYMENT_TYPE = "unemployment-type";
         // events
         this.EVENT_SET_WORKMODE = "EVENT_SET_WORKMODE";
         this.EVENT_SHOW_OVERLAY = "EVENT_SHOW_OVERLAY";
@@ -127,6 +128,8 @@ class Constants {
             "sun-education-level-1",
             "sun-education-level-2",
             "sun-education-level-3",
+            "unemployment-fund",
+            "unemployment-type",
         ];
         this.CONCEPT_RELATION_TYPES = {
             "ssyk-level-4": {

@@ -51,6 +51,8 @@ class ConceptsSearch extends React.Component {
         this.TYPE_SUN_EDUCATION_LEVEL_3 = "sun-education-level-3";
         this.TYPE_WAGE_TYPE = "wage-type";
         this.TYPE_WORKTIME_EXTENT = "worktime-extent";
+        this.TYPE_UNEMPLOYMENT_FUND = "unemployment-fund";
+        this.TYPE_UNEMPLOYMENT_TYPE = "unemployment-type";
 
         this.state = {
             data: [],
@@ -148,6 +150,8 @@ class ConceptsSearch extends React.Component {
         this.addOption(options, this.TYPE_SUN_EDUCATION_LEVEL_3);
         this.addOption(options, this.TYPE_WAGE_TYPE);
         this.addOption(options, this.TYPE_WORKTIME_EXTENT);
+        this.addOption(options, this.TYPE_UNEMPLOYMENT_FUND);
+        this.addOption(options, this.TYPE_UNEMPLOYMENT_TYPE);
         options.sort((a, b) => {
             if(a.text < b.text) {
                 return -1;

@@ -116,13 +116,10 @@ class Content3 extends React.Component {
                 return 2;
             case "driving-licence":
                 return 3;
-            case "driving-licence-combination":
-                return 4;
             case "employment-duration":
                 return 5;
             case "employment-type":
                 return 6;
-            case "isco-level-1":
             case "isco-level-4":
                 return 7;
             case "keyword":
