@@ -224,13 +224,45 @@ class Util {
                     onFetchError(context, status);
                 });
             };
+            var fetchSkillHeadlines = async (context) => {
+                var headlines = [];
+                for(var i=0; i<context.concept.related.length; ++i) {
+                    var related = context.concept.related[i];
+                    if(related.type == Constants.CONCEPT_SKILL) {
+                        var query = 
+                            "concepts(id: \"" + related.id + "\", version: \"next\") { " + 
+                                "broader(type:\"skill-headline\") { " + 
+                                    "id type preferredLabel:preferred_label " +
+                                "} " +
+                            "}";
+                        var data = await Rest.getGraphQlPromise(query);
+                        data = data.data.concepts[0].broader[0];
+                        var current = headlines.find((x) => {
+                            return x.id == data.id;
+                        });
+                        if(current == null) {
+                            headlines.push(data);
+                            current = data;
+                        }
+                        if(current.children == null) {
+                            current.children = [];
+                        }
+                        current.children.push(related);
+                    }
+                }
+                for(var i=0; i<headlines.length; ++i) {
+                    context.concept.related.push(headlines[i]);
+                }
+                onFetchComplete(context);
+            };
             // context to keep track of where we are
             var context = {
                 concept: concepts[0],
                 depth: 0,
             };
             context.depth++;
-            // get local history
+            context.depth++;
+            fetchSkillHeadlines(context);
             if(includeHistory) {
                 fetchLocalHistory(context);
             }

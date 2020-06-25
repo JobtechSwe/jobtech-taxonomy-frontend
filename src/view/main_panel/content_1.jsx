@@ -110,9 +110,7 @@ class Content1 extends React.Component {
                 version = version[version.length - 1].version;
                 // setup excel writer
                 var context = Excel.create(concept.preferredLabel, concept.preferredLabel, version, specialTitle, lastChange);
-                
                 context.addRow();
-
                 if(concept.type == "ssyk-level-4") {
                     // broader relations
                     var broaderRelations = splitRelationTypes(concept.broader);
@@ -125,17 +123,14 @@ class Content1 extends React.Component {
                         context.addRow();
                     }
                 }
-
                 // database id
                 context.addRow("Databas-ID", { bold: true });
                 context.addRow(concept.id);
                 context.addRow();
-
                 // definition
                 context.addRow(Localization.get("description"), { bold: true });
                 context.addRow(concept.definition, { height: 28, wrapText: true });
                 context.addRow();
-
                 if(concept.type == "ssyk-level-4") {
                     var relations = splitRelationTypes(concept.narrower);
                     relations = relations.concat(splitRelationTypes(concept.related));
@@ -166,12 +161,16 @@ class Content1 extends React.Component {
                             // add headline
                             rows[nextSkillIndex++].right = {
                                 bold: true,
-                                text: skillHeadline.concept.preferredLabel,
+                                text: skillHeadline.preferredLabel,
+                                idLabel: true,
                             };
                             // add skills
                             for(var j=0; j<skillHeadline.children.length; ++j) {
                                 rows.push({
-                                    right: { text: skillHeadline.children[j].preferredLabel },
+                                    right: { 
+                                        text: skillHeadline.children[j].preferredLabel,
+                                        id: skillHeadline.children[j].id,
+                                     },
                                 });
                                 nextSkillIndex++;
                             }
@@ -182,7 +181,13 @@ class Content1 extends React.Component {
                     }
                     // add rows
                     for(var i=0; i<rows.length; ++i) {
-                        context.addLeftRight(rows[i].left, rows[i].right);
+                        var nr = context.addLeftRight(rows[i].left, rows[i].right);
+                        if(rows[i].right.idLabel) {
+                            context.setCell("I" + nr, "Databas-ID", true);
+                        }
+                        if(rows[i].right.id) {
+                            context.setCell("I" + nr, rows[i].right.id);
+                        }
                     }
                 } else {
                     var relations = splitRelationTypes(concept.broader);
@@ -204,12 +209,14 @@ class Content1 extends React.Component {
                                 var skillHeadline = collection.items[j];
                                 context.addRow(skillHeadline.preferredLabel, { bold: true });
                                 for(var k=0; k<skillHeadline.children.length; ++k) {
-                                    context.addRow(skillHeadline.children[k].preferredLabel, { indent: 1 });
+                                    var nr = context.addRow(skillHeadline.children[k].preferredLabel, { indent: 1 });
+                                    context.setCell("I" + nr, skillHeadline.children[k].id);
                                 }
                             }
                         } else {
                             for(var j=0; j<collection.items.length; ++j) {
-                                context.addRow(collection.items[j].preferredLabel);
+                                var nr = context.addRow(collection.items[j].preferredLabel);
+                                context.setCell("I" + nr, skillHeadline.items[j].id);
                             }
                         }
                         context.addRow();

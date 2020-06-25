@@ -54,6 +54,11 @@ class Content1 extends React.Component {
             // setup excel
             var name = Localization.get("db_" + this.type);
             var context = Excel.create(name, name, version);
+            var nr = context.addRow();
+            context.setCell("C" + nr, name, true);
+            context.setCell("G" + nr, "SSYK", true);
+            context.setCell("H" + nr, "Namn", true);
+            context.setCell("I" + nr, "Databas-ID", true);
             context.addRow();
             // insert data
             for(var i=0; i<fields.length; ++i) {
@@ -62,10 +67,11 @@ class Content1 extends React.Component {
                 var ssyks = getAllConcepts(edges, "source", concepts);
                 Util.sortByKey(ssyks, "ssyk-code-2012", true);
                 if(ssyks.length > 0) {
-                    context.addGroupRow(field.preferredLabel, ssyks[0]["ssyk-code-2012"], ssyks[0].preferredLabel);
-                    for(var j=1; j<ssyks.length; ++j) {
-                        context.addGroupRow(null, ssyks[j]["ssyk-code-2012"], ssyks[j].preferredLabel);
+                    for(var j=0; j<ssyks.length; ++j) {
+                        var rowNr = context.addGroupRow(j == 0 ? field.preferredLabel : null, ssyks[j]["ssyk-code-2012"], ssyks[j].preferredLabel);
+                        context.setCell("I" + rowNr, ssyks[j].id);
                     }
+                    context.addRow();
                 } else {
                     context.addGroupRow(field.preferredLabel);
                 }
@@ -90,7 +96,7 @@ class Content1 extends React.Component {
             if(this.type == Constants.CONCEPT_OCCUPATION_FIELD) {
                 exportSsykRelations(Constants.RELATION_NARROWER, Constants.CONCEPT_OCCUPATION_FIELD);
             } else if(this.type == Constants.CONCEPT_SKILL) {
-                exportSsykRelations(Constants.RELATION_NARROWER, Constants.CONCEPT_SKILL);
+                exportSsykRelations(Constants.RELATION_RELATED, Constants.CONCEPT_SKILL);
             } else {
                 Rest.getConcepts(this.type, async (data) => {
                     Util.sortByKey(data, "preferredLabel", true);
@@ -99,10 +105,14 @@ class Content1 extends React.Component {
                     // setup excel
                     var name = Localization.get("db_" + this.type);
                     var context = Excel.create(name, name, version);
+                    var nr = context.addRow();
+                    context.setCell("C" + nr, "Namn", true);
+                    context.setCell("I" + nr, "Databas-ID", true);
                     context.addRow();
                     // insert data
                     for(var i=0; i<data.length; ++i) {
-                        context.addRow(data[i].preferredLabel);
+                        var rowNr = context.addRow(data[i].preferredLabel);
+                        context.setCell("I" + rowNr, data[i].id);
                     }
                     context.download(name + ".xlsx");
                     EventDispatcher.fire(Constants.EVENT_HIDE_POPUP_INDICATOR);

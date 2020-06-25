@@ -116,7 +116,7 @@ class Excel {
         sheet.getColumn('F').width = 2;
         sheet.getColumn('G').width = 6;
 		sheet.getColumn('H').width = 39;
-		sheet.getColumn('I').width = 2;
+		sheet.getColumn('I').width = 18;
 		sheet.getColumn('J').width = 5;
 		/*['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map((element) => {
 			sheet.getColumn(element).fill = {
@@ -226,6 +226,15 @@ class Excel {
 					link.click();
 				});
 			},
+			setCell: (cell, text, bold) => {
+				var cell = sheet.getCell(cell);
+				cell.value = text;
+				cell.font = {
+					name: 'Arial',
+					size: 10,
+					bold: bold == null ? false : bold,
+				};
+			},
 			/*
 			config = {
 				width: 10,
@@ -256,6 +265,7 @@ class Excel {
 						indent: config.indent == null ? false : config.indent,
 					};
 				}
+				return row._number;
 			},
 			addHeadlines: (leftTitle, rightTitle) => {
 				var row = sheet.addRow([]);
@@ -281,6 +291,7 @@ class Excel {
 						italic: true,
 					};
 				}
+				return row._number;
 			},
 			/*
 			left / right = {
@@ -322,6 +333,7 @@ class Excel {
 						cell.alignment.indent = 1;
 					}
 				}
+				return row._number;
 			},
 			addGroupRow: (title, number, text, bold) => {
 				var row = sheet.addRow([]);
@@ -351,6 +363,7 @@ class Excel {
 						size: 10,
 					};
 				}
+				return row._number;
 			},
 		};
     }
