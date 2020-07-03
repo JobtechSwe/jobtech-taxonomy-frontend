@@ -9,6 +9,7 @@ import Rest from '../../context/rest.jsx';
 import Localization from '../../context/localization.jsx';
 import EventDispatcher from '../../context/event_dispatcher.jsx';
 import Util from '../../context/util.jsx';
+import ConceptWrapper from '../../control/concept_wrapper.jsx';
 import CacheManager from '../../context/cache_manager.jsx';
 
 class Connections extends React.Component { 
@@ -138,7 +139,7 @@ class Connections extends React.Component {
                 if(data.data.concepts.length > 0) {
                     data = data.data.concepts[0].broader[0];
                     var headline = ControlUtil.createTreeViewItem(this.relationTreeView, data);
-                    headline.setText(data.preferredLabel);
+                    headline.setText(<ConceptWrapper concept={data}>{data.preferredLabel}</ConceptWrapper>);
                     headline.setExpanded(true);
                     root.addChild(headline);
                     root = headline;
@@ -152,7 +153,7 @@ class Connections extends React.Component {
         } else if(element.ssyk) {
             text = element.ssyk + " - " + text;
         }
-        child.setText(text);
+        child.setText(<ConceptWrapper concept={element}>{text}</ConceptWrapper>);
         root.addChild(child);
     }
 

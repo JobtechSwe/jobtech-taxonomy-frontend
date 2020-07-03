@@ -12,6 +12,7 @@ import EventDispatcher from '../../context/event_dispatcher.jsx';
 import App from '../../context/app.jsx';
 import Label from '../../control/label.jsx';
 import CacheManager from '../../context/cache_manager.jsx';
+import ConceptWrapper from '../../control/concept_wrapper.jsx';
 
 class ConceptsSearch extends React.Component { 
 
@@ -180,7 +181,7 @@ class ConceptsSearch extends React.Component {
             }
             var child = ControlUtil.createTreeViewItem(this.queryTreeView, element);
             child.setShowButton(false);
-            child.setText(element.label);
+            child.setText(<ConceptWrapper concept={element}>{element.label}</ConceptWrapper>);
             root.addChild(child);
         }
         for(var i=0; i<roots.length; ++i) {
@@ -194,7 +195,7 @@ class ConceptsSearch extends React.Component {
         for(var i=0; i<data.length; ++i) {
             var element = data[i];
             var root = ControlUtil.createTreeViewItem(this.queryTreeView, element);
-            root.setText(element.label);
+            root.setText(<ConceptWrapper concept={element}>{element.label}</ConceptWrapper>);
             root.setExpanded(query.length > 1);
             this.queryTreeView.addRoot(root);
             if(element.skills) {
@@ -207,7 +208,7 @@ class ConceptsSearch extends React.Component {
                         continue;
                     }
                     var child = ControlUtil.createTreeViewItem(this.queryTreeView, skill);
-                    child.setText(skill.label);
+                    child.setText(<ConceptWrapper concept={skill}>{skill.label}</ConceptWrapper>);
                     child.setExpanded(query.length > 1);
                     root.addChild(child);
                 }
@@ -229,7 +230,7 @@ class ConceptsSearch extends React.Component {
             var element = data[i];
             var item = ControlUtil.createTreeViewItem(this.queryTreeView, element);
             item.setShowButton(false);
-            item.setText(element.label);
+            item.setText(<ConceptWrapper concept={element}>{element.label}</ConceptWrapper>);
             this.queryTreeView.addRoot(item);
         }
         this.queryTreeView.shouldUpdateState = true;
@@ -456,7 +457,7 @@ class ConceptsSearch extends React.Component {
             if(type == this.state.queryType) {
                 // create tree node for item
                 var node = ControlUtil.createTreeViewItem(this.queryTreeView, data.concept);
-                node.setText(data.concept.label);
+                node.setText(<ConceptWrapper concept={data.concept}>{data.concept.label}</ConceptWrapper>);
                 // update structure correctly
                 if(type == Constants.CONCEPT_SKILL) {
                     if(data.parent) {

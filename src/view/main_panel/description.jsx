@@ -147,7 +147,7 @@ class Description extends React.Component {
         if(this.state.lastChanged != null) {
             return (
                 <Label 
-                    text={Localization.get("last_changed") + new Date(this.state.lastChanged).toLocaleString()}
+                    text={Localization.get("last_changed") + ": " + new Date(this.state.lastChanged).toLocaleString()}
                     css="description_last_changed"/>
             );
         }
