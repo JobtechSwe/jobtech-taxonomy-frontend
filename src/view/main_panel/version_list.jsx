@@ -232,6 +232,9 @@ class VersionList extends React.Component {
             }, {
                 text: Localization.get("name"),
                 width: 90,
+            }, {
+                text: Localization.get("database_id"),
+                width: 40,
             }];
 
             var context = Excel.createSimple("Version - " + this.state.item.version, "Next", columns)
@@ -241,7 +244,8 @@ class VersionList extends React.Component {
                     "", 
                     Localization.get(item["event-type"]),
                     Localization.get("db_" + item["changed-concept"].type),
-                    item["changed-concept"].preferredLabel
+                    item["changed-concept"].preferredLabel,
+                    item.id,
                 ];
                 context.addRow(row);
             }

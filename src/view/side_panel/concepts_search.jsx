@@ -72,7 +72,7 @@ class ConceptsSearch extends React.Component {
         this.queryTreeView.onAllowItemSelection = this.onAllowItemSelection.bind(this);
         this.boundMainItemSelected = this.onMainItemSelected.bind(this);
         this.boundNewConcept = this.onNewConcept.bind(this);
-    }    
+    }
 
     componentDidMount() {
         EventDispatcher.add(this.boundMainItemSelected, Constants.EVENT_MAINPANEL_ITEM_SELECTED);
