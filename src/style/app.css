@@ -1108,6 +1108,13 @@ body {
     padding: 0px 10px 10px 10px;
 }
 
+.settings_user_id {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 10px 10px 10px;
+}
+
 .isco_color {
     background: #78b3ff;
 }
@@ -1503,4 +1510,36 @@ body {
     width: 20px;
     height: 20px;
     margin-right: 5px;
+}
+
+.login_container {
+    display: flex;
+    align-self: center;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login_title {
+    font-weight: bold;
+    font-size: 36pt;
+}
+
+.login_panel {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.login_remember {
+    display: flex;
+    justify-content: space-between;
+}
+
+.login_buttons {
+    display: flex;
+    margin-top: 8px;
 }

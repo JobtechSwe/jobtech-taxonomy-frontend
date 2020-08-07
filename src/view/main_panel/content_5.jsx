@@ -51,6 +51,11 @@ class Content5 extends React.Component {
         this.forceUpdate();
     }
 
+    onForgetUserIdClicked() {
+        localStorage.removeItem("taxonomy_user");
+        this.forceUpdate();
+    }
+
     renderEditableTypes() {
         var list = JSON.parse(JSON.stringify(Constants.DB_TYPES));
         list.sort((a, b) => {
@@ -116,6 +121,23 @@ class Content5 extends React.Component {
         );
     }
 
+    renderForgetUserId() {
+        var userId = localStorage.getItem("taxonomy_user");
+        if(!userId) {
+            userId = "";
+        }
+        return (
+            <Group text={Localization.get("user_id")}>
+                <div className="settings_user_id">
+                    <Label text={userId}/>
+                    <Button
+                        text={Localization.get("forget")}
+                        onClick={this.onForgetUserIdClicked.bind(this)} />
+                </div>
+            </Group>
+        );
+    }
+
     render() {
         return (
             <div className="main_content_5">       
@@ -124,6 +146,7 @@ class Content5 extends React.Component {
                     text={Localization.get("settings")}/>
                 {this.renderEditableTypes()}
                 {this.renderCache()}
+                {this.renderForgetUserId()}
             </div>
         );
     }

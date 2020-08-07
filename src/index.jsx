@@ -11,6 +11,7 @@ import Button from './control/button.jsx';
 import Label from './control/label.jsx';
 import SidePanel from './view/side_panel/side_panel.jsx';
 import MainPanel from './view/main_panel/main_panel.jsx';
+import Login from './login.jsx';
 
 class Index extends React.Component { 
 
@@ -118,6 +119,14 @@ class Index extends React.Component {
         }, 500);
     }
 
+    onSetUserId(userId) {
+        if(userId != null) {
+            Constants.REST_API_KEY = userId;
+            this.forceUpdate();
+        }
+    }
+
+
     renderSavedSearchResult() {        
         if(this.state.savedSearchResult) {
             return (
@@ -178,15 +187,25 @@ class Index extends React.Component {
         }
     }
 
-    render() {
-        return (
-            <div className="main">
+    renderContent() {
+        if(Constants.REST_API_KEY == null || Constants.REST_API_KEY === "") {
+            return ( <Login onSetUserId={this.onSetUserId.bind(this)}/> );
+        } else {
+            return (
                 <div 
                     className="main_container"
                     id="main_container">
                     <SidePanel/>
                     <MainPanel/>
                 </div>
+            );
+        }
+    }
+
+    render() {        
+        return (
+            <div className="main">
+                {this.renderContent()}
                 {this.renderSavedSearchResult()}
                 {this.renderErrors()}
                 <div id="overlay_window">

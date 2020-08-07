@@ -211,6 +211,12 @@ class Localization {
                 edit_concept_relation_text: "Markera det begrepp som den nya relationen ska gå till",
                 edit_concept_recommended_relation: "Den rekommenderade relationstypen är",
                 visit_latest_search: "Visa senaste sökresultat",
+                remember: "Kom ihåg",
+                app_name: "Taxonomieditor",
+                set_user_id: "Ange användar-id",
+                user_id: "Användar-id",
+                use: "Använd",
+                forget: "Glöm",
             },
         }
         // find active language
