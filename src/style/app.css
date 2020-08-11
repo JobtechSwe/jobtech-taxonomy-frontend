@@ -716,6 +716,11 @@ body {
     align-self: flex-end;
 }
 
+.item_history_dialog_item_header {
+    background: #386479 !important;
+    color: #fff;
+}
+
 .item_history_dialog_item {
     display: flex;
     margin: 2px;

@@ -96,11 +96,11 @@ class ItemHistory extends React.Component {
         this.setState({selected: item});
     }
 
-    renderInfoItem(name, value, key) {
+    renderInfoItem(name, value, key, isHeader) {
         return (
             <div 
                 key={key}
-                className="item_history_dialog_item">
+                className={"item_history_dialog_item " + (isHeader ? "item_history_dialog_item_header" : "")}>
                 <div>
                     {name}
                 </div>
@@ -135,7 +135,7 @@ class ItemHistory extends React.Component {
             //info.push(this.renderInfoItem("Typ", Localization.get("db_" + item.type), key++));
             for(var i=0; i<item.changes.length; ++i) {
                 var change = item.changes[i];
-                info.push(this.renderInfoItem(Localization.get("action"), Localization.get("changed") + " " + Localization.get(change.attribute), key++));
+                info.push(this.renderInfoItem(Localization.get("action"), Localization.get("changed") + " " + Localization.get(change.attribute), key++, true));
                 info.push(this.renderInfoItem(Localization.get("from"), change["old-value"], key++));
                 info.push(this.renderInfoItem(Localization.get("to"), change["new-value"], key++));
             }

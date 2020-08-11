@@ -463,7 +463,7 @@ class VersionList extends React.Component {
                 </List>
                 <Pager
                     data={this.state.data}
-                    itemsPerPage={10}
+                    itemsPerPage={50}
                     onNewRange={this.onNewRange.bind(this)}/>                
                 <div className="version_list_buttons">
                     <Button 
