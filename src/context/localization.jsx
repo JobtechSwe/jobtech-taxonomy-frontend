@@ -217,6 +217,7 @@ class Localization {
                 user_id: "Användar-id",
                 use: "Använd",
                 forget: "Glöm",
+                invalid_user_id: "Ogiltig inloggning",
             },
         }
         // find active language
