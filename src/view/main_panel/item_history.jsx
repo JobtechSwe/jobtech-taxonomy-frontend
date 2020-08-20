@@ -193,7 +193,11 @@ class ItemHistory extends React.Component {
             } else if(item.changes) {
                 event = Localization.get(item.changes[0].attribute) + " " + event;
             } else if(item.relation) {
-                event += " " + Localization.get("against") + " " + item.relation.target["concept/preferredLabel"];
+                if(this.state.concept.id === item.relation.target["concept/id"]) {
+                    event += " " + Localization.get("from").toLowerCase() + " " + item.relation.source["concept/preferredLabel"];
+                } else {
+                    event += " " + Localization.get("against") + " " + item.relation.target["concept/preferredLabel"];
+                }
             }
             comment = item.comment;
         }
