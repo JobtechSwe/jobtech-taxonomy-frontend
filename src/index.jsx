@@ -193,7 +193,7 @@ class Index extends React.Component {
         } else {
             return (
                 <div 
-                    className="main_container"
+                    className="root_container"
                     id="main_container">
                     <SidePanel/>
                     <MainPanel/>

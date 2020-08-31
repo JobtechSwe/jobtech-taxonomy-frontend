@@ -149,6 +149,7 @@ body {
 
 .side_panel {
     display: flex;
+    flex-grow: 0;
     flex-direction: column;
     width: 300px;
     min-width: 310px;
@@ -343,13 +344,9 @@ body {
     height: 100%;
 }
 
-.main_panel {
-    width: 100%;
-}
-
-.main_container {
+.root_container {
     display: flex;
-    height: 100%;
+    flex: 1 1 auto;
     transition: all 500ms ease-in-out;
 }
 
