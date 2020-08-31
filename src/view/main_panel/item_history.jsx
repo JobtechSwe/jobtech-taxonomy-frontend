@@ -114,27 +114,31 @@ class ItemHistory extends React.Component {
     renderHistoryShowItem(item) {
         var info = [];
         var key = 0;
-        if(item.concept) {
-            info.push(this.renderInfoItem(Localization.get("name"), item.concept["concept/preferredLabel"], key++));
-            info.push(this.renderInfoItem(Localization.get("description"), item.concept["concept/definition"], key++));
-            info.push(this.renderInfoItem(Localization.get("id"), item.concept["concept/id"], key++));
-            info.push(this.renderInfoItem(Localization.get("type"), Localization.get("db_" + item.concept["concept/type"]), key++));
-            if(item["event-type"] === "CREATED") {
+        if(item["latest-version-of-concept"]) {
+            info.push(this.renderInfoItem(Localization.get("name"), item["latest-version-of-concept"]["concept/preferredLabel"], key++));
+            info.push(this.renderInfoItem(Localization.get("id"), item["latest-version-of-concept"]["concept/id"], key++));
+            info.push(this.renderInfoItem(Localization.get("type"), Localization.get("db_" + item["latest-version-of-concept"]["concept/type"]), key++));
+            /*if(item["event-type"] === "CREATED") {
                 //not deprecated
                 info.push(this.renderInfoItem("Kvalitetsnivå", item.concept["concept/quality-level"], key++));
             } else {
                 //deprecated
                 info.push(this.renderInfoItem(Localization.get("action"), "[händelse]", key++));
                 info.push(this.renderInfoItem("Hävisad till", "[hänvisad_till]", key++));
+            }*/
+        }
+        if(item["new-concept"]) {
+            for(var x in item["new-concept"]) {
+                if(x != "concept/preferredLabel" && 
+                    x != "concept/id" &&
+                    x != "concept/type") {
+                    info.push(this.renderInfoItem(Localization.get(x), item["new-concept"][x], key++));
+                }
             }
         }
-        if(item.changes) {
-            if(this.selected) {
-                info.push(this.renderInfoItem(Localization.get("id"), this.selected.id, key++));
-            }
-            //info.push(this.renderInfoItem("Typ", Localization.get("db_" + item.type), key++));
-            for(var i=0; i<item.changes.length; ++i) {
-                var change = item.changes[i];
+        if(item["concept-attribute-changes"]) {
+            for(var i=0; i<item["concept-attribute-changes"].length; ++i) {
+                var change = item["concept-attribute-changes"][i];
                 info.push(this.renderInfoItem(Localization.get("action"), Localization.get("changed") + " " + Localization.get(change.attribute), key++, true));
                 info.push(this.renderInfoItem(Localization.get("from"), change["old-value"], key++));
                 info.push(this.renderInfoItem(Localization.get("to"), change["new-value"], key++));
@@ -202,7 +206,7 @@ class ItemHistory extends React.Component {
             comment = item.comment;
         }
         return (
-            <div className="item_history_item" title={comment}>
+            <div className="item_history_item" title={Localization.get("note") + ": " + comment}>
                 <div>
                     {new Date(item.date).toLocaleString()}
                 </div>

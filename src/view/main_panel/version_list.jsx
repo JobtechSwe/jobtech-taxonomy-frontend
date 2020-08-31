@@ -14,6 +14,7 @@ import Excel from '../../context/excel.jsx';
 import App from '../../context/app.jsx';
 import Export from '../dialog/export.jsx';
 import PublishVersion from '../dialog/publish_version.jsx';
+import VersionDetail from './version_detail.jsx';
 
 class VersionList extends React.Component { 
 
@@ -23,8 +24,9 @@ class VersionList extends React.Component {
         this.SORT_EVENT_TYPE = 0;
         this.SORT_CONCEPT_TYPE = 1;
         this.SORT_CONCEPT_LABEL = 2;
-        this.SORT_CREATED = 3;
-        this.SORT_DEPRECATED  = 4;
+        this.SORT__FROM = 3;
+        this.SORT_TO = 4;
+        this.SORT_RELATION_TYPE = 5;
         this.state = {
             item: null,
             data: [], 
@@ -33,16 +35,24 @@ class VersionList extends React.Component {
             loadingData: false,
             selected: null,
             range: null,
+            conceptChanges: 0,
+            relationChanges: 0,
         }
         this.sortBy= this.SORT_EVENT_TYPE;
         this.sortDesc= false;
     }
 
     componentDidMount() {
+        if(this.props.exportContext) {
+            this.props.exportContext.onExport = this.onSaveClicked.bind(this);
+        }
         this.getChanges(this.props.item);
     }
 
     UNSAFE_componentWillReceiveProps(props) {
+        if(this.props.exportContext) {
+            this.props.exportContext.onExport = this.onSaveClicked.bind(this);
+        }
         if(this.state.item == null || this.state.item.version != props.item.version) {
             EventDispatcher.fire(this.VERSION_LIST_EVENT_ID);
             this.state.selected = null;
@@ -55,19 +65,22 @@ class VersionList extends React.Component {
         switch(this.sortBy) {
             default:
             case this.SORT_EVENT_TYPE:
-                cmp = (a) => {return Localization.get(a["event-type"]);};
+                cmp = (a) => {return this.getEvent(a);};
                 break;
             case this.SORT_CONCEPT_TYPE:
-                cmp = (a) => {return Localization.get("db_" + a["changed-concept"].type);};
+                cmp = (a) => {return this.getType(a);};
                 break;
             case this.SORT_CONCEPT_LABEL:
-                cmp = (a) => {return a["changed-concept"].preferredLabel;};
+                cmp = (a) => {return this.getName(a);};
                 break;
-            case this.SORT_CREATED:
-                cmp = (a) => {return a.created ? 1 : 0;};
+            case this.SORT__FROM:
+                cmp = (a) => {return this.getFrom(a);};
                 break;
-            case this.SORT_DEPRECATED:
-                cmp = (a) => {return a.deprecated ? 1 : 0;};
+            case this.SORT_TO:
+                cmp = (a) => {return this.getTo(a);};
+                break;
+            case this.SORT_RELATION_TYPE:
+                cmp = (a) => {return a.relation ? a.relation["relation-type"] : "";};
                 break;
         }
         return Util.sortByCmp(data, cmp, this.sortDesc);
@@ -80,32 +93,14 @@ class VersionList extends React.Component {
         }
         var lowerCaseFilter = this.state.filter.toLowerCase();
         return this.state.unfilteredData.filter((e) => {
-            return e["changed-concept"].preferredLabel.toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
-                Localization.get("db_" + e["changed-concept"].type).toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
-                Localization.get(e["event-type"]).toLowerCase().indexOf(lowerCaseFilter) >= 0;
+            return this.getType(e).toLowerCase().indexOf(lowerCaseFilter) >= 0||
+                this.getEvent(e).toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
+                this.getName(e).toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
+                this.getFrom(e).toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
+                this.getTo(e).toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
+                this.getRelationType(e).toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
+                e.id != null && e.id.toLowerCase().indexOf(lowerCaseFilter) >= 0;
         });
-    }
-
-    prepareData(data) {
-        var res = [];
-        for(var i=data.length-1; i>=0; --i) {
-            var dataItem = data[i];
-            var item = res.find((e) => e["changed-concept"].id == dataItem["changed-concept"].id);
-            if(item == null) {                
-                item = dataItem;
-                res.push(item);
-            } 
-            if(dataItem["event-type"] === "CREATED") {
-                item.created = true;
-            } else if(dataItem["event-type"] === "DEPRECATED") {
-                item.deprecated = true;
-            }
-        }
-        EventDispatcher.fire(Constants.EVENT_VERSION_ITEM_CONTENT_INFO, {
-            nrConcepts: res.length, 
-            nrChanges: data.length,
-        });
-        return res;
     }
 
     getChanges(item) {        
@@ -114,30 +109,79 @@ class VersionList extends React.Component {
             unfilteredData: [],
             loadingData: true,
             item: item,
-        }, () => {
-            EventDispatcher.fire(Constants.EVENT_VERSION_ITEM_SELECTED, null);
+            conceptChanges: 0,
+            relationChanges: 0,
+        }, () => {            
             if(item) {
                 Rest.abort();
                 if(item.version == -1) {
-                    Rest.getUnpublishedChanges(item.latestVersion, (data) => {
-                        var preparedData = this.sortData(this.prepareData(data));
+                    Rest.getUnpublishedConceptChanges(item.latestVersion, (data) => {
+                        data = this.sortData(data);
                         this.setState({
-                            unfilteredData: preparedData,
-                            data: preparedData, 
-                            loadingData: false,
+                            unfilteredData: data,
+                            data: data, 
+                            loadingData: true,
+                            conceptChanges: data.length,
+                        }, () => {
+                            Rest.getUnpublishedRelationChanges(item.latestVersion, (data) => {
+                                var preparedData = this.state.unfilteredData;
+                                preparedData.push(...data);
+                                preparedData = this.sortData(preparedData);
+                                if(this.state.selected != null) {
+                                    EventDispatcher.fire(this.VERSION_LIST_EVENT_ID);
+                                    this.onItemSelected(null);
+                                }
+                                this.setState({
+                                    unfilteredData: preparedData,
+                                    data: preparedData, 
+                                    loadingData: false,
+                                    relationChanges: data.length,
+                                });
+                                EventDispatcher.fire(Constants.EVENT_VERSION_ITEM_CONTENT_INFO, {
+                                    nrConcepts: this.state.conceptChanges, 
+                                    nrRelations: this.state.relationChanges,
+                                });
+                            }, (status) => {
+                                App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta förändringar");
+                                this.setState({loadingData: false});
+                            });
                         });
                     }, (status) => {
                         App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta förändringar");
                         this.setState({loadingData: false});
                     });
                 } else {
-                    Rest.getChanges(item.version - 1, item.version, (data) => {
-                        var preparedData = this.sortData(this.prepareData(data));
+                    Rest.getConceptChanges(item.version - 1, item.version, (data) => {
+                        var data = this.sortData(data);
                         this.setState({
-                            unfilteredData: preparedData,
-                            data: preparedData, 
-                            loadingData: false,
-                        });
+                            unfilteredData: data,
+                            data: data, 
+                            loadingData: true,
+                            conceptChanges: data.length,
+                        }, () => {
+                            Rest.getRelationChanges(item.version - 1, item.version, (data) => {
+                                var preparedData = this.state.unfilteredData;
+                                preparedData.push(...data);
+                                preparedData = this.sortData(preparedData);
+                                if(this.state.selected != null) {
+                                    EventDispatcher.fire(this.VERSION_LIST_EVENT_ID);
+                                    this.onItemSelected(null);
+                                }
+                                this.setState({
+                                    unfilteredData: preparedData,
+                                    data: preparedData, 
+                                    loadingData: false,
+                                    relationChanges: data.length,
+                                });
+                                EventDispatcher.fire(Constants.EVENT_VERSION_ITEM_CONTENT_INFO, {
+                                    nrConcepts: this.state.conceptChanges, 
+                                    nrRelations: this.state.relationChanges,
+                                });
+                            }, (status) => {
+                                App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta förändringar");
+                                this.setState({loadingData: false});
+                            });
+                        });                        
                     }, (status) => {
                         App.showError(Util.getHttpMessage(status) + " : misslyckades att hämta förändringar");
                         this.setState({loadingData: false});
@@ -145,6 +189,95 @@ class VersionList extends React.Component {
                 }
             }
         });
+    }
+
+    getEvent(item) {
+        if(item.relation) {
+            return Localization.get("relation") + " " + Localization.get(item["event-type"]);
+        }
+        if(item["concept-attribute-changes"]) {
+            var changedAttributes = Localization.get(item["concept-attribute-changes"][0].attribute);
+            for(var i=1; i<item["concept-attribute-changes"].length; ++i) {
+                changedAttributes += ", " + Localization.get(item["concept-attribute-changes"][i].attribute);
+            }
+            return changedAttributes + " " + Localization.get("changed");
+        }
+        return Localization.get("concept") + " " + Localization.get(item["event-type"]);
+    }
+
+    getType(item) {
+        var type = this.getDbType(item);
+        return type != null ? Localization.get("db_" + type) : "";
+    }
+
+    getDbType(item) {
+        if(item["latest-version-of-concept"]) {
+            return item["latest-version-of-concept"].type;
+        }
+        if(item["changed-concept"]) {
+            return item["changed-concept"].type;
+        }
+        if(item["new-concept"]) {
+            return item["new-concept"].type;
+        }
+        if(item.relation) {
+            return item.relation.source.type;
+        }
+        return null;
+    }
+
+    getName(item) {
+        if(item["latest-version-of-concept"]) {
+            return item["latest-version-of-concept"].preferredLabel;
+        }
+        if(item["changed-concept"]) {
+            return item["changed-concept"].preferredLabel;
+        }        
+        if(item["new-concept"]) {
+            return item["new-concept"].preferredLabel;
+        }
+        if(item.relation) {
+            return item.relation.source.preferredLabel;
+        }
+        return "";
+    }
+
+    getFrom(item) {
+        if(item["concept-attribute-changes"]) {
+            if(item["concept-attribute-changes"].length == 1) {
+                return item["concept-attribute-changes"][0].old-value;
+            }
+        }
+        if(item.relation) {
+            return Localization.get("db_" + item.relation.source.type);
+        }
+        return "";
+    }
+
+    getTo(item) {
+        if(item["concept-attribute-changes"]) {
+            if(item["concept-attribute-changes"].length == 1) {
+                return item["concept-attribute-changes"][0].new-value;
+            }
+        }
+        if(item.relation) {
+            return Localization.get("db_" + item.relation.target.type);
+        }
+        return "";
+    }
+
+    getRelationType(item) {
+        return item.relation ? item.relation["relation-type"] : "";
+    }
+
+    getId(item) {
+        if(item["latest-version-of-concept"]) {
+            return item["latest-version-of-concept"].id;
+        }
+        if(item.relation) {
+            return item.relation.source.id;
+        }
+        return "";
     }
 
     getPageData() {
@@ -157,12 +290,14 @@ class VersionList extends React.Component {
 
     onNewRange(range) {
         this.setState({range: range});
+        if(this.state.selected != null) {
+            EventDispatcher.fire(this.VERSION_LIST_EVENT_ID);
+            this.onItemSelected(null);
+        } 
     }
 
-    onItemSelected(item) {       
-        this.setState({selected: item}, () => {
-            EventDispatcher.fire(Constants.EVENT_VERSION_ITEM_SELECTED, item);
-        });
+    onItemSelected(item) {
+        this.setState({selected: item});
     }
 
     onFilterChange(value) {  
@@ -195,7 +330,13 @@ class VersionList extends React.Component {
         if(this.state.selected != null) {
             EventDispatcher.fire(Constants.ID_NAVBAR, Constants.WORK_MODE_1);
             setTimeout(() => {
-                EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, this.state.selected["changed-concept"]);
+                var visit = {
+                    id: this.getId(this.state.selected),
+                    type: this.getDbType(this.state.selected),
+                    preferredLabel: this.getName(this.state.selected),
+                    deprecated: this.state.selected["event-type"] === "DEPRECATED",
+                };
+                EventDispatcher.fire(Constants.EVENT_MAINPANEL_ITEM_SELECTED, visit);
             }, 500);
         }
     }
@@ -203,8 +344,7 @@ class VersionList extends React.Component {
     onShowInfoClicked() {
         if(this.state.selected != null) {
             var title = <div className="publish_info_header">
-                            <div>{"[date] " + Localization.get(this.state.selected["event-type"])}</div>
-                            <div>[user]</div>
+                            <div>{this.getEvent(this.state.selected)}</div>                            
                         </div>;
             EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
                 title: title,
@@ -224,17 +364,26 @@ class VersionList extends React.Component {
             }); 
 
             var columns = [{
-                text: Localization.get("event"),
-                width: 30,
+                text: Localization.get("type"),
+                width: 25,
             }, {
-                text: Localization.get("value_storage"),
-                width: 40,
+                text: Localization.get("event"),
+                width: 25,
             }, {
                 text: Localization.get("name"),
-                width: 90,
+                width: 40,
+            }, {
+                text: Localization.get("from"),
+                width: 25,
+            }, {
+                text: Localization.get("to"),
+                width: 25,            
+            }, {
+                text: Localization.get("relation_type"),
+                width: 25,
             }, {
                 text: Localization.get("database_id"),
-                width: 40,
+                width: 25,
             }];
 
             var context = Excel.createSimple("Version - " + this.state.item.version, "Next", columns)
@@ -242,10 +391,13 @@ class VersionList extends React.Component {
                 var item = this.state.data[i];
                 var row = [
                     "", 
-                    Localization.get(item["event-type"]),
-                    Localization.get("db_" + item["changed-concept"].type),
-                    item["changed-concept"].preferredLabel,
-                    item.id,
+                    this.getType(item),
+                    this.getEvent(item),
+                    this.getName(item),
+                    this.getFrom(item),
+                    this.getTo(item),
+                    this.getRelationType(item),
+                    this.getId(item),
                 ];
                 context.addRow(row);
             }
@@ -293,46 +445,10 @@ class VersionList extends React.Component {
     }
 
     renderInfoDialog() {
-        var info = [];
-        var key = 0;
-        if(this.state.selected["event-type"] === "CREATED") {
-            info.push(this.renderInfoItem("Namn", this.state.selected["changed-concept"].preferredLabel, key++));
-            info.push(this.renderInfoItem("Definition", "[definition]", key++));
-            info.push(this.renderInfoItem("Id", this.state.selected["changed-concept"].id, key++));
-            info.push(this.renderInfoItem("Typ", Localization.get("db_" + this.state.selected["changed-concept"].type), key++));
-            info.push(this.renderInfoItem("Kvalitetsnivå", "[kvalitetsnivå]", key++));
-            info.push(this.renderInfoItem("Anteckning", "[anteckning]", key++));                 
-        } else if(this.state.selected["event-type"] === "UPDATED") {
-            info.push(this.renderInfoItem("Namn", this.state.selected["changed-concept"].preferredLabel, key++));
-            info.push(this.renderInfoItem("Definition", "[definition]", key++));
-            info.push(this.renderInfoItem("Id", this.state.selected["changed-concept"].id, key++));
-            info.push(this.renderInfoItem("Typ", Localization.get("db_" + this.state.selected["changed-concept"].type), key++));
-            info.push(this.renderInfoItem("Åtgärd", "[åtgärd]", key++));
-            info.push(this.renderInfoItem("Från", "[från]", key++));
-            info.push(this.renderInfoItem("Till", "[till]", key++));
-            info.push(this.renderInfoItem("Anteckning", "[anteckning]", key++));    
-        } else if(this.state.selected["event-type"] === "DEPRECATED") {
-            info.push(this.renderInfoItem("Namn", this.state.selected["changed-concept"].preferredLabel, key++));
-            info.push(this.renderInfoItem("Definition", "[definition]", key++));
-            info.push(this.renderInfoItem("Id", this.state.selected["changed-concept"].id, key++));
-            info.push(this.renderInfoItem("Typ", Localization.get("db_" + this.state.selected["changed-concept"].type), key++));
-            info.push(this.renderInfoItem("Åtgärd", "[åtgärd]", key++));
-            info.push(this.renderInfoItem("Hävisad till", "[hänvisad_till]", key++));
-            info.push(this.renderInfoItem("Anteckning", "[anteckning]", key++));    
-        } else {
-            info.push(this.renderInfoItem("Namn", this.state.selected["changed-concept"].preferredLabel, key++));
-            info.push(this.renderInfoItem("Definition", "[definition]", key++));
-            info.push(this.renderInfoItem("Id", this.state.selected["changed-concept"].id, key++));
-            info.push(this.renderInfoItem("Typ", Localization.get("db_" + this.state.selected["changed-concept"].type), key++));
-            info.push(this.renderInfoItem("Kvalitetsnivå", "[kvalitetsnivå]", key++));
-            info.push(this.renderInfoItem("Anteckning", "[anteckning]", key++));
-        }
-
-        return(
+        return (
             <div className="dialog_content item_history_dialog">
-                <div>
-                    {info}
-                </div>
+                <VersionDetail
+                    item={this.state.selected}/>
                 <div>
                     <Button 
                         text={Localization.get("close")}
@@ -359,48 +475,35 @@ class VersionList extends React.Component {
             }
         };
 
-        /*<div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_FROM)}>
-                    {Localization.get("from")}
-                    {renderArrow(this.SORT_CONCEPT_FROM)}
-                </div>
-                <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_TO)}>
-                    {Localization.get("to")}
-                    {renderArrow(this.SORT_CONCEPT_TO)}
-                </div>
-                <div onClick={this.onSortClicked.bind(this, this.SORT_EVENT_DATE)}>
-                    {Localization.get("date")}
-                    {renderArrow(this.SORT_EVENT_DATE)}
-                </div>
-                <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_RELATION)}>
-                    {Localization.get("relation_type")}
-                    {renderArrow(this.SORT_CONCEPT_RELATION)}
-                </div>
-                */
         return(
             <div className="version_list_header no_select font">
                 <div
                     title={Localization.get("CREATED")} 
-                    onClick={this.onSortClicked.bind(this, this.SORT_CREATED)}>
-                    {Localization.get("created_short")}
-                    {renderArrow(this.SORT_CREATED)}
+                    onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_TYPE)}>
+                    {Localization.get("type")}
+                    {renderArrow(this.SORT_CONCEPT_TYPE)}
                 </div>
                 <div
                     title={Localization.get("DEPRECATED")}
-                    onClick={this.onSortClicked.bind(this, this.SORT_DEPRECATED)}>
-                    {Localization.get("deprecated_short")}
-                    {renderArrow(this.SORT_DEPRECATED)}
-                </div>
-                <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_TYPE)}>
-                    {Localization.get("value_storage")}
-                    {renderArrow(this.SORT_CONCEPT_TYPE)}
-                </div>
-                <div onClick={this.onSortClicked.bind(this, this.SORT_EVENT_TYPE)}>
+                    onClick={this.onSortClicked.bind(this, this.SORT_EVENT_TYPE)}>
                     {Localization.get("event")}
                     {renderArrow(this.SORT_EVENT_TYPE)}
                 </div>
                 <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_LABEL)}>
                     {Localization.get("name")}
                     {renderArrow(this.SORT_CONCEPT_LABEL)}
+                </div>
+                <div onClick={this.onSortClicked.bind(this, this.SORT__FROM)}>
+                    {Localization.get("from")}
+                    {renderArrow(this.SORT__FROM)}
+                </div>
+                <div onClick={this.onSortClicked.bind(this, this.SORT_TO)}>
+                    {Localization.get("to")}
+                    {renderArrow(this.SORT_TO)}
+                </div>                
+                <div onClick={this.onSortClicked.bind(this, this.SORT_RELATION_TYPE)}>
+                    {Localization.get("relation_type")}
+                    {renderArrow(this.SORT_RELATION_TYPE)}
                 </div>                
             </div>
         );
@@ -409,20 +512,23 @@ class VersionList extends React.Component {
     renderItem(item) {
         return(
             <div className="version_list_item">     
-                <div>
-                    {item.created ? Localization.get("created_short") : ""}
+                <div title={this.getType(item)}>
+                    {this.getType(item)}
                 </div>
-                <div>
-                    {item.deprecated ? Localization.get("deprecated_short") : ""}
+                <div title={this.getEvent(item)}>
+                    {this.getEvent(item)}
                 </div>
-                <div>
-                    {Localization.get("db_" + item["changed-concept"].type)}
+                <div title={this.getName(item)}>
+                    {this.getName(item)}
                 </div>
-                <div>
-                    {Localization.get(item["event-type"])}
+                <div title={this.getFrom(item)}>
+                    {this.getFrom(item)}
                 </div>
-                <div>
-                    {item["changed-concept"].preferredLabel}
+                <div title={this.getTo(item)}>
+                    {this.getTo(item)}
+                </div>
+                <div title={this.getRelationType(item)}>
+                    {this.getRelationType(item)}
                 </div>
             </div>
         );
@@ -439,12 +545,6 @@ class VersionList extends React.Component {
     }
 
     render() {
-        /*
-         <Button 
-                        isEnabled={this.state.selected != null}
-                        onClick={this.onShowInfoClicked.bind(this)}
-                        text={Localization.get("show")}/>
-         */
         return (
             <div className="version_list">
                 <Label text={Localization.get("title_filter")}/>
@@ -469,11 +569,12 @@ class VersionList extends React.Component {
                     <Button 
                         isEnabled={this.state.selected != null}
                         onClick={this.onVisitClicked.bind(this)}
-                        text={Localization.get("visit")}/>                   
-                    {this.renderPublishButton()}
-                    <Button                             
-                        onClick={this.onSaveClicked.bind(this)}
-                        text={Util.renderExportButtonText()}/>
+                        text={Localization.get("visit")}/>
+                    <Button
+                        isEnabled={this.state.selected != null}
+                        onClick={this.onShowInfoClicked.bind(this)}
+                        text={Localization.get("show")}/>
+                    {this.renderPublishButton()}                    
                 </div>
             </div>
         );

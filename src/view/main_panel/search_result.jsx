@@ -35,8 +35,6 @@ class SearchResult extends React.Component {
             searchFor: null,
             searching: false,
             data: [],
-            tempData: [],
-            conceptIds: null,
             selected: null,
             range: null,
         };
@@ -76,24 +74,14 @@ class SearchResult extends React.Component {
             searchFor: searchFor,
             searching: true,
             data: [],
-            tempData: [],
-            conceptIds: null,
             selected: null,
         }, () => {
             if(searchFor.actions.length > 0) {
                 Rest.getConceptDayNotes(null, searchFor.fromDate, searchFor.toDate, (data) => {
-                    var result = this.filterConceptActions(data);
-                    var tempData = result.filter((item) => {
-                        return !item.concept;
-                    });
-                    result = result.filter((item) => {
-                        return item.concept;
-                    });
                     this.setState({
-                        data: this.filterConceptTypes(result), 
-                        tempData: tempData,
-                        conceptIds: this.findConceptIds(tempData),
-                    }, () => {this.getConcepts()});
+                        searching: false,
+                        data: this.filterConceptData(data), 
+                    });
                 }, (status) => {
                     App.showError(Util.getHttpMessage(status) + " : misslyckades med att utföra sökning");
                     this.setState({searching: false});
@@ -103,7 +91,6 @@ class SearchResult extends React.Component {
                     this.setState({
                         searching: false,
                         data: this.filterRelationData(data),
-                        conceptIds: null,
                     });
                 }, (status) => {
                     App.showError(Util.getHttpMessage(status) + " : misslyckades med att utföra sökning");
@@ -113,54 +100,14 @@ class SearchResult extends React.Component {
         });
     }
 
-    getConcepts() {
-        if(!this.state.conceptIds || this.state.conceptIds.length == 0) {
-            if(this.state.tempData.length > 0) {
-                this.state.data.push(...this.state.tempData.filter((item) => {
-                    return this.state.searchFor.types.indexOf(item.type) >= 0;
-                }));
-            }
-            this.setState({
-                searching: false,
-                data: this.state.data,
-                tempData: [],
-                conceptIds: [],
-            });
-            return;
-        }
-        Rest.getConceptExtraField(this.state.conceptIds.pop(), "", (data) => {
-            for(var i=0; i<this.state.tempData.length; ++i) {
-                var item = this.state.tempData[i];
-                if(item["concept-id"] === data[0].id) {
-                    item.type = data[0].type;
-                    item.preferredLabel = data[0].preferredLabel;
-                    item.quality_level = data[0].quality_level;
-                }
-            }
-            this.getConcepts();
-        }, (status) => {
-            //TODO
-        })
-    }
-
-    findConceptIds(data) {
-        var result = [];
-        for(var i=0; i<data.length; ++i) {
-            result.push(data[i]["concept-id"]);
-        }
-        return Array.from(new Set(result));
-    }
-
-    filterConceptActions(data) {
+    filterConceptData(data) {
+        //filter event types
         var result = data.filter((item) => {
             return this.state.searchFor.actions.indexOf(item["event-type"]) >= 0;
         });
-        return result;
-    }
-
-    filterConceptTypes(data) {
-        var result = data.filter((item) => {
-            return item.concept ? this.state.searchFor.types.indexOf(item.concept["concept/type"]) >= 0 : false;
+        //filter concept types
+        result = result.filter((item) => {
+            return item["latest-version-of-concept"] ? this.state.searchFor.types.indexOf(item["latest-version-of-concept"]["concept/type"]) >= 0 : false;
         });
         return result;
     }
@@ -182,71 +129,118 @@ class SearchResult extends React.Component {
         switch(this.sortBy) {
             default:
             case this.SORT_EVENT_TYPE:
-                cmp = (a) => {return Localization.get("db_" + (a.concept ? a.concept["concept/type"] : a.type));};
+                cmp = (a) => {return this.getType(a);};
                 break;
             case this.SORT_EVENT_EVENT:
-                cmp = (a) => {return Localization.get(a["event-type"]);};
+                cmp = (a) => {return this.getEventType(a);};
                 break;
             case this.SORT_EVENT_NAME:
-                cmp = (a) => {return a.concept ? a.concept["concept/preferredLabel"] : a.preferredLabel;};
+                cmp = (a) => {return this.getName(a);};
                 break;
             case this.SORT_EVENT_OLD:
-                cmp = (a) => {return a.changes ? a.changes[0]["old-value"] : "";};
+                cmp = (a) => {return this.getOldValue(a);};
                 break;
             case this.SORT_EVENT_NEW:
-                cmp = (a) => {return a.changes ? a.changes[0]["new-value"] : "";};
+                cmp = (a) => {return this.getNewValue(a)};
                 break;
             case this.SORT_EVENT_DATE:
-                cmp = (a) => {return a.timestamp;};
+                cmp = (a) => {return this.getDate(a);};
                 break;
             case this.SORT_EVENT_QUALITY_LEVEL:
-                cmp = (a) => {return a.concept ? a.concept["concept/quality-level"] : a.quality_Label;};
+                cmp = (a) => {return this.getQualityLevel(a);};
                 break;
             case this.SORT_EVENT_RELATION_TYPE:
-                cmp = (a) => {return Localization.get(a.relation["relation-type"]);};
+                cmp = (a) => {return this.getRelationType(a);};
                 break;
             case this.SORT_EVENT_FROM_NAME:
-                cmp = (a) => {return a.relation.source["concept/preferredLabel"];};
+                cmp = (a) => {return this.getFromName(a);};
                 break;
             case this.SORT_EVENT_TO_NAME:
-                cmp = (a) => {return a.relation.target["concept/preferredLabel"];};
+                cmp = (a) => {return this.getToName(a);};
                 break;
             case this.SORT_EVENT_FROM_TYPE:
-                cmp = (a) => {return Localization.get("db_" + a.relation.source["concept/type"]);};
+                cmp = (a) => {return this.getFromType(a);};
                 break;
             case this.SORT_EVENT_TO_TYPE:
-                cmp = (a) => {return Localization.get("db_" + a.relation.target["concept/type"]);};    
+                cmp = (a) => {return this.getToType(a);};    
                 break;
             case this.SORT_EVENT_WEIGHT:
-                cmp = (a) => {return "";};
+                cmp = (a) => {return this.getWeight(a);};
                 break;
         }
         return Util.sortByCmp(data, cmp, this.sortDesc);
     }
 
+    getType(item) {        
+        return (item["latest-version-of-concept"] ? Localization.get("db_" + item["latest-version-of-concept"]["concept/type"]) : "");
+    }
+
+    getEventType(item) {
+        if(item["concept-attribute-changes"]) {
+            var changedAttributes = Localization.get(item["concept-attribute-changes"][0].attribute);
+            for(var i=1; i<item["concept-attribute-changes"].length; ++i) {
+                changedAttributes += ", " + Localization.get(item["concept-attribute-changes"][i].attribute);
+            }
+            return changedAttributes + " " + Localization.get("changed");
+        } else {
+            return Localization.get(item["event-type"]);
+        }
+        
+    }
+    
+    getName(item) {
+        return item["latest-version-of-concept"] ? item["latest-version-of-concept"]["concept/preferredLabel"] : "";
+    }
+        
+    getOldValue(item) {
+        if(item["concept-attribute-changes"] && item["concept-attribute-changes"].length == 1) {
+            return item["concept-attribute-changes"][0]["old-value"];
+        }
+        return "";
+    }
+
+    getNewValue(item) {
+        if(item["concept-attribute-changes"] && item["concept-attribute-changes"].length == 1) {
+            return item["concept-attribute-changes"][0]["new-value"];
+        }
+        return "";
+    }
+
+    getDate(item) {
+        return item.timestamp;
+    }
+
+    getQualityLevel(item) {
+        return "";
+    }
+
+    getRelationType(item) {
+        return Localization.get(item.relation["relation-type"]);
+    }
+
+    getFromName(item) {
+        return item.relation.source["concept/preferredLabel"];
+    }
+
+    getToName(item) {
+        return item.relation.target["concept/preferredLabel"];
+    }
+
+    getFromType(item) {
+        return Localization.get("db_" + item.relation.source["concept/type"]);
+    }
+
+    getToType(item) {
+        return Localization.get("db_" + item.relation.target["concept/type"]);
+    }
+
+    getWeight(item) {
+        return "";
+    }
+
     getColumnsFor(item) {
         var cols = [];
-        if(item.changes) {
-            // typ, åtgärd, namn, från, till, datum, kvalitetsnivå, anteckning
-            cols.push(item.type == null ? "" : Localization.get("db_" + item.type));
-            cols.push(Localization.get(item["event-type"]) + " " + localization.get(item.changes[0]["attribute"]));
-            cols.push(item.preferredLabel == null ? "" : item.preferredLabel);
-            cols.push(item.changes[0]["old-value"]);
-            cols.push(item.changes[0]["new-value"]);
-            cols.push(new Date(item.timestamp).toLocaleString());
-            cols.push("");
-            cols.push(item.comment);
-        } else if(item.concept) {
-            // typ, åtgärd, namn, från, till, datum, kvalitetsnivå, anteckning
-            cols.push(Localization.get("db_" + item.concept["concept/type"]));
-            cols.push(Localization.get(item["event-type"]));
-            cols.push(item.concept["concept/preferredLabel"]);
-            cols.push("");
-            cols.push("");
-            cols.push(new Date(item.timestamp).toLocaleString());
-            cols.push(item.concept["concept/quality-level"]);
-            cols.push(item.comment);
-        } else if(item.relation) {
+        if(item.relation) {
             // relation, from label, to label, from type, to type, vikt, datum, anteckning
             cols.push(Localization.get(item["event-type"]));
             cols.push(Localization.get(item.relation["relation-type"]));
@@ -259,13 +253,13 @@ class SearchResult extends React.Component {
             cols.push(item.comment);
         } else {
             // typ, åtgärd, namn, från, till, datum, kvalitetsnivå, anteckning
-            cols.push(Localization.get("db_" + item.type));
-            cols.push(Localization.get(item["event-type"]));
-            cols.push(item.preferredLabel);
-            cols.push("");
-            cols.push("");
-            cols.push(new Date(item.timestamp).toLocaleString());
-            cols.push(item.quality_level);
+            cols.push(this.getType(item));
+            cols.push(this.getEventType(item));
+            cols.push(this.getName(item));
+            cols.push(this.getOldValue(item));
+            cols.push(this.getNewValue(item));
+            cols.push(new Date(this.getDate(item)).toLocaleString());
+            cols.push(this.getQualityLevel(item));
             cols.push(item.comment);
         }        
         return cols;

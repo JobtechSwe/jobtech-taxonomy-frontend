@@ -322,8 +322,20 @@ class Rest {
         this.get("/main/changes?after-version=" + fromVersion + "&to-version-inclusive=" + toVersion, onSuccess, onError);
     }
 
-    getUnpublishedChanges(fromVersion, onSuccess, onError) {
-        this.get("/private/changes?after-version=" + fromVersion, onSuccess, onError);
+    getConceptChanges(fromVersion, toVersion, onSuccess, onError) {
+        this.get("/main/concept/changes?after-version=" + fromVersion + "&to-version-inclusive=" + toVersion, onSuccess, onError);
+    }
+
+    getRelationChanges(fromVersion, toVersion, onSuccess, onError) {
+        this.get("/main/relation/changes?after-version=" + fromVersion + "&to-version-inclusive=" + toVersion, onSuccess, onError);
+    }
+
+    getUnpublishedConceptChanges(fromVersion, onSuccess, onError) {
+        this.get("/private/concept/changes?after-version=" + fromVersion, onSuccess, onError);
+    }
+
+    getUnpublishedRelationChanges(fromVersion, onSuccess, onError) {
+        this.get("/private/relation/changes?after-version=" + fromVersion, onSuccess, onError);
     }
 
     deleteConcept(id, comment, onSuccess, onError) {
