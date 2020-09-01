@@ -245,7 +245,7 @@ class VersionList extends React.Component {
     getFrom(item) {
         if(item["concept-attribute-changes"]) {
             if(item["concept-attribute-changes"].length == 1) {
-                return item["concept-attribute-changes"][0].old-value;
+                return item["concept-attribute-changes"][0]["old-value"];
             }
         }
         if(item.relation) {
@@ -257,7 +257,7 @@ class VersionList extends React.Component {
     getTo(item) {
         if(item["concept-attribute-changes"]) {
             if(item["concept-attribute-changes"].length == 1) {
-                return item["concept-attribute-changes"][0].new-value;
+                return item["concept-attribute-changes"][0]["new-value"];
             }
         }
         if(item.relation) {
