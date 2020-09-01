@@ -239,6 +239,10 @@ class Localization {
                 forget: "Glöm",
                 invalid_user_id: "Ogiltig inloggning",
                 event_info: "Information om händelse",
+                time: "Tid",                
+                publish_to: "Visa ändringar till:",
+                timestamp: "tidpunkt",
+                of: "av",
             },
         }
         // find active language

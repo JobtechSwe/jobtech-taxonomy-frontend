@@ -19,8 +19,7 @@ class PublishVersion extends React.Component {
         this.SORT_NAME = "SORT_NAME";
         this.SORT_ERROR = "SORT_ERROR";
         this.PUBLISH_VERSION_LIST_EVENT_ID = "PUBLISH_VERSION_LIST_EVENT_ID";
-        this.state = {
-            data: props.data,
+        this.state = {            
             result: [],
             okToPublish: false,
             skills: null,
@@ -31,6 +30,8 @@ class PublishVersion extends React.Component {
     }
 
     componentDidMount() {
+        this.afterVersion = this.props.afterVersion;
+        this.versionTimestamp = this.props.versionTimestamp;
         //fetch data needed for check
         Rest.getOccupationNamesWithBroaderTypes((data) => {
             this.setState({occupationNames: data}, () => {this.performChecks()});            
@@ -172,7 +173,11 @@ class PublishVersion extends React.Component {
     }
 
     onPublishClicked() {
-
+        Rest.postNewVersion(this.afterVersion + 1, this.versionTimestamp, () => {
+            EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
+        }, (status) => {
+            App.showError(Util.getHttpMessage(status) + " : misslyckades att skapa version");
+        });
     }
 
     onCloseClicked() {
@@ -182,13 +187,13 @@ class PublishVersion extends React.Component {
     renderItem(item) {
         return (
             <div className="dialog_publish_list_item">
-                <div>
+                <div title={Localization.get("db_" + item.item.type)}>
                     {Localization.get("db_" + item.item.type)}
                 </div>
-                <div>
+                <div title={item.item.preferredLabel}>
                     {item.item.preferredLabel}
                 </div>
-                <div>
+                <div title={Localization.get("publish_error_" + item.error)}>
                     {Localization.get("publish_error_" + item.error)}
                 </div>
             </div>

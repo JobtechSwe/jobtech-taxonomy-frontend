@@ -1,4 +1,5 @@
 import React from 'react';
+import DatePicker from 'react-datepicker';
 import Button from '../../control/button.jsx';
 import Label from '../../control/label.jsx';
 import List from '../../control/list.jsx';
@@ -27,31 +28,35 @@ class VersionList extends React.Component {
         this.SORT__FROM = 3;
         this.SORT_TO = 4;
         this.SORT_RELATION_TYPE = 5;
+        this.SORT_TIME = 6;
         this.state = {
             item: null,
             data: [], 
-            unfilteredData: [],
+            unfilteredData: [],            
             filter: "",
             loadingData: false,
             selected: null,
             range: null,
             conceptChanges: 0,
             relationChanges: 0,
+            toDate: new Date(),
         }
         this.sortBy= this.SORT_EVENT_TYPE;
         this.sortDesc= false;
     }
 
     componentDidMount() {
-        if(this.props.exportContext) {
-            this.props.exportContext.onExport = this.onSaveClicked.bind(this);
+        if(this.props.onClickContext) {
+            this.props.onClickContext.onExport = this.onSaveClicked.bind(this);
+            this.props.onClickContext.onPublishNewVersion = this.onPublishNewVersionClicked.bind(this);
         }
         this.getChanges(this.props.item);
     }
 
     UNSAFE_componentWillReceiveProps(props) {
-        if(this.props.exportContext) {
-            this.props.exportContext.onExport = this.onSaveClicked.bind(this);
+        if(this.props.onClickContext) {
+            this.props.onClickContext.onExport = this.onSaveClicked.bind(this);
+            this.props.onClickContext.onPublishNewVersion = this.onPublishNewVersionClicked.bind(this);
         }
         if(this.state.item == null || this.state.item.version != props.item.version) {
             EventDispatcher.fire(this.VERSION_LIST_EVENT_ID);
@@ -82,17 +87,26 @@ class VersionList extends React.Component {
             case this.SORT_RELATION_TYPE:
                 cmp = (a) => {return a.relation ? a.relation["relation-type"] : "";};
                 break;
+            case this.SORT_TIME:
+                cmp = (a) => {return this.getTimestamp(a);};
+                break;
         }
         return Util.sortByCmp(data, cmp, this.sortDesc);
     }
 
     filterData() {
+        var data = this.state.unfilteredData;
+        if(this.state.item && this.state.item.version == -1) {
+            data = data.filter((e) => {
+                return this.getTimestamp(e) <= this.state.toDate;
+            });
+        }
         // check if empty
         if(/^\s*$/.test(this.state.filter)) {
-            return this.state.unfilteredData;
+            return data;
         }
         var lowerCaseFilter = this.state.filter.toLowerCase();
-        return this.state.unfilteredData.filter((e) => {
+        return data.filter((e) => {
             return this.getType(e).toLowerCase().indexOf(lowerCaseFilter) >= 0||
                 this.getEvent(e).toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
                 this.getName(e).toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
@@ -100,7 +114,24 @@ class VersionList extends React.Component {
                 this.getTo(e).toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
                 this.getRelationType(e).toLowerCase().indexOf(lowerCaseFilter) >= 0 ||
                 e.id != null && e.id.toLowerCase().indexOf(lowerCaseFilter) >= 0;
+        });        
+    }
+
+    updateContentInfo() {
+        var filteredConcepts = 0
+        for(var i=0; i<this.state.data.length; ++i) {
+            if(!this.state.data[i].relation) {
+                filteredConcepts++;
+            }
+        }
+        var filteredRelations = this.state.data.length - filteredConcepts;
+        EventDispatcher.fire(Constants.EVENT_VERSION_ITEM_CONTENT_INFO, {
+            nrConcepts: this.state.conceptChanges, 
+            nrRelations: this.state.relationChanges,
+            nrFilteredConcepts: filteredConcepts,
+            nrFilteredRelations: filteredRelations,
         });
+
     }
 
     getChanges(item) {        
@@ -280,6 +311,20 @@ class VersionList extends React.Component {
         return "";
     }
 
+    getTimestamp(item) {
+        if(item.timestamp) {
+            return new Date(item.timestamp);
+        }
+        return new Date(0);
+    }
+
+    getComment(item) {
+        if(item.comment) {
+            return item.comment;
+        }
+        return "";
+    }
+
     getPageData() {
         if(this.state.data.length == 0 || this.state.range == null) {
             return [];
@@ -297,6 +342,7 @@ class VersionList extends React.Component {
     }
 
     onItemSelected(item) {
+        console.log(item);
         this.setState({selected: item});
     }
 
@@ -309,6 +355,8 @@ class VersionList extends React.Component {
         this.setState({
             filter: value,
             data: this.filterData(),
+        }, () => {
+            this.updateContentInfo();
         });
     }
 
@@ -413,20 +461,32 @@ class VersionList extends React.Component {
             title: Localization.get("export") + " " + title,
             content: <Export 
                         values={values}
-                        onSaveExcel={onSaveExcel}
-                    />
+                        onSaveExcel={onSaveExcel}/>
         });
     }
 
-    onPublishNewVersionClicked() {
+    onPublishNewVersionClicked(version) {
         EventDispatcher.fire(Constants.EVENT_SHOW_OVERLAY, {
             title: Localization.get("new_version"),
-            content: <PublishVersion data={this.state.data}/>,
+            content: <PublishVersion 
+                data={this.state.data}
+                afterVersion={version}
+                versionTimestamp={this.state.toDate}/>,
         });
     }
 
     onCloseDialogClicked() {
         EventDispatcher.fire(Constants.EVENT_HIDE_OVERLAY);
+    }
+
+    onSetToDate(date) {
+        this.state.toDate = date;
+        this.setState({
+            toDate: date,
+            data: this.filterData(),
+        }, () => {
+            this.updateContentInfo();
+        });
     }
 
     renderInfoItem(name, value, key) {
@@ -466,6 +526,38 @@ class VersionList extends React.Component {
         }
     }
 
+    renderFilter() {
+        return (
+            <div className="version_list_filter">
+                <Label text={Localization.get("title_filter")}/>
+                <input 
+                    type="text" 
+                    className="rounded" 
+                    value={this.state.filter} 
+                    onChange={(e) => this.onFilterChange(e.target.value)}/>                
+            </div>
+        );
+    }
+
+    renderDate() {
+        if(this.state.item && this.state.item.version == -1) {
+            return (
+                <div className="version_list_date">
+                    <Label text={Localization.get("publish_to")}/>
+                    <DatePicker 
+                        selected={this.state.toDate} 
+                        onChange={this.onSetToDate.bind(this)}
+                        locale={Localization.get("locale")}
+                        showTimeSelect
+                        timeFormat="HH:mm:ss"
+                        timeIntervals={15}
+                        timeCaption={Localization.get("time")}
+                        dateFormat="yyyy-MM-dd HH:mm:ss"/>
+                </div>
+            );
+        }
+    }
+
     renderHeader() {
         var renderArrow = (type) => {
             if(type == this.sortBy) {
@@ -475,84 +567,103 @@ class VersionList extends React.Component {
             }
         };
 
-        return(
-            <div className="version_list_header no_select font">
-                <div
-                    title={Localization.get("CREATED")} 
+        var extraClass = "";
+        var key = 0;
+        var list = [];
+        if(this.state.item && this.state.item.version == -1) {
+            list.push(<div key={key++}
+                        onClick={this.onSortClicked.bind(this, this.SORT_TIME)}>
+                        {Localization.get("date")}
+                        {renderArrow(this.SORT_TIME)}
+                    </div>);
+            extraClass = "version_list_header_publish";
+        }
+        list.push(<div key={key++}
                     onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_TYPE)}>
                     {Localization.get("type")}
                     {renderArrow(this.SORT_CONCEPT_TYPE)}
-                </div>
-                <div
-                    title={Localization.get("DEPRECATED")}
+                </div>);
+        list.push(<div key={key++}
                     onClick={this.onSortClicked.bind(this, this.SORT_EVENT_TYPE)}>
                     {Localization.get("event")}
                     {renderArrow(this.SORT_EVENT_TYPE)}
-                </div>
-                <div onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_LABEL)}>
+                </div>);
+        list.push(<div key={key++}
+                    onClick={this.onSortClicked.bind(this, this.SORT_CONCEPT_LABEL)}>
                     {Localization.get("name")}
                     {renderArrow(this.SORT_CONCEPT_LABEL)}
-                </div>
-                <div onClick={this.onSortClicked.bind(this, this.SORT__FROM)}>
+                </div>);
+        list.push(<div key={key++}
+                    onClick={this.onSortClicked.bind(this, this.SORT__FROM)}>
                     {Localization.get("from")}
                     {renderArrow(this.SORT__FROM)}
-                </div>
-                <div onClick={this.onSortClicked.bind(this, this.SORT_TO)}>
+                </div>);
+        list.push(<div key={key++}
+                    onClick={this.onSortClicked.bind(this, this.SORT_TO)}>
                     {Localization.get("to")}
                     {renderArrow(this.SORT_TO)}
-                </div>                
-                <div onClick={this.onSortClicked.bind(this, this.SORT_RELATION_TYPE)}>
+                </div>);
+        list.push(<div key={key++}
+                    onClick={this.onSortClicked.bind(this, this.SORT_RELATION_TYPE)}>
                     {Localization.get("relation_type")}
                     {renderArrow(this.SORT_RELATION_TYPE)}
-                </div>                
+                </div>);
+
+        return(
+            <div className={"version_list_header no_select font " + extraClass}>
+                {list}             
             </div>
         );
     }
 
     renderItem(item) {
-        return(
-            <div className="version_list_item">     
-                <div title={this.getType(item)}>
+        var css = this.state.item && this.state.item.version == -1 ? "version_list_item_publish" : ""; 
+        var list = [];
+        var key = 0;
+        if(this.state.item && this.state.item.version == -1) {
+            list.push(<div key={key++}
+                        title={this.getTimestamp(item).toLocaleString()}>
+                        {this.getTimestamp(item).toLocaleString()}
+                    </div>);
+        }
+        list.push(<div key={key++}
+                    title={this.getType(item)}>
                     {this.getType(item)}
-                </div>
-                <div title={this.getEvent(item)}>
+                </div>);
+        list.push(<div key={key++}
+                    title={this.getEvent(item)}>
                     {this.getEvent(item)}
-                </div>
-                <div title={this.getName(item)}>
+                </div>);
+        list.push(<div key={key++}
+                    title={this.getName(item)}>
                     {this.getName(item)}
-                </div>
-                <div title={this.getFrom(item)}>
+                </div>);
+        list.push(<div key={key++}
+                    title={this.getFrom(item)}>
                     {this.getFrom(item)}
-                </div>
-                <div title={this.getTo(item)}>
+                </div>);
+        list.push(<div key={key++}
+                    title={this.getTo(item)}>
                     {this.getTo(item)}
-                </div>
-                <div title={this.getRelationType(item)}>
+                </div>);
+        list.push(<div key={key++}
+                    title={this.getRelationType(item)}>
                     {this.getRelationType(item)}
-                </div>
+                </div>);
+        return(
+            <div className={"version_list_item " + css}>
+                {list}                
             </div>
         );
-    }
-
-    renderPublishButton() {
-        if(this.state.item && this.state.item.version == -1) {
-            return (
-                <Button
-                    onClick={this.onPublishNewVersionClicked.bind(this)}
-                    text={Localization.get("new_version")}/>
-            );
-        }
     }
 
     render() {
         return (
             <div className="version_list">
-                <Label text={Localization.get("title_filter")}/>
-                <input 
-                    type="text" 
-                    className="rounded" 
-                    value={this.state.filter} 
-                    onChange={(e) => this.onFilterChange(e.target.value)}/>
+                <div className="version_list_date_filter">
+                    {this.renderDate()}
+                    {this.renderFilter()}
+                </div>
                 {this.renderHeader()}
                 <List 
                     eventId={this.VERSION_LIST_EVENT_ID}
@@ -574,7 +685,6 @@ class VersionList extends React.Component {
                         isEnabled={this.state.selected != null}
                         onClick={this.onShowInfoClicked.bind(this)}
                         text={Localization.get("show")}/>
-                    {this.renderPublishButton()}                    
                 </div>
             </div>
         );

@@ -823,20 +823,29 @@ body {
     padding-left: 7px;
 }
 
+.version_list_date {
+    display: flex;
+    flex-direction: column;
+    margin-right: 4px;
+}
+
+.version_list_filter {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+.version_list_date_filter {
+    display: flex;
+    flex-direction: row;
+}
+
 .version_list_item {
     display: flex;
     flex-direction: row;
 }
 
-.version_list_item > div:nth-child(1) {
-    padding-right: 10px;
-    width: 16%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.version_list_item > div:nth-child(2) {
+.version_list_item > div {
     padding-right: 10px;
     width: 16%;
     white-space: nowrap;
@@ -845,35 +854,27 @@ body {
 }
 
 .version_list_item > div:nth-child(3) {
-    padding-right: 10px;
     width: 20%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.version_list_item > div:nth-child(4) {
-    padding-right: 10px;
-    width: 16%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.version_list_item > div:nth-child(5) {
-    padding-right: 10px;
-    width: 16%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .version_list_item > div:nth-child(6) {
-    padding-right: 10px;
+    text-transform: capitalize;
+}
+
+.version_list_item_publish > div {
+    width: 14%;
+}
+
+.version_list_item_publish > div:nth-child(3) {
+    width: 14%;
+}
+
+.version_list_item_publish > div:nth-child(4) {
     width: 16%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+}
+
+.version_list_item_publish > div:nth-child(7) {
+    text-transform: capitalize;
 }
 
 .version_list_header {
@@ -894,17 +895,7 @@ body {
     border-color: #fff;
 }
 
-.version_list_header > div:nth-child(1) {
-    padding-right: 10px;
-    width: 16%;
-    cursor: pointer;
-    text-transform: capitalize;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.version_list_header > div:nth-child(2) {
+.version_list_header > div {
     padding-right: 10px;
     width: 16%;
     cursor: pointer;
@@ -915,43 +906,19 @@ body {
 }
 
 .version_list_header > div:nth-child(3) {
-    padding-right: 10px;
     width: 20%;
-    cursor: pointer;
-    text-transform: capitalize;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
-.version_list_header > div:nth-child(4) {
-    padding-right: 10px;
-    width: 16%;
-    cursor: pointer;
-    text-transform: capitalize;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.version_list_header_publish > div {
+    width: 14%;
 }
 
-.version_list_header > div:nth-child(5) {
-    padding-right: 10px;
-    width: 16%;
-    cursor: pointer;
-    text-transform: capitalize;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.version_list_header_publish > div:nth-child(3) {
+    width: 14%;
 }
 
-.version_list_header > div:nth-child(6) {
-    padding-right: 10px;
+.version_list_header_publish > div:nth-child(4) {
     width: 16%;
-    cursor: pointer;
-    text-transform: capitalize;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .version_list_buttons {
@@ -1490,15 +1457,17 @@ body {
 
 .dialog_publish_list_item > div {
     padding-right: 10px;
-    overflow-wrap: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .dialog_publish_list_item > div:nth-child(1) {
-    width: 120px;
+    width: 150px;
 }
 
 .dialog_publish_list_item > div:nth-child(2) {
-    width: 450px;
+    width: 420px;
 }
 
 .dialog_publish_list_item > div:nth-child(3) {

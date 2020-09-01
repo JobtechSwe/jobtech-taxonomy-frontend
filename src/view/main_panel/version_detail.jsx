@@ -57,6 +57,10 @@ class VersionDetail extends React.Component {
         var info = [];
         var key = 0;
 
+        if(item.timestamp) {
+            info.push(this.renderInfoItem(Localization.get("timestamp"), new Date(item.timestamp).toLocaleString()));
+        }
+
         if(item["latest-version-of-concept"]) {
             info.push(this.renderInfoItem(Localization.get("preferredLabel"), Localization.get(item["latest-version-of-concept"].preferredLabel), key++));
             info.push(this.renderInfoItem(Localization.get("type"), Localization.get(item["latest-version-of-concept"].type), key++));

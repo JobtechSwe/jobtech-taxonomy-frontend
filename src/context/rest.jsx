@@ -394,6 +394,10 @@ class Rest {
     postDayNote(conceptId, comment, onSuccess, onError) {
         this.post("/private/concept/automatic-daynotes/?id=" + conceptId + "&comment=" + encodeURIComponent(comment), onSuccess, onError);
     }
+
+    postNewVersion(versionId, tiemstamp, onSuccess, onError) {
+        this.post("/private/versions/?new-version-id=" + versionId + "&new-version-timestamp=" + timestamp.toISOString(), onSuccess, onError)
+    }
 }
 
 export default new Rest;
