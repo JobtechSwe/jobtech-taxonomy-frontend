@@ -9,6 +9,7 @@ class PagedList extends React.Component {
             data: [],
             page: 1,
             itemsPerPage: 1,
+            lastDataLength: 0,
         };
     }
 
@@ -22,12 +23,13 @@ class PagedList extends React.Component {
 
     init(props) {
         var updated = false;
-        if(props.data.length != this.state.data.length) {
+        if(props.data.length != this.state.lastDataLength) {
             updated = true;
             this.state.page = 1;
         }
         this.state.data = props.data;
         this.state.itemsPerPage = props.itemsPerPage;
+        this.state.lastDataLength = this.state.data.length;
         if(updated) {
             this.props.onNewRange(this.getRange(this.state.page));
         }
